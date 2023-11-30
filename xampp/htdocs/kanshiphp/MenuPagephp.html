@@ -1,0 +1,149 @@
+﻿<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<link rel="stylesheet" href="MenuPage2.css">
+<style>
+body {
+	font-family: "メイリオ", meiryo, sans-serif;
+	background: linear-gradient(45deg, #FFCCFF, #14EFFF);
+        font-size: small; 	}
+h4 {	font-weight: lighter;}
+
+div {	color: #006DD9;
+        width: 600px;
+        border-radius: 3%;
+        background-color: #F75D59;
+	/* background-color: #BBBBBB; */ 
+	background-image: url(b025.jpg);}
+ul li { margine-left: -2.5em;}
+
+div.sidebar h2 {
+  /* margin:0 0 -3px 0;
+  border-top:groove 2px #666666;
+  border-bottom:groove 2px #cccccc;
+  padding: 0.1em 1em 0.1em 1em;
+  color:#ffffff;
+  background-color:#666666;
+  font-size:small; */
+margin:0px 0px 5px 0px;
+padding:8px 5px 6px 20px;
+font-size:12px;
+color:#444;
+line-height:100%;
+background:url("header/hbg_top.gif") no-repeat left top;
+background-color:#cfcfcf;
+border-top:1px solid #AAA;
+border-bottom:1px solid #DDE;
+}
+div.sidebar ul {
+  margin:0;
+  padding:0;
+  list-style-type:none;
+  /* background-color:#cfcfcf; */
+  clear:both;
+  /* font-size:small; */
+}
+div#left {
+  float:left;
+  border-right:1px solid #666666;
+  border-bottom:1px solid #666666;
+}
+
+div.sidebar ul li {
+/*  padding: 0.5em 1em; */
+background-color: #F75D59;
+font-size:11px;
+border-top: dotted 2px #666666;
+margin:0px 20px 4px 20px;
+padding:3px;
+text-indent:10px;
+border-top:1px solid #ccc;
+border-left:1px solid #ccc;
+border-bottom:1px solid #888;
+border-right:1px solid #888;
+background:url("header/libg.gif") repeat 0px -1px #fff; /* sankaku */
+}
+div.sidebar ul li:first-child {
+  border-top: none;  
+}
+div.sidebar ul li a {
+  text-decoration:none;  
+}
+img.pysize { width:15; height: 15; }
+.bgc { background-color:yellow; font-weight:bold; }
+
+</style>
+<title>Welcome to My WebSite</title>
+<script language="JavaScript"><!--
+function changeFramemon(){ parent.sframe.location.href = "MonitorManager.php";}
+function changeFrameelog(){ parent.sframe.location.href = "EventLogPage.php";}
+function changeFrameememo(){ parent.sframe.location.href = "EventMemoPage.php";}
+function changeFramesnmpvalue(){ parent.sframe.location.href = "SnmpStatPage.php";}
+function changeFramegraphlist(){ parent.sframe.location.href = "GraphListPage.php";}
+function changeFramegraphlistpl(){ parent.sframe.location.href = "GraphListPlotPage.php";}
+
+function changeFrameins(){ parent.sframe.location.href = "NewHostPage.php";}
+function changeFrameupdate(){ parent.sframe.location.href = "HostListPage.php";}
+function changeFramekanri(){ parent.sframe.location.href = "AdminPage.php";}
+function changeFrameheader(){ parent.sframe.location.href = "HeaderEditPage.php";}
+function changeFramesvrimg(){ parent.sframe.location.href = "ServerImage.php";}
+
+function changeFramelaychg(){ parent.sframe.location.href = "SelectLayout.php";}
+function changeFramelayswap(){ parent.sframe.location.href = "ShowLayout.php";}
+function changeFramelaygmake(){ parent.sframe.location.href = "LayoutGphp.php";}
+function changeFramelayhmake(){ parent.sframe.location.href = "LayoutSphp.php";}
+
+function changeFramelog(){ parent.sframe.location.href = "ReadLogPage.php";}
+function changeFramecmd(){ parent.sframe.location.href = "CoreRestart.html";}
+function changeFrametsm2(){ parent.sframe.location.href = "PHPMailSend.php";}
+function changeFramecmde(){ parent.sframe.location.href = "WebErrorLog.php";}
+function changeFrameman(){ parent.sframe.location.href = "ManualPagephp.php";}
+function changeFrameuser(){ parent.sframe.location.href = "UserPage.php";}
+function changeFrametodo(){ parent.sframe.location.href = "HistoryPage.php";}
+// --></script>
+</head>
+
+<body >
+<div id="body">
+  <hr id="bar">
+  <div class="sidebar" id="left">
+  <h2>▼　表示メニュー</h2>
+  <ul>
+        <li><a href="javascript:changeFramemon()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;監視モニター</span></a></li>
+        <li><a href="javascript:changeFrameelog()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;イベントログ</span></a></li>
+        <li><a href="javascript:changeFrameememo()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;イベントメモ</span></a></li>
+        <li><a href="javascript:changeFramesnmpvalue()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;SNMP監視結果</span></a></li>
+        <li><a href="javascript:changeFramegraphlist()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;リソースグラフ</span></a></li>
+        <li><a href="javascript:changeFramegraphlistpl()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;プロットグラフ</span></a></li>
+        
+  </ul>
+  <h2>▼　設定メニュー</h2>
+  <ul >
+        <li><a href="javascript:changeFrameins()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;監視ホスト追加</span></a></li>
+        <li><a href="javascript:changeFrameupdate()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;監視ホスト修正</span></a></li>
+        <li><a href="javascript:changeFramekanri()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;管理情報</span></a></li>
+        <li><a href="javascript:changeFrameheader()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ヘッダ情報</span></a></li>
+        <li><a href="javascript:changeFramesvrimg()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;サーバー画像管理</span></a></li>
+   </ul>
+  <h2>▼　レイアウトメニュー</h2>
+  <ul >
+         <li><a href="javascript:changeFramelaychg()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ホストレイアウト変更</span></a></li>
+         <li><a href="javascript:changeFramelayswap()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;レイアウト取替</span></a></li>
+         <li><a href="javascript:changeFramelaygmake()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;グループレイアウト作成</span></a></li>
+         <li><a href="javascript:changeFramelayhmake()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ホストレイアウト作成</span></a></li>
+         
+  </ul>
+  <h2>▼　サポートメニュー</h2>
+  <ul >
+         <li><a href="javascript:changeFramelog()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ログ表示・削除</a></li>
+         <li><a href="javascript:changeFramecmd()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;コア再起動</a></li>
+         <li><a href="javascript:changeFrametsm2()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;メール設定・送信</a></li>
+         <li><a href="javascript:changeFramecmde()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;Webエラーログ</a></li>
+         <li><a href="javascript:changeFrameman()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;マニュアル</a></li>
+         <li><a href="javascript:changeFrameuser()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ユーザー管理</a></li>
+         <li><a href="javascript:changeFrametodo()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;覚え書き管理</a></li>       
+  </ul>
+</div>
+
+</body>
+</html>

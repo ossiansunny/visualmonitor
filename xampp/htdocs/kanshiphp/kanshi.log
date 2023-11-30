@@ -1,0 +1,18 @@
+231125212002: logout.php: LOGOUT admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT admin','231125212002','9','admin')
+231126075738: login.php: LOGIN_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_admin','231126075738','0','admin','')
+231126104647: login.php: LOGIN_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_admin','231126104647','0','admin','')
+231126170637: logout.php: LOGOUT admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT admin','231126170637','9','admin')
+231126173120: login.php: LOGIN_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_admin','231126173119','0','admin','')
+231126212542: logout.php: LOGOUT admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT admin','231126212542','9','admin')
+231127164556: login.php: LOGIN_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_admin','231127164555','0','admin','')
+231127204104: logout.php: LOGOUT admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT admin','231127204104','9','admin')
+231129113709: login.php: LOGIN_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_admin','231129113709','0','admin','')
+231129123812: logout.php: LOGOUT admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT admin','231129123812','9','admin')
+231130095152: login.php: LOGIN_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_admin','231130095152','0','admin','')
+231130140155: : #notic#admin#ユーザーoperatorが更新されました
+231130140352: : #alert#admin#ユーザーが選択がされていません
+231130205921: login.php: LOGIN_operator Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_operator','','0','operator','')
+231130210301: logout.php: LOGOUT admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT admin','231130210300','9','admin')
+231130212145: login.php: LOGIN_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_admin','231130212145','0','admin','')
+231130212213: login.php: LOGIN_operator Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('LOGIN_operator','','0','operator','')
+231130214247: logout.php: LOGOUT admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT admin','231130214247','9','admin')

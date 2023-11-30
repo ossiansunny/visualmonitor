@@ -1,0 +1,53 @@
+h4 { font-weight: lighter;}
+div {
+color: #006DD9;
+        border-radius: 3%;
+background-color: #BBBBBB
+}
+div.header a{
+/*  padding: 0.5em 1em; */
+border-top: dotted 2px #666666;
+margin:0px 20px 4px 20px;
+padding:10px;
+font-size: 10px;
+text-decoration:none;
+/* text-indent:10px; */
+border-top:1px solid #ccc;
+border-left:1px solid #ccc;
+border-bottom:1px solid #888;
+border-right:1px solid #888;
+background:url("header/libg.gif") repeat 0px -1px #fff; /* sankaku */
+}
+.button{
+/*  padding: 0.5em 1em; */
+border-top: dotted 2px #666666;
+margin:2px 5px -15px 5px;
+padding:10px;
+font-size: 15px;
+text-decoration:none;
+/* text-indent:10px; */
+border-top:1px solid #ccc;
+border-left:1px solid #ccc;
+border-bottom:1px solid #888;
+border-right:1px solid #888;
+border-radius: 12%; 
+background:url("header/libg.gif") repeat 0px -1px #fff; /* sankaku */
+}
+.buttonhref{
+/*  padding: 0.5em 1em; */
+border-top: dotted 2px #666666;
+margin:-15px -15px -15px 8px; /* top right bottom left */
+padding:10px; 
+font-size: 12px;
+color: black;
+text-decoration:none;
+/* text-indent:10px; */
+border-top:1px solid #ccc;
+/*
+border-left:1px solid #ccc;
+border-right:1px solid #888; */
+border-bottom:1px solid #888;
+border-radius: 12%; 
+background:url("header/libg.gif") ; /* sankaku */
+}
+
