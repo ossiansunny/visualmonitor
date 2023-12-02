@@ -24,10 +24,10 @@ if (!isset($_GET['param'])){
   echo '<h2><img src="header/php.jpg" width="30" height="30">▽　サーバー画像管理　▽</h2>';
   echo '<h3>☆画像名はpngファイルのみ許容します、詳細はマニュアル参照<br>';
   echo '☆削除と追加は一緒に出来ません</h3>';
-  //###
+  /// ホスト画像表示
   hostimagelist();
   echo '<br>';
-  //###
+  ///
   echo '<form  type="get" action="serverimageinsdeldb.php">';
   echo '<table border=1>';
   echo '<tr><th>削除</th><th width="150">画像名</th><th width="248">サーバー名</th></tr>';

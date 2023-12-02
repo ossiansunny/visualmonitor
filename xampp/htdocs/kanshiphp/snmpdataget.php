@@ -202,52 +202,5 @@ function snmpdataget($itar){
   }
   return $snmparray;
 }  
-/*
-/// デバッグ
-//
-//$rtnval=snmpprocget('gcp.sunnyblue.mydns.jp');
-//var_dump($rtnval);
-*/
-/*
-$hostdata='192.168.1.155,Home,0,1,2,Optiplex990,1,1;2;80;4;5;6;8;443;1521,80:90,90:90,50:90,aa;bb;cc;dd;httpd;ee;ff;oracle;gg;snmp,pcwin.png,public';
-$hostarray=explode(',',$hostdata);
-$snmpans=snmpdataget($hostarray);
-//var_dump($snmpans);
-
-$c=count($snmpans);
-for ($i=0;$i<$c;$i++){
-  echo $snmpans[$i]."\r\n";
-}
-
-$hostdata='192.168.1.18,Home,1,1,2,Proxy,1,80;110;57188,80:90,80:90,80:90,&abcd;squid,serverlinux.png,public';
-$hostarray=explode(',',$hostdata);
-$snmpans=snmpdataget($hostarray);
-$c=count($snmpans);
-for ($i=0;$i<$c;$i++){
-  echo $snmpans[$i]."\r\n";
-}
-
-*/
-/*
-$rtn=18;
-$jtblist=numbitconv($rtn);
-var_dump($jtblist);
-$ptb=[0,0,0,0,0,0,0];
-$dd='';
-for ($i=0;$i<7;$i++) {
-  if ($jtblist[$i]==0){
-    echo strval($jtblist[$i]);
-    $dd=$dd.'0;';
-    $ptb[$i]='0';
-  }else{
-    echo strval($jtblist[$i]);
-    $dd=$dd.'1;';
-    $ptb[$i]='1';
-    //$dd=$dd+strval($ptb[$i]).';';
-  }
-}
-var_dump($ptb);
-echo $dd;
-*/
 ?>
 

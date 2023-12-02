@@ -1,12 +1,7 @@
 <?php
-
-//error_reporting(E_ALL & ~E_NOTICE);
 require_once "mysqlkanshi.php";
-//
 $pgm = "Reset.php";
-//
 date_default_timezone_set('Asia/Tokyo');
-
 
 function branch($page,$param){
   echo '<html>';
@@ -19,14 +14,13 @@ function branch($page,$param){
 $esw=0;
 $errorcde="";
 $errormsg="";
-/// get admin data
 $adminsql='select * from admintb';
 $arows=getdata($adminsql);
 $adata=explode(',',$arows[0]);
-$reset=$adata[0]; // AdminPageで初期化すると'reset'、デフォルトはNULL
+$reset=$adata[0]; /// resetは初期化、デフォルトはNULL
 if (isset($_GET['param'])){
-  writelogd($pgm,$_GET['patam']);
-  $inform=$_GET['param'];   /// branchで戻った時の処理
+  writelogd($pgm,$_GET['param']);
+  $inform=$_GET['param'];   
   if (substr($inform,0,1)=="#") {
     $brarr=explode("#",ltrim($inform,"#"),3);
     $errorcde=$brarr[0];
@@ -47,8 +41,8 @@ if (isset($_GET['param'])){
     $user=$_GET['user'];
     $passwd=$_GET['passwd'];
     if ($user=='admin' && $passwd=='manager'){
-      if (isset($_GET['reset'])){  /// reset ボタン押した時の処理
-        if ($reset=='reset'){ // admintbに'reset登録済か
+      if (isset($_GET['reset'])){  
+        if ($reset=='reset'){ /// 初期化判定
           echo "Initialize";
           $upsql='update admintb set kanriname=null';
           putdata($upsql);
@@ -74,7 +68,6 @@ if (isset($_GET['param'])){
   }
 }
 /// 最初の処理
-//echo 'Content-type: text/html; charset=UTF-8\n';
 echo '<!DOCTYPE html>';
 echo '<html>';
 echo '<head>';

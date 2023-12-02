@@ -1,7 +1,5 @@
 <?php
 error_reporting(E_ALL & ~E_WARNING);
-
-
 //==================================================
 //====================== windows ===================
 //==================================================
@@ -198,37 +196,5 @@ function phpsnmptcpopen($host,$community,&$data) {
 }
 
 
-/*
-/// デバッグ
-//LinuxのIPv6を無効にすれば、80番ポートはtcpで見つかる
-//Linuxのsysctl.confでipv6無効にすれば、80もtcpに乗る
-//======================================================Linux process===
-echo "--------- windows -------------<br>";
-$item = array();
-$ckport = array("22","80","25","3389","11822");
-$host = "192.168.1.155";
-$comm = "public";
-$rtn=phpsnmptcpopenwin($host,$comm,$ckport);
-if ($rtn==1){
-  $ckport='unknown';
-}
-var_dump($ckport)."<br>";
-
-
-echo "---------- Unix---------------<br>\n";
-$item = array();
-$ckport = array("80","22","","19999","1234");
-$host = "192.168.1.19";
-$comm = "public";
-$rtn=phpsnmptcpopen($host,$comm,$ckport);
-// return 'unknow' is error, 'xx;yy' is close xx;yy, '' is allok(open)
-//var_dump($rtn);
-if ($rtn=='error'){
-  $ckport='unknown';
-  echo $rtn;
-}else{
-  print_r($rtn);  
-}
-*/
 ?>
 

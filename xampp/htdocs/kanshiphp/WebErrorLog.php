@@ -48,7 +48,7 @@ if(isset($_GET['remove'])){
   echo '<link rel="stylesheet" href="kanshi1_py.css">';
   echo '</head><body>';
   echo '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　Webエラーログ　▽</h2>';
-  $line_num = 20;   // 表示する行数
+  $line_num = 20;   /// 表示する行数
   echo "<h3>最新 {$line_num} 行</h3>";
   $vpath_apache="";
   $vpatharr=array("vpath_apache");
@@ -60,7 +60,6 @@ if(isset($_GET['remove'])){
   if(count($rtnv)==1){
     $vpath_apache=$rtnv[0]; 
     $currpath = $vpath_apache."\\logs\\".$currelog; 
-    //echo $currpath;
     if (file_exists($currpath)){
       $contents = file($currpath , FILE_IGNORE_NEW_LINES);
       $start_index = count($contents) - $line_num;

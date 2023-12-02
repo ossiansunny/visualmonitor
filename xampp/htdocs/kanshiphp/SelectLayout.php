@@ -16,7 +16,6 @@ if (!isset($_GET['param'])){
   echo 'document.forms["F"].elements["param"].value = keyvalue;';
   echo '</script>';
 }else{
-  //$informuser=$_GET['param'];
   $inform=$_GET['param'];
   if (substr($inform,0,1)=="#"){
     $brarr=explode("#",ltrim($inform,"#"),4);
@@ -38,13 +37,11 @@ if (!isset($_GET['param'])){
 
   $showsql='show tables like "layout%"';
   $showdata=getdata($showsql);
-  //#print(showdata)
   echo '<br><table border=0 class="tablelayout"><form type=GET action="layoutsupmap.php">';
   echo '<tr><th align=center>レイアウト名</th></tr>';
 
-  foreach ($showdata as $item){ // item ('layout',) itemlayout[0]='layout'
+  foreach ($showdata as $item){ 
     $itemarray=explode(',',$item);
-    //#print(itemarray[0])
     echo '<tr>';
     if ($itemarray[0]=='layout'){
       echo "<td ><input type='radio' name='terms' value={$itemarray[0]}>現用</td>";

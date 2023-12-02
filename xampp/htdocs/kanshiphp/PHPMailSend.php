@@ -23,13 +23,13 @@ function mailstatset($server,$port,$from,$to,$subj,$body){
     putdata($upsql);
     $upsql="update admintb set sender='".$from."',receiver='".$to."',subject='".$subj."',body='".$body."'";
     putdata($upsql);
-    delstatus('Mail Server InActive');                    // mailserverからping応答があるので
-    delstatus('Mail Server Active');                      // InActiveからActiveにする　
+    delstatus('Mail Server InActive');    /// mailserverからping応答があるので
+    delstatus('Mail Server Active');      /// InActiveからActiveにする　
     setstatus('0','Mail Server Active');
     echo '<br><h3><font color=green>設定完了</font></h3>';
   }else{
-    delstatus('Mail Server InActive');                    // mailserverからping応答がないので
-    delstatus('Mail Server Active');                      // InActiveにする
+    delstatus('Mail Server InActive');     /// mailserverからping応答がないので
+    delstatus('Mail Server Active');       /// InActiveにする
     setstatus("1","Mail Server InActive");
     $sql='update mailserver set status="1"';
     putdata($sql);
@@ -59,12 +59,12 @@ if (!isset($_GET['param'])){
 ///
 }else{ 
   $user=$_GET['param'];
-  $server=ckset($_GET['server']); // mailserver server
-  $port=ckset($_GET['port']);     // mailserver port
-  $from=ckset($_GET['from']);     // admintb sender
-  $to=ckset($_GET['to']);         // admintb receiver
-  $subj=ckset($_GET['subj']);     // admintb subject
-  $body=ckset($_GET['body']);     // admintb body
+  $server=ckset($_GET['server']); /// mailserver server
+  $port=ckset($_GET['port']);     /// mailserver port
+  $from=ckset($_GET['from']);     /// admintb sender
+  $to=ckset($_GET['to']);         /// admintb receiver
+  $subj=ckset($_GET['subj']);     /// admintb subject
+  $body=ckset($_GET['body']);     /// admintb body
   /// メールサーバ設定
   if( isset($_GET['set']) ){
     $type='set';

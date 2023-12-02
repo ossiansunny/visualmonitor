@@ -116,7 +116,6 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
   $ttl1='<img src="header/php.jpg" width="30" height="30">';
   $ttl2=' ▽　ユーザー管理　▽   ';
   $ttl=$ttl1 . $ttl2;
-  /// charset=UTF-8は日本語に必要
   echo '<html><head>';
   echo '<link rel="stylesheet" href="kanshi1_py.css">';
   echo '<script language="JavaScript">';
@@ -149,10 +148,8 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
   //
   $displaysw='';
   $rows='';
-  //echo 'all display';
   $sql='select * from user order by userid';
   $rows=getdata($sql);
-  //var_dump($rows);
   if (empty($rows)){
     echo '<h4><font color=red>表示すべきデータがありません</font></h4>';
   }else{

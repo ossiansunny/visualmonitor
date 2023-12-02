@@ -1,7 +1,6 @@
 <?php
 error_reporting(0);
 require_once "mysqlkanshi.php";
-//require_once "layoutsform.php";
 
 function gcreatearray($gdata,&$ghai){
   $c=count($gdata);
@@ -11,7 +10,7 @@ function gcreatearray($gdata,&$ghai){
   }
 }
 
-function getgroup($grpno,$ghai){ //## 配列で返る [0]=グル-プ名　[1]=順序　[2]=ホスト数　[3]=段数　[4]=済
+function getgroup($grpno,$ghai){ /// 配列で返る [0]=グル-プ名　[1]=順序　[2]=ホスト数　[3]=段数　[4]=済
   $rtnrec='';
   foreach ($ghai as $ghirec){
     $ghiar = explode(',',$ghirec);
@@ -24,7 +23,7 @@ function getgroup($grpno,$ghai){ //## 配列で返る [0]=グル-プ名　[1]=�
 }
 
 function screatearray($hdata,$garr){
-//## host_data:hdata, group_data:garr
+/// host_data:$hdata, group_data:$garr
   $hitemarr=array();
   $c=count($hdata);
   for ($i=0;$i<$c;$i++){ 
@@ -39,11 +38,9 @@ function screatearray($hdata,$garr){
     $seg=intval($garr[$i][3]);   //  1 2 1 1
     $sname=array();
     for ($j=0;$j<$seg;$j++){
-    //for nums in range(seg):
       $host=intval($garr[$j][2]);        // num of host
       $hname=array();
       for ($k=0;$k<$host;$k++){
-      //for numh in range(host):
         $hnamex=array();
         $hname[$k]=$hitemarr[$num][1];
         $num++;
@@ -56,40 +53,33 @@ function screatearray($hdata,$garr){
 }
 //                    group  host   layout  user
 function layoutsupform($garr,$sarr,$layout,$user){
-  //echo '-----------sarr--------------')
-  //var_dump($garr);
-  //$hostincr=0;
-  $maxgrp=count($garr);                // num of group
+  $maxgrp=count($garr);                
   echo '<form name=myform action=layoutsupmapdb.php method=get>';
-  for ($i=0;$i<$maxgrp;$i++){     // グループ数繰り返し
-    $maxseg=intval($garr[$i][3]); // 1グループ内セグメント取得
-    $groupno=strval($i+1);        // グループ番号取得
-    $groupname=$garr[$i][0];      // グループ名取得
-    $groupvalue=$groupno.','.$groupname; // グループ番号＋グループ名
-    //#print(groupvalue)
+  for ($i=0;$i<$maxgrp;$i++){     /// グループ数繰り返し
+    $maxseg=intval($garr[$i][3]); /// 1グループ内セグメント取得
+    $groupno=strval($i+1);        /// グループ番号取得
+    $groupname=$garr[$i][0];      /// グループ名取得
+    $groupvalue=$groupno.','.$groupname; /// グループ番号＋グループ名
     echo "<br><table><tr><td class=back><b>グループ:</b></td><td><input type=text name='groupname[]' value={$groupname}></td></tr></table>";
     echo "<input type='hidden' name='groupno[]' value={$groupno}>";
     echo '<table border="1" class="tablelayout">';
-    for ($j=0;$j<$maxseg;$j++){   // 1グループ内セグメントループ
-    //for cursegno in range(maxseg):
-      $maxhost=intval($garr[$j][2]);     // ホスト数取得
+    for ($j=0;$j<$maxseg;$j++){   /// 1グループ内セグメントループ
+      $maxhost=intval($garr[$j][2]);     /// ホスト数取得
       echo '<tr>'; 
-      for ($k=0;$k<$maxhost;$k++){       // ホスト数ループ
-      //for curhostno in range(maxhost):
-        $host=$sarr[$i][$j][$k];  // ホスト名取得
+      for ($k=0;$k<$maxhost;$k++){       /// ホスト数ループ
+        $host=$sarr[$i][$j][$k];  /// ホスト名取得
         if ($host==''){
           $host='NoAssign';
         }
-        $datag='g'.strval($i+1);  // 
+        $datag='g'.strval($i+1);   
         $datas='s'.strval($j);
         $datah='h'.strval($k);
-        $datagsh=$datag.$datas.$datah;   // gsh連結
-        $datavalue=$datagsh.','.$host;   // gsh + ホスト名
-        //print($datavalue);
-        $dataarr='data['.$datag.$datas.$datah.']'; // 配列へ格納
+        $datagsh=$datag.$datas.$datah;   /// gsh連結
+        $datavalue=$datagsh.','.$host;   /// gsh + ホスト名
+        $dataarr='data['.$datag.$datas.$datah.']'; /// 配列へ格納
         echo "<td class=back><input type=text name='data[]' value={$host}></td>";
         echo "<input type=hidden name='key[]' value={$datagsh}>";
-        //$hostincr++;
+        
       }
       echo '</tr>';
     }
@@ -104,7 +94,6 @@ function layoutsupform($garr,$sarr,$layout,$user){
 $pgm='layoutsupmap.php';
 $layout=$_GET['terms'];
 $user=$_GET['user'];
-//
 
 echo '<html><head><meta>';
 echo '<link rel="stylesheet" href="kanshi1.css">';
@@ -112,31 +101,21 @@ echo '</head><body>';
 echo "<h2>グループ名、ホスト名変更  ／  レイアウト名：{$layout}</h2>";
 echo '<h4>現用レイアウトのグループ名、ホスト名／IPアドレスが変更出来ます、変更したら「実行」をクリックして下さい<br>';
 echo '変更しないものは、そのまま反映されます</h4>';
-//
 $gtable='g'.$layout;
 $table=$layout;
-$garr = array(); // group array table
-$sarr = array(); //#
-//
+$garr = array(); /// group array table
+$sarr = array(); 
 
-// group 配列テーブル作成
+/// group 配列テーブル作成
 $sql='select * from '.$gtable;
 $gdata=getdata($sql);
-//get tupple
-//print('<br>gdata: ');
-//var_dump($gdata);
 
 gcreatearray($gdata,$garr);
-//get list
-//print('<br>garr: ');
-//var_dump($garr);
 
 // ホストテーブル作成
 $sql='select * from '.$table;
 $sdata=getdata($sql);
 $sarr=screatearray($sdata,$garr);
-//print('<br>sarr: ');
-//var_dump($sarr);
 
 layoutsupform($garr,$sarr,$layout,$user);
 

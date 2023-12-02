@@ -20,16 +20,4 @@ function pathget($path){
   }  
   return $rtnarr;
 }
-/*
-/// Debug
-/// 配列にキー文字列を指定、その順にパスが配列で返る
-/// 取得の判定は、配列の要素数で行い、通常は要求した要素数でチェックする
-$patharr=array("vpath_kanshiphp","vpath_xampp");
-$pathfile=pathget($patharr);
-if(count($pathfile)==2){
-  echo '<br>\r\nreturn ok:'.$pathfile[0]." ".$pathfile[1].PHP_EOL;
-}else{
-  var_dump($pathfile);
-}
-*/
 ?>

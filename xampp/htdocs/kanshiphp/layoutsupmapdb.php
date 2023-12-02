@@ -32,7 +32,7 @@ for ($i=0;$i<$max;$i++){
   $upsql='update '.$layout.' set host="'.$hvalue.'" where gshid="'.$hkey.'"';
   putdata($upsql);   
 }
-// ホストデータなしの場合、グループデータフラグをリセット
+/// ホストデータなしの場合、グループデータフラグをリセット
 dataflagreset($layout);
 
 echo '<h4>変更処理が終わりました、「監視モニターへ戻る」をクリックして下さい</h4>';

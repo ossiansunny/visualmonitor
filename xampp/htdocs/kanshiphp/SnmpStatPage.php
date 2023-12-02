@@ -70,14 +70,6 @@ if (!isset($_GET['param'])){
   $udata=getdata($selsql);
   $sdata=explode(',',$udata[0]);
   $auth=$sdata[0];
-/*
-  if ($auth=='1'){    
-    echo "<input type='hidden' name='userid' value={$user}>";
-    echo "<input type='hidden' name='authcd' value={$auth}>";
-    echo '<br><input class=buttondel type="submit" name="delete" value="削除" >';
-    
-  }
-*/
   echo '</form>';
   echo '<br><br>';
   echo "<a href='MonitorManager.php?param={$user}'><span class=button>監視モニターへ戻る</span></a>"; 

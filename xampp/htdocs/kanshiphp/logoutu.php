@@ -1,10 +1,5 @@
 <?php
 
-//error_reporting(E_ALL & ~E_NOTICE);
-//require_once "mysqlkanshi.php";
-//require_once "mailsendany.php";
-//
-//date_default_timezone_set('Asia/Tokyo');
 $pgm = "logoutu.php";
 //
 if(!isset($_GET['param'])){
@@ -23,26 +18,6 @@ if(!isset($_GET['param'])){
   echo '</script>';
 }else{
   $user=$_GET['param'];
-  /// 終了メール
-  //$now=date('ymdHis');
-  //$tstamp = $now;
-  //$adminsql='select * from admintb';
-  //$arows=getdata($adminsql);
-  //$adata=explode(',',$arows[0]);
-  //$to=$adata[3];
-  //$from=$adata[4];
-  //$logname='LOGOUT '.$user;
-  /// Write Event Log
-  //$insql = "insert into eventlog (host, eventtime, eventtype) values('".$logname."','" . $tstamp . "','0')";
-  //putdata($insql); 
-  //$msg = $logname . " Eventlog Insert sql: " . $insql;
-  //writeloge($pgm,$msg); 
-  /// 終了メール
-  //$message=$user.' Logged out';
-  //echo "進行中・・・";
-  //$rtn=mailsendany('loginlogout',$from,$to,$sub,$message);
-
-  //  echo 'Content-type: text/html; charset=UTF-8\n';
   echo '<!DOCTYPE html>';
   echo '<html>';
   echo '<head>';

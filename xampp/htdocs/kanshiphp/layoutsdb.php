@@ -3,9 +3,6 @@ require_once 'mysqlkanshi.php';
 echo '<html><head>';
 echo '<link rel="stylesheet" href="kanshi1.css">';
 echo '</head><body>';
-//$garr = array();
-//$harr = array();
-//$gharr = array($garr,$harr);
 $layout=substr($_GET['layoutname'],1); // cut left g
 $layarr=explode('_',$layout);
 $user = $_GET['user'];
@@ -15,27 +12,18 @@ $gseqi=intval($gseq);
 $count=count($gharr[0]);
 $gshid='g'.$gseq.'%';
 $gc=count($gharr);
-//for($i=0;$i<$gc;$i++){
-//  $hc=count($gharr[$i]); 
-//  echo 'count: strval('.$i.') count=strval('.$hc.')<br>';
-//}
 $delsql='delete from '.$layout.' where gshid like "'.$gshid.'"';
-//echo $delsql.'<br>';
 putdata($delsql);
 for($cc=0;$cc<$gc;$cc++){
   $hc=count($gharr[$cc]);
   for($dd=0;$dd<$hc;$dd++) {
-    //echo 'g'.strval($gseq).'s'.strval($cc).'h'.strval($dd);
     $gshid='g'.strval($gseq).'s'.strval($cc).'h'.strval($dd);
-    //echo strval($gharr[$cc][$dd]).'<br>';
     $host=strval($gharr[$cc][$dd]);
     $insql='insert into '.$layout.' values("'.$gshid.'","'.$host.'")';
-    //echo $insql.'<br>';
     putdata($insql);
   }
 }
 $upsql='update g'.$layout.' set dataflag="1" where gsequence='.$gseqi;
-//echo $upsql.'<br>';
 putdata($upsql);
 $backurl='layouts.php?laynick='.$layarr[1];
 echo '<h2>▽　グループレイアウト作成　その４　▽</h2>';

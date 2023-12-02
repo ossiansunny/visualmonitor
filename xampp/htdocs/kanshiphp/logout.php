@@ -1,12 +1,11 @@
 <?php
 
-//error_reporting(E_ALL & ~E_NOTICE);
 require_once "mysqlkanshi.php";
 require_once "mailsendany.php";
-//
+
 date_default_timezone_set('Asia/Tokyo');
 $pgm = "logout.php";
-//
+
 if(!isset($_GET['param'])){
   echo '<html>';
   echo '<body onLoad="document.F.submit();">';
@@ -40,7 +39,7 @@ if(!isset($_GET['param'])){
   writeloge($pgm,$msg); 
   /// 終了メール
   $message=$user.' Logged out';
-  //echo "進行中・・・";
+  ///echo "進行中・・・";
   $logname="LOGOUT ".$user;
   $sub=$logname;
   $rtn=mailsendany('loginlogout',$from,$to,$sub,$message);
@@ -52,7 +51,6 @@ if(!isset($_GET['param'])){
     $upsql='update admintb set authority="0"';
     putdata($upsql);
   }
-  //  echo 'Content-type: text/html; charset=UTF-8\n';
   echo '<!DOCTYPE html>';
   echo '<html>';
   echo '<head>';

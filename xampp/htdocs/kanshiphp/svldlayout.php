@@ -93,32 +93,9 @@ if($terms=='layout' && $tosave==''){
   }
 }
 
-/*
-レイアウト保存時
-tosave value: custom2
-toload value: current
-terms value: layout
-レイアウト読込時
-tosave value:
-toload value: current
-terms value: layout_map3
-
-//layout_xxからayoutを作る
-drop table if exists glayout;
-create table glayout select * from glyaout_xx;
-drop table if exists layout;
-create table layout select * from lyaout_xx;
-
-//layoutからlayout_xxへ保存
-drop table if exists glayout_xx;
-create table glayout_xx select * from glayout;
-drop table if exists layout_xx;
-create table layout_xx select * from layout;
-*/
 if($msg!=''){
   echo "<h4><font color=red>{$msg}</font></h4>";
 }
-
 echo "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
 echo '</body></html>';
 ?>

@@ -118,49 +118,5 @@ function delstatus($val){
   }
   return $nosw; // deleted=0 , not found=1
 }
-/// デバッグ
-/*
-delstatus('Mail Server InActive');
-delstatus('Mail Server Active');
-setstatus("1","Mail Server InActive");
-*/
-/*
-$msg="Logoff Now";
-$rc=delstatus($msg);
-if($rc==0){
-  echo "\n".$msg." deleted";
-}else{
-  echo "\n".$msg." not found";
-}
-*/
-/*
-$flg=getmailstatus();
-echo "\n";
-var_dump($flg);
-if($flg==0){
-  echo "\nFound";
-}else{
-  echo "\nNot found";
-}
-*/
-/*
-$rows=getstatus();
-echo "\n";
-var_dump($rows);
-$row=explode(',',$rows[0]);
-if(empty($row[0])){
-  echo "\nnot found";
-}else{
-  echo "\n".$row[0]." ".$row[1];
-}
- 
-$rc=setstatus("d","msg4d");
-if ($rc==1){
-  echo "\nno saved";
-}else if($rc==2){
-  echo "\nalready saved";
-}else{ 
-  echo "\nsaved";
-}
-*/
+
 ?>

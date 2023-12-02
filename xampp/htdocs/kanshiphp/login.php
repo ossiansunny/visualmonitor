@@ -1,6 +1,4 @@
 <?php
-
-//error_reporting(E_ALL & ~E_NOTICE);
 require_once "mysqlkanshi.php";
 require_once "winhostping.php";
 require_once "mailsendany.php";
@@ -22,7 +20,6 @@ function mailstatset($server,$port,$from,$to,$subj,$body){
     setstatus('0','Mail Server Active');
     $msg="メールサーバ応答あり、メッセージ欄に「Mail Server Active」設定";
     writelogd($pgm,$msg);
-    //echo '<br><h3><font color=green>設定完了</font></h3>';
   }else{
     delstatus('Mail Server InActive');
     delstatus('Mail Server Active');
@@ -31,7 +28,6 @@ function mailstatset($server,$port,$from,$to,$subj,$body){
     putdata($sql);
     $msg="メールサーバ応答なし、メッセージ欄に「Mail Server InActive」設定";
     writelogd($pgm,$msg);
-    //echo '<br><h3><font color=green>設定失敗</font></h3>';
   }
 }
 
@@ -45,17 +41,17 @@ function checkproc($kanri){
   $snmpstamp=$pdata[7];
   $mrtgtime=$pdata[8];
   $mrtgstamp=$pdata[9];
-  $diff=time() - intval($corestamp); //現在時刻からcore起動した時刻の差
+  $diff=time() - intval($corestamp); ///現在時刻からcore起動した時刻の差
   $rtncd="";
-  if ($kanri=='1'){ //管理者
-    if ($diff < intval($coretime)){ // 差がcore起動間隔より小さいか
-      $rtncd='1'; // Yes 監視が管理者により実行されている
+  if ($kanri=='1'){ ///管理者
+    if ($diff < intval($coretime)){ /// 差がcore起動間隔より小さいか
+      $rtncd='1'; /// Yes 監視が管理者により実行されている
     }else{
       $rtncd="0";
     }
-  }else{            //一般ユーザ
-    if ($diff >= intval($coretime)){ // 差がcore起動間隔より大きいか等しいか
-      $rtncd='1'; // Yes　監視が管理者より実行されている
+  }else{            ///一般ユーザ
+    if ($diff >= intval($coretime)){ /// 差がcore起動間隔より大きいか等しいか
+      $rtncd='1'; /// Yes　監視が管理者より実行されている
     }else{
       $rtncd="0";
     }
@@ -65,7 +61,6 @@ function checkproc($kanri){
 
 function setsess($value){
   echo '<script type="text/javascript">';
-  //echo "sessionStorage.setItem('user',{$value});";  NG
   echo 'sessionStorage.setItem("user","'.$value.'");';
   echo '</script>';
 }
@@ -107,7 +102,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
   $esw=1; 
 }else{
   if (isset($_GET['login'])){  /// login ボタン押した時の処理
-    if (isset($_GET['init'])){ // init is NULL or 'init'
+    if (isset($_GET['init'])){ /// init is NULL or 'init'
       if ($_GET['init']=="on"){
         echo "Initialize";
         $upsql='update admintb set kanriname=null';
@@ -121,14 +116,13 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
     $passwd=$_GET['passwd'];
     $user=$_GET['user'];
     $ercde=$_GET['errorcde'];
-    //var_dump($ercde);
     $ucode="";
     $auth="";
     $uname="";
     $selsql='select * from user where userid="'.$user.'"';
     $udata=getdata($selsql);
     $c=count($udata);
-    if ($c==0){ // userなし
+    if ($c==0){ /// userなし
       $msg="●入力したユーザー".$user."がありません";
       writeloge($pgm,$msg);
       branch("login.php","#2001#".$msg);
@@ -156,35 +150,35 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $tstamp = $now;
               $upsql='update processtb set admin="'.$user.'",starttime="'.$tstamp.'"';
               putdata($upsql);
-              // echo 開始イベントログ
+              /// echo 開始イベントログ
               $logname = "LOGIN_" . $user; 
               $insql = "insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('".$logname."','".$tstamp."','0','".$userid."','')";
               putdata($insql); 
               $msg = $logname . " Eventlog Insert sql: " . $insql;
               writeloge($pgm,$msg);              
-              // echo 開始メール 
+              /// echo 開始メール 
               $sub=$logname;
               $message=$user.' Logged in';
               mailsendany('loginlogout',$fromaddr,$toaddr,$sub,$message);
-              // check mailserver
+              /// check mailserver
               mailstatset($server,$port,$fromaddr,$toaddr,$subject,$body);
               $upsql='update admintb set kanriname="'.$userid.'",authority="'.$auth.'",kanrino="'.$ucode.'"';
               putdata($upsql);
               branch("MainIndexphp.html","");
-            }else{ // auth=0
+            }else{ /// auth=0
               $msg="●既に監視が管理者で実行されています";
               branch("login.php","#2003#".$msg);
             } 
-          }else{ // auth=0
+          }else{ /// auth=0
             $rtn=checkproc($auth);
             if ($rtn=="0" and $authority=="1"){
-              // echo 開始イベントログ
+              /// echo 開始イベントログ
               $logname = "LOGIN_" . $user; 
               $insql = "insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('".$logname."','" . $tstamp . "','0','".$userid."','')";
               putdata($insql); 
               $msg = $logname . " Eventlog Insert sql: " . $insql;
               writeloge($pgm,$msg);  
-              // echo 開始メール 
+              /// echo 開始メール 
               
               $sub=$logname;
               $message=$user.' Logged in';
@@ -208,7 +202,6 @@ $mrows=getdata($mlsvrsql);
 $mdata=explode(',',$mrows[0]);
 $mailserver=$mdata[0];
 $mailport=$mdata[1];
-//var_dump($mrows);
 $pingsw=hostping($mailserver);
 $sql='';
 if ($pingsw != 0) {
@@ -228,7 +221,6 @@ if ($pingsw != 0) {
   putdata($sql);
 }
 
-//echo 'Content-type: text/html; charset=UTF-8\n';
 echo '<!DOCTYPE html>';
 echo '<html>';
 echo '<head>';
@@ -243,7 +235,7 @@ echo '<h2 class="login-header"><img src="header/php.jpg" width="70" height="70">
 echo '<form class="login-container" type="get" action="login.php">';
 echo '<p><input type="text" name="user" value="" placeholder="ユーザID" required></p>';
 echo '<p><input type="password" name="passwd" placeholder="パスワード" required></p>';
-// $resetはadmintbのkanriname、AdminPageで初期化すると'reset'になる 
+/// $resetはadmintbのkanriname、AdminPageで初期化すると'reset'になる 
 if ($reset=='reset'){
   echo '<table><tr><td>&emsp;&emsp;初期化オプション</td><td><input type="checkbox" name="init"></td></tr></table>';
 }

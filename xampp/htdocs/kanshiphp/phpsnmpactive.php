@@ -10,15 +10,4 @@ function snmpactive($host,$community) {
     return 0;
   }
 }
-/*
-/// デバッグ用
-$host='192.168.1.19';
-$community='public';
-$rtn=snmpactive($host,$community);
-if ($rtn==0){
-  echo 'OK '.strval($rtn);
-}else{
-  echo 'NG '.strval($rtn);
-}
-*/
 ?>

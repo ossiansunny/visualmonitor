@@ -8,35 +8,28 @@ function gcreatearray($gdata,&$ghai){
   $gsc=count($gdata);
   for($gcc=0;$gcc<$gsc;$gcc++){
     $garr=explode(',',$gdata[$gcc]);
-    $ghai[$gcc][0]=$garr[0]; //group name
-    $ghai[$gcc][1]=$garr[1]; //group seq
-    $ghai[$gcc][2]=$garr[2]; //no. of host
-    $ghai[$gcc][3]=$garr[3]; //no. of seg
-    $ghai[$gcc][4]=$garr[4]; //sumi 
+    $ghai[$gcc][0]=$garr[0]; ///group name
+    $ghai[$gcc][1]=$garr[1]; ///group seq
+    $ghai[$gcc][2]=$garr[2]; ///no. of host
+    $ghai[$gcc][3]=$garr[3]; ///no. of seg
+    $ghai[$gcc][4]=$garr[4]; ///sumi 
   }
 }
 
-function screatearray($hdata,$garr,&$hhai){ //$hdata is layout record
+function screatearray($hdata,$garr,&$hhai){ ///$hdata is host layout record
   $hdatac=count($hdata);
-//echo '------------- host data loop $hdatac is '.strval($hdatac).'<br>';
   $hdataidx=0;
-  $gc=count($garr); // グループ数取得
-//  echo '------------- group loop $gc is '.strval($gc).'<br>';
-  for($gcc=0;$gcc<$gc;$gcc++){ // グループのループ
-    $dc=intval($garr[$gcc][3]); // 段数取得
-//  echo '------------- dansu loop $dc is '.strval($dc).'<br>';
-    for($dcc=0;$dcc<$dc;$dcc++){ // 段数のループ
-      $hc=intval($garr[$gcc][2]); // ホスト数取得
-//  echo '------------- host loop $hc is '.strval($hc).'<br>';
+  $gc=count($garr); /// グループ数取得
+  for($gcc=0;$gcc<$gc;$gcc++){ /// グループのループ
+    $dc=intval($garr[$gcc][3]); /// 段数取得
+    for($dcc=0;$dcc<$dc;$dcc++){ /// 段数のループ
+      $hc=intval($garr[$gcc][2]); /// ホスト数取得
       for($hcc=0;$hcc<$hc;$hcc++){ // ホストのループ
-  
-        $hdarr=explode(',',$hdata[$hdataidx]); //件のlayout ホストデータを配列
-        //var_dump($hdarr);
-//echo '------------- host data is '.$hdarr[1].'<br>';
-        $hhai[$gcc][$dcc][$hcc][0]=$hdarr[1]; //ホスト名をコピー
-        $hhai[$gcc][$dcc][$hcc][1]='view';  //場所を確保
-        $hhai[$gcc][$dcc][$hcc][2]='image'; //場所を確保
-        $hhai[$gcc][$dcc][$hcc][3]='snmp'; //場所を確保
+        $hdarr=explode(',',$hdata[$hdataidx]); ///layout ホストデータを配列
+        $hhai[$gcc][$dcc][$hcc][0]=$hdarr[1]; ///ホスト名をコピー
+        $hhai[$gcc][$dcc][$hcc][1]='view';  ///場所を確保
+        $hhai[$gcc][$dcc][$hcc][2]='image'; ///場所を確保
+        $hhai[$gcc][$dcc][$hcc][3]='snmp'; ///場所を確保
         $hdataidx++;
       }
     }
@@ -63,12 +56,8 @@ if(!isset($_GET['param'])){
   $rows=getdata($sql);
   $adata=explode(',',$rows[0]);
   //----------
-  $countdown = strval($adata[12]); // corenewctr
+  $countdown = strval($adata[12]); 
   $interval = strval($adata[7]);
-  //----------
-  //$interval = '30';
-  //$title = "&ensp;&ensp;&ensp;&ensp;監視モニター（".$interval."秒間隔更新)";
-  //----------------------------------
   $blk="";
   $blkmsg="";
   $blcolor="";
@@ -112,21 +101,18 @@ if(!isset($_GET['param'])){
   echo "<br><table><tr class=big><td>&ensp;&ensp;監視時刻&ensp;</td><td class=okcolor>{$gis}</td>";
   echo "<td>&ensp;&ensp;SNMPカウントダウン　</td><td class=okcolor>{$countdown}</td></tr></table>";
   echo '</form><br>';
-  $garr = array(); // group array table
+  $garr = array(); // group 配列テーブル
   $grponedata=array();
-  // group 配列テーブル作成
+  /// group 配列テーブル作成
   $sql='select * from glayout order by gsequence';
   $rows=getdata($sql);
   gcreatearray($rows,$garr);
-  // ホストテーブル作成
+  /// ホストテーブル作成
   $sarr = array();
   $sql='select * from layout order by gshid';
   $rows=getdata($sql);
-  //var_dump($rows);
   screatearray($rows,$garr,$sarr);
-  //var_dump($sarr);
   layoutsform($uid,$garr,$sarr);
-
   $dtm=date('ymdHis');
   $usql='select authority from user where userid="'.$uid.'"';
   $rows=getdata($usql);

@@ -4,18 +4,17 @@ require_once 'mysqlkanshi.php';
 require_once 'phpsendmail.php';
 $pgm="mailsendsnmp.php";
 function mailsendsnmp($mdata,$mtype,$mvalue,$updown){
-  //var_dump($mdata);
-  // -------------------- Gmailに接続する時間がかかるのが、処理に時間がかかる
-  // 管理DB Read & 展開
+  /// -------------------- Gmailに接続する時間がかかるのが、処理に時間がかかる
+  /// 管理DB Read & 展開
   $sql="select * from admintb";
   $kdata=getdata($sql);
   $sdata=explode(',',$kdata[0]);
-  $fromaddr=$sdata[4]; // sender
-  $toaddr=$sdata[3]; // recipient
-  $csubject=$sdata[5]; // subject admintb
-  $cbody=$sdata[6]; // body admintb
-  // 引数 Read & 展開、$mdataは配列で来るから配列にする必要が無い
-  //$madata=explode(',',$mdata);
+  $fromaddr=$sdata[4]; /// sender
+  $toaddr=$sdata[3]; /// recipient
+  $csubject=$sdata[5]; /// subject admintb
+  $cbody=$sdata[6]; /// body admintb
+  /// 引数 Read & 展開、$mdataは配列で来るから配列にする必要が無い
+  ///$madata=explode(',',$mdata);
   $madata=$mdata;
   $host=$madata[0];
   $viewn=$madata[5];
@@ -27,20 +26,20 @@ function mailsendsnmp($mdata,$mtype,$mvalue,$updown){
   $stat='';
   $info='';  
 
-  //$mdata: 管理データの配列
-  //$mtype: 1=CPU 2=RAM 3=DISK 4=Process 5=Port
-  //$mvalue: 1-3(n:58 w=60 c=80) 4(httpd;snmpd) 5(80;443)
-  //$updown: 1=前回データなし（ホスト新規、修正） 2=前回データあり  
-  //前回データなし  n:xx Subj=Info stat=Monitoring started       info=xx% normal
-  //                c:xx Subj=Plob stat=Critical value exceeded  info=xx% exceeded
-  //前回データあり  n:xx Subj=Info stat=Monitoring normal        info=xx% normal
-  //                c:xx Subj=Plob stat=Critical value exceeded  info=xx% exceeded
+  ///$mdata: 管理データの配列
+  ///$mtype: 1=CPU 2=RAM 3=DISK 4=Process 5=Port
+  ///$mvalue: 1-3(n:58 w=60 c=80) 4(httpd;snmpd) 5(80;443)
+  ///$updown: 1=前回データなし（ホスト新規、修正） 2=前回データあり  
+  ///前回データなし  n:xx Subj=Info stat=Monitoring started       info=xx% normal
+  ///                c:xx Subj=Plob stat=Critical value exceeded  info=xx% exceeded
+  ///前回データあり  n:xx Subj=Info stat=Monitoring normal        info=xx% normal
+  ///                c:xx Subj=Plob stat=Critical value exceeded  info=xx% exceeded
 
-  switch ($mtype) { //snmptype 1=CPU 2=RAM 3=Disk 4=Process 5=PORT 
+  switch ($mtype) { ///snmptype 1=CPU 2=RAM 3=Disk 4=Process 5=PORT 
     case '1':
     case '2':
     case '3':
-      $wcflag=explode(':',$mvalue); // w:80 c:90
+      $wcflag=explode(':',$mvalue); /// w:80 c:90
       $info=$wcflag[1].'% exceeded';    
       if($wcflag[0]=='w'){
         $stat='Warning value exceeded';      
@@ -65,7 +64,7 @@ function mailsendsnmp($mdata,$mtype,$mvalue,$updown){
         $snmpt='Disk';
       }
       break;
-    case '4': // snmpd;ftp
+    case '4': /// snmpd;ftp
       $snmpt='Process';
       if($mvalue=='' || $mvalue=='allok'){
         $stat='All Process running';
@@ -78,7 +77,7 @@ function mailsendsnmp($mdata,$mtype,$mvalue,$updown){
         $info=$mvalue.' process not running';
       }
       break;
-    case '5': // 80;443
+    case '5': /// 80;443
       $snmpt='TCPPort';
       if($mvalue=='' || $mvalue=='allok'){
         $stat='No TCP Port closing';
@@ -118,7 +117,6 @@ function mailsendsnmp($mdata,$mtype,$mvalue,$updown){
   $cc=count($body);
   for($cs=0;$cs<$cc;$cs++){
     $bodystr=$bodystr.$body[$cs]."\r\n";
-    //echo $bodystr."<br>";    
   }    
   if(1 === preg_match('/</', $csubject)){
     $csubject=str_replace('<host>',$host,$csubject);
@@ -127,19 +125,11 @@ function mailsendsnmp($mdata,$mtype,$mvalue,$updown){
     $ttl=$csubject;
   }else{
     $sub2=$viewn;
-    $sub3='SNMP'; // PING|SERVICE
+    $sub3='SNMP'; /// PING|SERVICE
     $sub4=$stat;
     $ttl='**'.$sub0.' Service ' .$sub1. ' ' .$sub2. '/' .$sub3. ' is ' .$sub4. '**'; 
   }
-  
-  
-  //$toaddr=$sdata[3];
-  //$fromaddr='From: '.$sdata[4];
-  //$sql="select * from mailserver";
-  //$kdata=getdata($sql);
-  //$mdata=explode(',',$kdata[0]);
-  //$mserver=$mdata[0]; // server host address
-  //$mport=$mdata[1]; // server listen port
+    
   $flg=phpsendmail("", "", $fromaddr, $toaddr, $ttl, $bodystr);
   if($flg==0){
     $mmsg='success '.$bodystr.' '.$toaddr.' '.$fromaddr."\r\n";
@@ -152,27 +142,5 @@ function mailsendsnmp($mdata,$mtype,$mvalue,$updown){
     writeloge('mailsendsnmp debug',$mmsg);
     return 1;
   }
-  /*
-  $flg=mb_send_mail($toaddr,$ttl,$bodystr,$fromaddr);
-  if ($flg){
-    return 0;
-  }else{
-    $msg="error: mb_send_mail";
-    writeloge($pgm,$msg);
-    return 1;
-  }
-  */
 }
-//$toaddr='From: ossiansunny@gmail.com';
-//$flg=mb_send_mail("oshima@sunnyblue.mydns.jp","testsub","testbody",$toaddr);
-//var_dump($flg);
-/*
-$data=['192.168.1.155','Home','0','1','2','デルOptiplex','1','','','','','','pcwin.png'];
-mailsendsnmp($data,'1','n:90','2');
-
-//mailsendsnmp($data,'2','n:100','2');
-//mailsendsnmp($data,'3','n:99','2');
-//mailsendsnmp($data,'4','','1');
-//mailsendsnmp($data,'5','','1');
-*/
 ?>

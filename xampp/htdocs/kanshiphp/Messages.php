@@ -5,7 +5,6 @@ require_once "alarmwindow.php";
 $statmsg="";
 $cde="";
 $rows=getstatus();
-//var_dump($rows); //array(2) { [0]=> string(1) "0" [1]=> string(18) "Mail Server Activ
 $statmsg=$rows[1];
 $cde=$rows[0];
 $pgm="messages.php";

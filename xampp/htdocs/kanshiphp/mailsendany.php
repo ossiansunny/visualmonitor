@@ -12,12 +12,9 @@ function bodyformat($_from,$_status,$_msg,&$bodystr){
   $_body[2]='Date: ' .$dte;
   $_body[3]='State: ' .$_status; // 
   $_body[4]='Messages:';
-  $_body[5]=$_msg; // message
+  $_body[5]=$_msg; /// message
   $bodystr='';
-  //$cc=count($_body);
   foreach ($_body as $_bodyrec){
-  //for($cs=0;$cs<$cc;$cs++){
-    //$bodystr=$bodystr.$_body[$cs]."\r\n";
     $bodystr=$bodystr.$_bodyrec."\r\n";
   }
 }
@@ -27,9 +24,7 @@ function mailsendany($type,$from,$to,$subject,$msg){
   $sql='select * from header';
   $hdata=getdata($sql);
   $hdarr=explode(',',$hdata[0]);
-  //var_dump($hdarr);
   $csubject=$subject;
-  //var_dump($csubject);
   if($type=='adminsubject'){
     $header=$hdarr[0];
     $check='';
@@ -51,48 +46,27 @@ function mailsendany($type,$from,$to,$subject,$msg){
     $header=$hdarr[0];
     $check='';
     $sub1=$hdarr[0]; 
-    //$sub2='デーモン';
+    ///$sub2='デーモン';
     $sub3=$subject;
     $ttl='**'.$sub1. ' '.$sub3.'**';
     bodyformat($header,$ttl,$msg,$bodystr); 
-    //var_dump($bodystr);
   }
-  // get mail from, to address
+  /// get mail from, to address
   $sql="select * from admintb";
   $kdata=getdata($sql);
   $sdata=explode(',',$kdata[0]);
-  $toaddr=$sdata[3]; // mail to addr
-  $fromaddr=$sdata[4]; // mail from addr
-  // get mailserver,port
-  //$sql="select * from mailserver";
-  //$kdata=getdata($sql);
-  //$mdata=explode(',',$kdata[0]);
-  //$mserver=$mdata[0]; // server host address
-  //$mport=$mdata[1]; // server listen port
-  // call phpMailer
+  $toaddr=$sdata[3]; /// mail to addr
+  $fromaddr=$sdata[4]; /// mail from addr
   $flg=phpsendmail("", "", $fromaddr, $toaddr, $ttl, $bodystr);
-  //
-  //$toaddr=$to;
-  //$fromaddr='From: '.$from;
-  //$flg=mb_send_mail($toaddr,$ttl,$bodystr,$fromaddr);
   $mmsg='';
   if($flg==0){
     $mmsg='success '.$bodystr.' '.$toaddr.' '.$fromaddr."\r\n";
-    //echo $mmsg;
     writelogd('mailsendany debug',$mmsg);
   }else{
     $mmsg='failed '.$bodystr.' '.$toaddr.' '.$fromaddr."\r\n";
     writelogd('mailsendany debug',$mmsg);
-    //echo $mmsg;
   }
   return $flg;
 
 }
-/*
-$from='vmadmin@sunnyblue.mydns.jp';
-$to='oshima@sunnyblue.mydns.jp';
-$sub='ホスト名:<host> 状態:<status>';
-$message='Change Subject';
-mailsendany('headerupdate',$from,$to,$sub,$message);
-*/
 ?>

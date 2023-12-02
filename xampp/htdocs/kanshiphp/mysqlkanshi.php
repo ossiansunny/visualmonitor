@@ -14,15 +14,14 @@ function openconnect(){
   $dbc = mysqli_connect($kanshi_host,$kanshi_user,$kanshi_pass);
   if ($dbc) {
     $db_sel = mysqli_select_db($dbc,$kanshi_db);
-    // $db_selは、bool(true) または bool(false)
+    /// $db_selは、bool(true) または bool(false)
     if($db_sel){
-      return $dbc; // 正常の場合、オブジェクトを戻す
+      return $dbc; /// 正常の場合、オブジェクトを戻す
     }else{
-      return $db_sel; // 異常の場合、falseを戻す
+      return $db_sel; /// 異常の場合、falseを戻す
     }
   }else{
-    //echo "error connect";
-    return $dbc; // 接続エラーで　falseを返す
+    return $dbc; /// 接続エラーで　falseを返す
   }
   
 }  
@@ -33,9 +32,9 @@ function default_str(String $raw_str = null, String $default = "") : String{
   }     
   return $default;
 }
-//-----------------------------------------------------
-// readlog関数
-//-----------------------------------------------------
+///-----------------------------------------------------
+/// readlog関数
+///-----------------------------------------------------
 function readlog(){
   $fp = fopen("kanshi.log","r");
   $rtable = array();
@@ -49,9 +48,9 @@ function readlog(){
   fclose($fp);
   return $rtable;
 }
-//-----------------------------------------------------
-// writeloge関数（無条件にログを出力）
-//-----------------------------------------------------
+///-----------------------------------------------------
+/// writeloge関数（無条件にログを出力）
+///-----------------------------------------------------
 function writeloge($pgm,$msg) {
   $fp = fopen("kanshi.log","a");
   $tstamp = date("ymdHis");
@@ -59,9 +58,9 @@ function writeloge($pgm,$msg) {
   fwrite($fp,$data);
   fclose($fp);
 }
-//-----------------------------------------------------
-// writelogd関数（管理情報のデバッグ有りの場合ログを出力）
-//-----------------------------------------------------
+///----------------------------------------------------
+/// writelogd関数（管理情報のデバッグ有りの場合ログを出力）
+///----------------------------------------------------
 function writelogd($pgm,$msg) {
   $rows=getdata("select debug from admintb");
   $debug=$rows[0];
@@ -73,9 +72,9 @@ function writelogd($pgm,$msg) {
     fclose($fp);
   }  
 }
-//-----------------------------------------------------
-// writelog関数（管理情報のデバッグDBの場合ログ出力）
-//-----------------------------------------------------
+///-----------------------------------------------------
+/// writelog関数（管理情報のデバッグDBの場合ログ出力）
+///-----------------------------------------------------
 function writelog($pgm,$msg) {
   $rows=getdata("select debug from admintb");
   $debug=$rows[0];
@@ -87,9 +86,9 @@ function writelog($pgm,$msg) {
     fclose($fp);
   }
 }
-//---------------------------------------
-//----- sql selectでデータを読む---------
-//---------------------------------------
+///---------------------------------------
+///----- sql selectでデータを読む---------
+///---------------------------------------
 function getdata($sql) {
   $dbg = debug_backtrace();
   $pgm = $dbg[0]["file"];
@@ -125,22 +124,22 @@ function getdata($sql) {
   return $rtable;
 }
 
-// ----------------------------------------
-// -----SQL insert, update, deleteを実行---
-//-----------------------------------------
+/// ----------------------------------------
+/// -----SQL insert, update, deleteを実行---
+///-----------------------------------------
 function putdata($sql) {
   $dbg = debug_backtrace();
   $pgm = $dbg[0]["file"];
   $rtn = 0;
   $dbc=openconnect();
   if(!$dbc){
-    $msg="mysql db connection error"; // rtn=-1
+    $msg="mysql db connection error"; 
     writeloge($pgm,$msg);
     $rtn=-1;
   }else{
     $res = mysqli_query($dbc,$sql);
     if (mysqli_error($dbc)) {
-      $msg="mysql query parse error: ".$sql; //文法の間違い rtn=-1
+      $msg="mysql query parse error: ".$sql; //文法の間違い
       writeloge($pgm,$msg);
       $rtn = -1;
     } else {
@@ -149,16 +148,16 @@ function putdata($sql) {
       mysqli_close($dbc);
     }
   }
-  return $rtn; // whereの該当なしも 0で帰る
+  return $rtn; 
 }
-//-------------------------------------------------------------------
-//---  Writelogなしのcreate table,insert, update, delete を実行---
-//--------------------------------------------------------------------
+///-------------------------------------------------
+///---  reate table,insert, update, delete を実行---
+///-------------------------------------------------
 function create($sql) {
   $dbc=openconnect();
   $rtn=0;
   if(!$dbc){
-    $msg="mysql db connection error"; // rtn=-1
+    $msg="mysql db connection error"; 
     $rtn=-1;
   }else{
     $res = mysqli_query($dbc,$sql);
@@ -168,44 +167,8 @@ function create($sql) {
       mysqli_close($dbc);
     }
   }
-  return $rtn; // whereの該当なしも 0で帰る
-}
-/*
-$sql="select  from mailserverx";
-$mrows=getdata($sql);
-if(empty($mrow)){
-  echo "no record";
-}elseif($mrows[0]=="error"){
-  echo "DB Access Error";
-}else{
-  echo "ok ",$mrows[0];
+  return $rtn; 
 }
 
 
-*/
-/*
-
-$sql="update statistics set gtype=9 where host=192.168.1.111";
-$rtn=putdata($sql);
-var_dump($rtn);
-if (!empty($rtn)){ // is not ok
-  echo "not ok";
-}else {
-  echo "OK";
-}
-*/
-/*
-$rc=array();
-$rc=getstatus();
-echo "\nget status".$rc;
-
-$rc=setstatus("b","msg2b");
-if ($rc==1){
-  echo "\nno saved";
-}else if($rc==2){
-  echo "\nalready saved";
-}else{ 
-  echo "\nsaved";
-}
-*/
 ?>

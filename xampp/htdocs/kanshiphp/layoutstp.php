@@ -22,10 +22,10 @@ $radio = $_GET['radio'];
 
 $rarr=explode(',',$radio);
 $gname=$rarr[0];
-$gseq=$rarr[1]; //group sequence number
+$gseq=$rarr[1]; ///group sequence number
 $ghost=$rarr[2];
 $gseg=$rarr[3];
-$sumi=$rarr[4]; //no check
+$sumi=$rarr[4]; 
 if($sumi=='1'){
   $gid='g'.$gseq.'%';
   $selsql="select * from layout_".$laynick[1]." where gshid like '".$gid."'";
@@ -47,13 +47,9 @@ if($sumi=='1'){
   while($hcc<$hdatac){    
     for($dnc=0;$dnc<$dn;$dnc++){ 
       echo '<tr>';
-      //echo 'dnc:'.strval($dnc).' dh:'.$gseq.'<br>';
       for($hsc=0;$hsc<$hs;$hsc++){
         $hdarr=explode(',',$hdata[$hcc]);
-        //echo $hdarr[0].' '.$hdarr[1].'<br>';
         echo "<td><input type=text name=host[{$dnc}][{$hsc}] size=20 value={$hdarr[1]}></td>";
-        //echo '<td><input type=text name=host['.$dnc.']['.$hsc.'] size=20 value="'.$hdarr[1].'"></td>';
-        //echo 'dnc:'.strval($dnc).' dh:'.$gseq.' hsc: '.strval($hsc).' hs:'.$ghost.'<br>';
         $hcc++;
       }	
       echo '</tr>';  

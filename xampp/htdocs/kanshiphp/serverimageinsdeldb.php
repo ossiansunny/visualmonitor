@@ -20,7 +20,6 @@ function nullcheck($data){
 }
 
 function branch($_page,$_param){
-  //#echo 'Content-type: text/html; charset=UTF-8\n';
   echo '<html>';
   echo '<body onLoad="document.F.submit();">';
   echo '<form name="F" action="'.$_page.'" method="get">';

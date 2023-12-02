@@ -79,9 +79,9 @@ $brmsg="";
 $cpulimit="";
 $disklimit="";
 $ramlimit="";
-//-------------------------------------------------
-//---------------新規ホスト追加処理----------------
-//-------------------------------------------------
+///-------------------------------------------------
+///---------------新規ホスト追加処理----------------
+///-------------------------------------------------
 if (isset($_GET['create'])){  
   $user=$_GET['user'];
   $hostmei=$_GET['hostname']; 
@@ -183,14 +183,14 @@ if (isset($_GET['create'])){
   /// eventレコードの作成
   ///
   $etime = date('ymdHis');
-  $etype='5'; //新規作成
+  $etype='5'; ///新規作成
   $insql="insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$hostmei."','".$etime."','".$etype."','".$user."')";
   putdata($insql); 
   $msg = $insql . " イベントレコード作成完了";
   writelogd($pgm,$msg);
   ///
   if ($trapsw=='1'){
-    $processx=mb_substr($process,1); //top char strip
+    $processx=mb_substr($process,1); //先頭文字削除
     $status=snmpprocessset($hostmei,$comm,$processx);
     if ($status==1){
       $msg='プロセス＝'.$processx.' 登録 snmpset 無応答';
@@ -204,7 +204,7 @@ if (isset($_GET['create'])){
 ///-------------------------------------------------
 ///--------セッションデータのユーザ取得-------------
 ///-------------------------------------------------
-}elseif (!isset($_GET['param'])){   ///----------param not set
+}elseif (!isset($_GET['param'])){ 
   echo '<html>';
   echo '<body onLoad="document.F.submit();">';
   echo '<form name="F" action="NewHostPage.php" method="get">';
