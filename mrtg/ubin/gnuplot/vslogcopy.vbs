@@ -12,7 +12,6 @@ rtn = readvar(param)
 rtnArr=Split(rtn,",")
 vp_plot=rtnArr(0)
 vp_mrtg=rtnArr(1)
-'Wscript.Echo vp_plot
 '--------------------------------------------
 '---- 共有function 読み込み
 Function Include(strFile)
@@ -41,23 +40,19 @@ Function SysWriter(str)
   Set fso = CreateObject("Scripting.FileSystemObject")
   LogFileName = vp_mrtg & "\ubin\gnuplot\logs\" & wkNow & ".log"
   'ファイルを開く
-  'もしも存在しない場合には作成する
+  '存在しない場合は作成する
   Set fi = fso.OpenTextFile(LogFileName, 8, true)
-   
   fi.WriteLine (Date() & " " & Time() & ": " & str) 'ログを書き込む
   Set fi = Nothing
   Set objWshShell = Nothing
 End Function
 
-'---------- process --------------
-' 
+'---------- 処理 --------------
 host = WScript.Arguments(0)
 SysWriter("....." & host & " vslogcopy.vbs enter.....")
-
 ' 5日間隔でコピー
 Dim w_Day
 w_Day = Day(Now())
-
 If w_Day="5" Or w_Day="10" Or w_Day="15" Or w_Day="20" Or w_Day="25" Or w_Day="30" Then
   src = vp_plot & "\plotimage\" & host & ".log"
   dst = vp_plot & "\plotimage\" & host & ".log.backup"

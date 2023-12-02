@@ -10,7 +10,6 @@ rtn = readvar(param)
 rtnArr=Split(rtn,",")
 vp_plot=rtnArr(0)
 vp_mrtg=rtnArr(1)
-'SysWriter(".....vslogmake.vbs " & host & "; " & vp_plot & "; " & vp_mrtg & " Include OK .....")
 '--------------------------------------------
 '---- 共有function 読み込み
 Function Include(strFile)
@@ -37,10 +36,8 @@ Function SysWriter(str)
   Set objWshShell = WScript.CreateObject("WScript.Shell")
   Set fso = CreateObject("Scripting.FileSystemObject")
   LogFileName = vp_mrtg & "\ubin\gnuplot\logs\" & wkNow & ".log"
-  'ファイルを開く
-  'もしも存在しない場合には作成する
+  'ファイルを開く、存在しない場合は作成する
   Set fi = fso.OpenTextFile(LogFileName, 8, true)
-   
   fi.WriteLine (Date() & " " & Time() & ": " & str) 'ログを書き込む
   Set fi = Nothing
   Set objWshShell = Nothing
@@ -132,4 +129,3 @@ Do Until inputFile.AtEndOfStream
   End If
 Loop
 SysWriter(".....vslogmake.vbs exit.....")
-

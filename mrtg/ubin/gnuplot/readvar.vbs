@@ -17,7 +17,6 @@ rv_rtnVal = ""
 Do Until rv_inputFile.AtEndOfStream
   
   rv_lineStr = rv_inputFile.ReadLine
-  'Wscript.Echo "lineStr: " & rv_lineStr
   rv_item = split(rv_lineStr,"=")
   rv_key = Trim(rv_item(0))
   rv_value = Trim(rv_item(1))

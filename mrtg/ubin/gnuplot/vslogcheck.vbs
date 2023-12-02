@@ -6,15 +6,12 @@ Dim fso
 Set fso = CreateObject("Scripting.FileSystemObject")
 baseDir=fso.getParentFolderName(WScript.ScriptFullName)
 path = baseDir & "\readvar.vbs"
-'path = "e:\visualmonitor\mrtg\ubin\gnuplot\readvar.vbs"
 Include(path)
 param = "vpath_plothome,vpath_mrtgbase"
 rtn = readvar(param)
 rtnArr=Split(rtn,",")
-'rtnArr(0)から
 vp_plot=rtnArr(0)
 vp_mrtg=rtnArr(1)
-'Wscript.Echo vp_plot & ": " & vp_mrtg
 '--------------------------------------------
 '---- 共有function 読み込み
 Function Include(strFile)
@@ -28,7 +25,6 @@ Function Include(strFile)
 End Function
 '--------------------------------------------
 '=============================================
- 
 Function SysWriter(str)
   Dim objWshShell
   Dim fso, fi
@@ -43,7 +39,7 @@ Function SysWriter(str)
   Set fso = CreateObject("Scripting.FileSystemObject")
   LogFileName = vp_mrtg & "\ubin\gnuplot\logs\" & wkNow & ".log"
   'ファイルを開く
-  'もしも存在しない場合には作成する
+  '存在しない場合は作成する
   Set fi = fso.OpenTextFile(LogFileName, 8, true)
    
   fi.WriteLine (Date() & " " & Time() & ": " & str) 'ログを書き込む
@@ -51,12 +47,8 @@ Function SysWriter(str)
   Set objWshShell = Nothing
 End Function
 
-'---------- process --------------
-'Option Explicit
-'WScript.Echo "Enter into vslogcheck.vbs"
-' Input <host>.log
+'---------- 処理 --------------
 Dim ck, ad, ckPath, inPath, inFile, lineStr, ckFile, host
-'host = "192.168.1.8"
 host = WScript.Arguments(0)
 SysWriter("....." & host & " vslogcheck.vbs enter.....")
 
@@ -71,10 +63,7 @@ With CreateObject("Scripting.FileSystemObject")
   Loop
   fp.Close
 End With
-'WScript.Echo recnum
 
-
-'WScript.Echo recnum
 Set ad = WScript.CreateObject("Scripting.FileSystemObject")
 inPath = vp_plot & "\plotimage\" & host & ".log"
 Set inFile = ad.OpenTextFile(inPath, 1, False, 0)
@@ -86,9 +75,7 @@ If ok.FileExists(outPath) Then
   ok.DeleteFile outPath
 End If
 Set outFile = ok.OpenTextFile(outPath, 8, True)  ' 8,True ... posbile add write when not found
-
 maxrec = 36 * 6
-
 flag = 0
 If recnum > maxrec Then
   skiprec = recnum - maxrec

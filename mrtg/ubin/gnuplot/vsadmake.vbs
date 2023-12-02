@@ -6,15 +6,12 @@ Dim fso
 Set fso = CreateObject("Scripting.FileSystemObject")
 baseDir=fso.getParentFolderName(WScript.ScriptFullName)
 path = baseDir & "\readvar.vbs"
-'path = "e:\visualmonitor\mrtg\ubin\gnuplot\readvar.vbs"
 Include(path)
 param = "vpath_plothome,vpath_mrtgbase"
 rtn = readvar(param)
 rtnArr=Split(rtn,",")
-'rtnArr(0)から
 vp_plot=rtnArr(0)
 vp_mrtg=rtnArr(1)
-'Wscript.Echo vp_plot & ": " & vp_mrtg
 '--------------------------------------------
 '---- 共有function 読み込み
 Function Include(strFile)
@@ -28,9 +25,6 @@ Function Include(strFile)
 End Function
 '--------------------------------------------
 '=============================================
-
-
-
 Function SysWriter(str)
   Dim objWshShell
   Dim fso, fi
@@ -45,9 +39,8 @@ Function SysWriter(str)
   Set fso = CreateObject("Scripting.FileSystemObject")
   LogFileName = vp_mrtg & "\ubin\gnuplot\logs\" & wkNow & ".log"
   'ファイルを開く
-  'もしも存在しない場合には作成する
+  '存在しない場合は作成する
   Set fi = fso.OpenTextFile(LogFileName, 8, true)
-   
   fi.WriteLine (Date() & " " & Time() & ": " & str) 'ログを書き込む
   Set fi = Nothing
   Set objWshShell = Nothing
@@ -83,24 +76,18 @@ Set log = WScript.CreateObject("Scripting.FileSystemObject")
 inPath = vp_plot & "\plotimage\" & host & ".log"
 Set inFile = log.OpenTextFile(inPath, 1, False, 0)
 oldKey = "99"
-'recctr = 0
 
 Do Until inFile.AtEndOfStream
   Dim lineArr, lineStr
   lineStr = inFile.ReadLine
-  'WScript.Echo "readLine: " & lineStr
   lineArr=Split(lineStr," ")
   newKey = lineArr(0)
   newCpu = lineArr(1)
   newRam = lineArr(2)
   newDisk = lineArr(3)
   If oldKey <> newKey Then
-    If oldKey = "99" Then
-      'WScript.Echo "oldKey is 99"
-    Else
+    If oldKey <> "99" Then
        writeProcess host, oldKey, oldCpu, oldRam, oldDisk
-       'WScript.Echo "writeProcess:" & host & " " & oldKey & " " & oldCpu & " " & oldRam & " " & oldDisk
-      'recctr = recctr + 1
     End If
     oldKey = newKey
     oldCpu = newCpu
@@ -116,11 +103,6 @@ Do Until inFile.AtEndOfStream
     If newDisk > oldDisk Then
       oldDisk = newDisk
     End If 
-      
   End If
-  
 Loop
-writeProcess host, oldKey, oldCpu, oldRam, oldDisk
-'WScript.Echo "writeProcess:" & host & " " & oldKey & " " & oldCpu & " " & oldRam & " " & oldDisk
-'ecctr = recctr + 1
 SysWriter("....." & host & " vsadmake.vbs exit.....") 
