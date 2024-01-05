@@ -1,7 +1,7 @@
 <?php
-echo '<html><head>';
-echo '<link rel="stylesheet" href="kanshi1.css">';
-echo '</head><body>';
+print '<html><head>';
+print '<link rel="stylesheet" href="kanshi1.css">';
+print '</head><body>';
 
 function jdgnwc($jdgdata){
   $jdgrtn="";
@@ -44,7 +44,6 @@ function gethostinfo($host){
     $sdataarr=explode(',',$sdata[$c]);
     if($host==$sdataarr[0]){
       $rtn=$sdata[$c];
-      //var_dump($rtn);
       $sw=1;
       break;
     }
@@ -87,73 +86,73 @@ function layoutsform($user,$garr,$sarr){
     if ($garr[$gcc][4]=="1"){ 
       $dc=count($sarr[$gcc]);
       $grpname=$garr[$gcc][0].' グループ';
-      echo '<p style="position: relative;">';
-      echo "<img src={$setimg} width={$wide} height=30 alt=Group /><br />";
-      echo "<span style='position: absolute; top: 5px; left: {$left}; width: 250px; color: white; font-weight: bold'>{$grpname}</span>";
-      echo '</p>';
-      echo '<table border="0" class="tablelayout">';
+      print '<p style="position: relative;">';
+      print "<img src={$setimg} width={$wide} height=30 alt=Group /><br />";
+      print "<span style='position: absolute; top: 5px; left: {$left}; width: 250px; color: white; font-weight: bold'>{$grpname}</span>";
+      print '</p>';
+      print '<table border="0" class="tablelayout">';
       for($dcc=0;$dcc<$dc;$dcc++){
         $hc=count($sarr[$gcc][$dcc]);
         
         // host名表示 管理データのkanrihyoujiが'1'の時表示
         if($hostsw=='1'){
-          echo '<tr>';
+          print '<tr>';
           for($hcc=0;$hcc<$hc;$hcc++){
             if($sarr[$gcc][$dcc][$hcc][0]==''){
-              echo '<td  align="center" class="host">No Assign</td>';
+              print '<td  align="center" class="host">No Assign</td>';
             }else{
-              echo "<td  align='center' class='host'>{$sarr[$gcc][$dcc][$hcc][0]}</td>";  //host
+              print "<td  align='center' class='host'>{$sarr[$gcc][$dcc][$hcc][0]}</td>";  //host
               $hostname=$sarr[$gcc][$dcc][$hcc][0];
               $hostdata=gethostinfo($hostname);
               $hostinfo=explode(',',$hostdata);
             }  
           }        
-          echo '</tr>';        
+          print '</tr>';        
         }
         // ---------- 表示名処理--------------
-        echo '<tr>';      
+        print '<tr>';      
         for($hcc=0;$hcc<$hc;$hcc++){
           $hostname=$sarr[$gcc][$dcc][$hcc][0];
           $hostdata=gethostinfo($hostname);
           $hostinfo=explode(',',$hostdata);
           if($hostinfo[5]==''){ 
-            echo '<td ></td>'; 
+            print '<td ></td>'; 
           }else{
-            echo "<td align=center class='viewname' >{$hostinfo[5]}</td>"; //viewname
+            print "<td align=center class='viewname' >{$hostinfo[5]}</td>"; //viewname
           }
         }        
-        echo '</tr>';
+        print '</tr>';
         ///----------- 画像処理----------------
         ///--- hostのaction==0 画像0 actio!=0 & result 1==画像1 action!==2-9 画像2
-        echo '<tr>';      
+        print '<tr>';      
         for($hcc=0;$hcc<$hc;$hcc++){
           $hostname=$sarr[$gcc][$dcc][$hcc][0];
           $hostdata=gethostinfo($hostname);
           $hostinfo=explode(',',$hostdata);
           $jumpphp="viewhostspec.php?host=".$hostname."&user=".$user;
           if($hostinfo[12]==''){  /// image
-            echo "<td align=center class=host><a href={$jumpphp}></a></td>";
+            print "<td align=center class=host><a href={$jumpphp}></a></td>";
           }else{
             $imgsep=explode('.',$hostinfo[12]);  //imageを.ファイルと拡張子に分解
             /// ここで画像を選択 
             if($hostinfo[4]=='0'){ /// action=0
               $img='hostimage\\'.$imgsep[0].'0.'.$imgsep[1];
-              echo "<td align=center class=unkown ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; //ima
+              print "<td align=center class=unkown ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; //ima
             }else if($hostinfo[4]!='0' && $hostinfo[3]=='1'){ /// action=0以外 result=1 正常
               $img='hostimage\\'.$imgsep[0].'1.'.$imgsep[1];
-              echo "<td align=center class=normal ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; //ima            
+              print "<td align=center class=normal ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; //ima            
             }else if($hostinfo[4]!='0' && $hostinfo[3]=='2'){ /// action=0以外 result=2 異常
               $img='hostimage\\'.$imgsep[0].'2.'.$imgsep[1];
-              echo "<td align=center class=alarm ><scan class=blink><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></scan></td>"; //ima
+              print "<td align=center class=alarm ><scan class=blink><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></scan></td>"; //ima
             }else{ /// action=0以外　result=3-9
               $img='hostimage\\'.$imgsep[0].'2.'.$imgsep[1];
-              echo "<td align=center class=alarm ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; //ima
+              print "<td align=center class=alarm ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; //ima
             }             
           }
         }  
-        echo '</tr>';
+        print '</tr>';
         ///-----------SNMP処理--------------------
-        echo '<tr>';   /// 横一列   
+        print '<tr>';   /// 横一列   
         for($hcc=0;$hcc<$hc;$hcc++){
           $hostname=$sarr[$gcc][$dcc][$hcc][0];
           $hostdata=gethostinfo($hostname); /// tcpport[7] process[11]を使う
@@ -163,15 +162,15 @@ function layoutsform($user,$garr,$sarr){
           $sql="select * from statistics where host='".$hostname."'"; 
           $statdata=getdata($sql); 
           if(empty($statdata[0]) || intval($action) < 2){
-            echo '<td></td>'; /// statistics データなし,action=0,1
+            print '<td></td>'; /// statistics データなし,action=0,1
           }else { 
             $statval=explode(',',$statdata[0]);
             if($result != "1"){ /// 障害中 statistics データ表示しない
-              echo '<td></td>'; 
+              print '<td></td>'; 
             }else if($hostname!='127.0.0.1'){ ///agent以外の処理
               if ($statval[2]=='9'){
                 $agst='aprob';
-                echo "<td class=snmp align=center><table><tr><td class={$agst} align=center>standby</td></tr></table></td>";
+                print "<td class=snmp align=center><table><tr><td class={$agst} align=center>standby</td></tr></table></td>";
               } else {
                 $cb1=jdgnwc($statval[3]); ///cpu
                 $cb2=jdgnwc($statval[4]); ///ram
@@ -180,7 +179,7 @@ function layoutsform($user,$garr,$sarr){
                 /// 以下、stat="" host="any" なら green表示
                 $cb4=jdgnc($statval[7],$hostinfo[11]);  ///process
                 $cb5=jdgnc($statval[8],$hostinfo[7]);  ///port            
-                echo "<td class=snmp align=center><table border=0><tr><td class={$cb1}>c</td><td class={$cb2}>r</td><td class={$cb3}>d</td><td class={$cb4}>p</td><td class={$cb5}>t</td></tr></table></td>";
+                print "<td class=snmp align=center><table border=0><tr><td class={$cb1}>c</td><td class={$cb2}>r</td><td class={$cb3}>d</td><td class={$cb4}>p</td><td class={$cb5}>t</td></tr></table></td>";
               }
             }else{ /// 127.0.0.1  Managerの処理
               if($statval[5]=='ok'){
@@ -190,15 +189,16 @@ function layoutsform($user,$garr,$sarr){
                 $amsg='Problem ';
                 $agst='aprob';
               }
-              echo "<td class=snmp align=center><table><tr><td align=center class={$agst}>{$amsg}</td></tr></table></td>";
+              print "<td class=snmp align=center><table><tr><td align=center class={$agst}>{$amsg}</td></tr></table></td>";
             }
           }
         }
-        echo '</tr>';
+        print '</tr>';
       }
-      echo '</table>';
+      print '</table>';
     }
   }
 }
-echo '</body></html>';
+print '</body></html>';
 ?>
+

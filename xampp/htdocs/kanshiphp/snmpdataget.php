@@ -4,9 +4,11 @@ require_once "phpsnmptcpopen6.php";
 require_once "phpsnmpprocess.php";
 require_once "phpsnmpdiskram.php";
 require_once "phpsnmpcpuload.php";
+///
 $pgm="snmpdataget.php";
+///
 function snmptrapget($host){
-  $sql='select host,process from trapstatistics where host="'.$host.'"';
+  $sql="select host,process from trapstatistics where host='".$host."'";
   $rows=getdata($sql);
   $traprecord = explode(',',$rows[0]);
   $rtndd = $traprecord[1];
@@ -28,7 +30,7 @@ function snmpprocget($host){
 }
 
 function snmpdataget($itar){ 
-  /// $itar ‚ÍƒzƒXƒgƒŒƒR[ƒh  
+  /// $itar ãƒ›ã‚¹ãƒˆãƒ¬ã‚³ãƒ¼ãƒ‰
   $host=$itar[0];
   $ostype=$itar[2];
   if ($ostype=='0'){
@@ -52,11 +54,11 @@ function snmpdataget($itar){
   $snmparray[0]=$host;
   if ($ostype == "0" || $ostype == "1"){ 
     ///------------------------------------------------------------------
-    /// ostype=1‚ÍWindows ostype=2‚ÍUnix
+    /// ostype=1ã¯Windows ostype=2ã¯Unix
     ///------------------------------------------------------------------
     if ($cpulim != ''){  
       ///-------------------------------------------------
-      /// -------windows / unix cpu Ý’è‚ ‚è‚Ìˆ—--------
+      /// -------windows / unix cpu åŒã˜å‡¦ç†--------
       ///-------------------------------------------------
       
       $cpuwc = explode(':',$cpulim);
@@ -73,7 +75,11 @@ function snmpdataget($itar){
       if ($rtn==1){
         $snmparray[1]="unknown";
       }else{
-        $cpuval=intval($data);   
+        if (intval($data) > 100){
+          $cpuval=100;
+        }else{
+          $cpuval=intval($data);
+        }   
         if ($cpuval >= intval($cpuwc[1])){  // critical check 90
           $snmparray[1] = "c:" . strval($cpuval);
         }else if($cpuval >= intval($cpuwc[0])){ // warning check 80
@@ -86,7 +92,7 @@ function snmpdataget($itar){
 
     if ($ramlim != ''){ 
       ///-------------------------------------------------
-      /// ------windows / unix ram Ý’è‚ ‚è‚Ìˆ—---------
+      /// ------windows / unix ram åŒã˜å‡¦ç†---------
       ///-------------------------------------------------
       $ramwc = explode(':',$ramlim);
       $ramc = count($ramwc);
@@ -102,7 +108,11 @@ function snmpdataget($itar){
       if ($rtn==1){
         $snmparray[2]="unknown";
       }else{
-        $ramval=intval($data);   
+        if (intval($data)>100){
+          $ramval=100;
+        }else{
+          $ramval=intval($data);
+        }   
         if ($ramval >= intval($ramwc[1])){  // critical check
           $snmparray[2] = "c:" . strval($ramval);
         }else if($ramval >= intval($ramwc[0])){ // warning check
@@ -115,7 +125,7 @@ function snmpdataget($itar){
 
     if ($disklim != ''){ 
       //--------------------------------------------------
-      // ------windows / unix diskÝ’è‚ ‚è‚Ìˆ—----------
+      // ------windows / unix diskã€€åŒã˜å‡¦ç†----------
       //--------------------------------------------------
       $diskwc = explode(':',$disklim);
       $diskc = count($diskwc);
@@ -131,15 +141,19 @@ function snmpdataget($itar){
       if ($rtn==1){
         $snmparray[3]="unknown";        
       }else{
-        $diskval=intval($data); 
+        if (intval($data)>100){
+          $diskval=100;
+        }else{
+          $diskval=intval($data);
+        }  
         if ($diskval >= intval($diskwc[1])){ 
-        /// critical ƒ`ƒFƒbƒN
+        /// critical å±é™ºå€¤
           $snmparray[3] = "c:" . strval($diskval);
         }else if ($diskval >= intval($diskwc[0])){ 
-        /// warnning ƒ`ƒFƒbƒN
+        /// warnning è­¦å‘Šå€¤
           $snmparray[3] = "w:" . strval($diskval);
         }else{ 
-        /// normalƒ`ƒFƒbƒN
+        /// normalã€€æ­£å¸¸å€¤
           $snmparray[3] = "n:" . strval($diskval);
         }
       }
@@ -147,12 +161,12 @@ function snmpdataget($itar){
 
     if ($process != ''){ 
       //----------------------------------------------------
-      // ------windows / unix processÝ’è‚ ‚è‚Ìˆ—---------
+      // ------windows / unix processã€€åŒã˜å‡¦ç†---------
       //----------------------------------------------------
       $ckproc=explode(';',$process);
       $string="";
       if (substr($ckproc[0],0,1)=='&'){
-        /// &•t‚«ƒvƒƒZƒXƒ`ƒFƒbƒN
+        /// æ‹¡å¼µãƒ—ãƒ­ã‚»ã‚¹ãƒã‚§ãƒƒã‚¯
         $traprtntb=snmpprocget($host);
         if ($traprtntb=='error' || $traprtntb=='allok'){
           $snmparray[4]='';
@@ -160,7 +174,7 @@ function snmpdataget($itar){
           $snmparray[4]=$traprtntb;
         }
       }else{        
-        /// ’Êí‚Ìsnmpprocess ƒ`ƒFƒbƒN
+        /// snmpprocess ãƒã‚§ãƒƒã‚¯
         $reqlist=array();
         foreach ($ckproc as $ckitem){
           array_push($reqlist,$ckitem);
@@ -178,7 +192,7 @@ function snmpdataget($itar){
 
     if ($tcpport != ''){ 
       ///-------------------------------------------------
-      /// --------windows / unix portÝ’è‚ ‚è‚Ìˆ—-------
+      /// --------windows / unix portã€€åŒã˜å‡¦ç†-------
       ///-------------------------------------------------
       $reqlist=explode(';',$tcpport);
       $string="";
@@ -189,7 +203,7 @@ function snmpdataget($itar){
       }
       
       if ($rtntb=='error'){
-      /// snmpƒGƒ‰[‚Ü‚½‚Íno response
+      /// snmp no response
         $string='unknown'; 
       }else{
         $string = $rtntb;
@@ -203,4 +217,5 @@ function snmpdataget($itar){
   return $snmparray;
 }  
 ?>
+
 

@@ -2,7 +2,7 @@
 require_once 'mysqlkanshi.php';
 
 function hostimagelist(){  
-  echo '<h3>▽　ホスト画像　▽</h3>';
+  print '<h3>▽　ホスト画像　▽</h3>';
   $svi=array();
   $svn=array();
   $sql='select * from serverimage order by image';
@@ -14,19 +14,20 @@ function hostimagelist(){
     $svn[$cnt]=$iitemlist[1];
     $cnt++;
   }
-  echo '<table border=1><tr>';
+  print '<table border=1><tr>';
   $svin=count($svi);
   for ($cnt=0;$cnt<$svin;$cnt++){
-    echo "<th>{$svn[$cnt]}</th>";
+    print "<th>{$svn[$cnt]}</th>";
   }
-  echo '</tr><tr>';
+  print '</tr><tr>';
   $svin=count($svi);
   for ($cnt=0;$cnt<$svin;$cnt++){
     $hlist=explode('.',$svi[$cnt]);
     $himg=$hlist[0].'1.png';
-    echo "<td align=center><img src='hostimage/{$himg}' class=size></td>";
+    print "<td align=center><img src='hostimage/{$himg}' class=size></td>";
     
   }
-  echo '</tr></table>';  
+  print '</tr></table>';  
 }
 ?>
+

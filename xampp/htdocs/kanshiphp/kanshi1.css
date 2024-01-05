@@ -10,7 +10,7 @@ th { font-size: 10px; color: #006DD9; border-radius: 10%;
 td { font-size: 10px; color: black; border-radius: 12%;
         background-color: lightgray; }
 td.back { background-color: #f4a460;}
-td.host { font-size: 6px; font-weight: bold; }
+td.host { font-size: 8px; font-weight: bold; }
 .tablelayout { layout-fixed; }
 .viewname { font-weight: bold; 	color: white; background-color: #3366ff; }
 .snmp { font-weight: bold; font-size: small; color: green; background-color: lightgray; }
@@ -28,10 +28,10 @@ input.ngcolor {background-color: red; color:white; }
 blink{animation:BLINK 0.5s ease-in-out infinite alternate;}@keyframes BLINK {0%{opacity:1.0;}100% {opacity:0;}}
 .button { font-size: small; color: white; border-radius: 15%; background-color: green; }
 .buttondel { font-size: small; color: white; border-radius: 15%; background-color: red; }
-.buttonyell { font-size: small; color: black; border-radius: 15%; background-color: yellow; }
-.buttongray { font-size: small; color: white; border-radius: 15%; background-color: dimgray; }
-.buttonwhite { font-size: small; color: black; border-radius: 15%; background-color: white; }
-.buttonorang { font-size: small; color: black; border-radius: 15%; background-color: orange; }
+.buttonyell { font-size: small; color: #006DD9; border-radius: 15%; background-color: yellow; font-weight: bold;}
+.buttongray { font-size: small; color: white; border-radius: 15%; background-color: dimgray; font-weight: bold;}
+.buttonwhite { font-size: small; color: black; border-radius: 15%; background-color: white; font-weight: bold;}
+.buttonorang { font-size: small; color: black; border-radius: 15%; background-color: orange; font-weight: bold;}
 .cwhite { font-size: small; color: black; border-radius: 15%; background-color: white; text-align: center;}
 .cyellow { font-size: small; color: black; border-radius: 15%; background-color: yellow; text-align: center;} 
 .cgray { font-size: small; color: white; border-radius: 15%; background-color: gray; text-align: center;}

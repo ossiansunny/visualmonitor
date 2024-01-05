@@ -2,7 +2,7 @@
 date_default_timezone_set('Asia/Tokyo');
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 $kanshi_host="localhost";
-$kanshi_user="kanshiuser";
+$kanshi_user="kanshiadmin";
 $kanshi_pass="kanshipass";
 $kanshi_db="kanshi";
 
@@ -37,7 +37,9 @@ function default_str(String $raw_str = null, String $default = "") : String{
 // readlog関数
 //-----------------------------------------------------
 function readlog(){
-  $fp = fopen("kanshi.log","r");
+  $tstamp = date("ymdHis");
+  $ymd=substr($tstamp,0,6);
+  $fp = fopen("logs\kanshi_".$ymd.".log","r");
   $rtable = array();
   $c=0;
   if($fp){
@@ -45,15 +47,19 @@ function readlog(){
       $rtable[$c] = $line;
       $c++;
     }
+    fclose($fp);
   }
-  fclose($fp);
+  //fclose($fp);
   return $rtable;
 }
+
 //-----------------------------------------------------
 // writeloge関数（無条件にログを出力）
 //-----------------------------------------------------
 function writeloge($pgm,$msg) {
-  $fp = fopen("kanshi.log","a");
+  $tstamp = date("ymdHis");
+  $ymd=substr($tstamp,0,6);
+  $fp = fopen("logs\kanshi_".$ymd.".log","a");
   $tstamp = date("ymdHis");
   $data = $tstamp . ": " . $pgm . ": " . $msg . "\n";
   fwrite($fp,$data);
@@ -66,11 +72,12 @@ function writelogd($pgm,$msg) {
   $rows=getdata("select debug from admintb");
   $debug=$rows[0];
   if ($debug=="1" || $debug=="2") {
-    $fp = fopen("kanshi.log","a");
-    $tstamp = date("ymdHis");
-    $data = $tstamp . ": " . $pgm . ": " . $msg . "\n";
-    fwrite($fp,$data);
-    fclose($fp);
+    writeloge($pgm,$msg);
+//    $fp = fopen("logs\kanshi.log","a");
+//    $tstamp = date("ymdHis");
+//    $data = $tstamp . ": " . $pgm . ": " . $msg . "\n";
+//    fwrite($fp,$data);
+//    fclose($fp);
   }  
 }
 //-----------------------------------------------------
@@ -80,11 +87,12 @@ function writelog($pgm,$msg) {
   $rows=getdata("select debug from admintb");
   $debug=$rows[0];
   if ($debug=="2") {
-    $fp = fopen("kanshi.log","a");
-    $tstamp = date("ymdHis");
-    $data = $tstamp . ": " . $pgm . ": " . $msg . "\n";
-    fwrite($fp,$data);
-    fclose($fp);
+    writeloge($pgm,$msg);
+//    $fp = fopen("logs\kanshi.log","a");
+//    $tstamp = date("ymdHis");
+//    $data = $tstamp . ": " . $pgm . ": " . $msg . "\n";
+//    fwrite($fp,$data);
+//    fclose($fp);
   }
 }
 //---------------------------------------
@@ -171,41 +179,11 @@ function create($sql) {
   return $rtn; // whereの該当なしも 0で帰る
 }
 /*
-$sql="select  from mailserverx";
-$mrows=getdata($sql);
-if(empty($mrow)){
-  echo "no record";
-}elseif($mrows[0]=="error"){
-  echo "DB Access Error";
-}else{
-  echo "ok ",$mrows[0];
-}
-
-
-*/
-/*
-
-$sql="update statistics set gtype=9 where host=192.168.1.111";
-$rtn=putdata($sql);
+$sql="select * from user where userid='aaabc'";
+$rtn=getdata($sql);
 var_dump($rtn);
-if (!empty($rtn)){ // is not ok
-  echo "not ok";
-}else {
-  echo "OK";
-}
-*/
-/*
-$rc=array();
-$rc=getstatus();
-echo "\nget status".$rc;
-
-$rc=setstatus("b","msg2b");
-if ($rc==1){
-  echo "\nno saved";
-}else if($rc==2){
-  echo "\nalready saved";
-}else{ 
-  echo "\nsaved";
+if (empty($rtn)){
+  echo 'none';
 }
 */
 ?>

@@ -6,9 +6,7 @@ function phpsnmpprocess($host,$ostype,$community,&$data) {
   $snmparray = snmp2_walk($host, $community, ".1.3.6.1.2.1.25.4.2.1.2",1000000,1);
   if(! $snmparray){
     return "error";
-    /// 呼び出し $rtn=phpsnmpprocess();
-    ///          if ($rtn=="error"){
-    ///            エラー処理
+    
   }
   $c = count($snmparray);
   $item = array();
@@ -39,7 +37,7 @@ function phpsnmpprocess($host,$ostype,$community,&$data) {
     } 
   }
   if ($dstr==''){
-    /// プロセス全て動作中
+    /// empty縺ｯ豁｣蟶ｸ
     $dstr='allok';
   }else{
     $dstr=rtrim($dstr,';');
@@ -47,4 +45,5 @@ function phpsnmpprocess($host,$ostype,$community,&$data) {
   return $dstr;
 }
 ?>
+
 

@@ -1,29 +1,23 @@
 <?php
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "varread.php";
 
-echo '<html><head>';
-echo '<link rel="stylesheet" href="kanshi1.css">';
-echo '<title>リソースグラフ作成・更新</title>';
-echo '</head><body>';
+print '<html><head>';
+print '<link rel="stylesheet" href="kanshi1.css">';
+print '<title>リソースグラフ作成・更新</title>';
+print '</head><body>';
 
 $pgm = "graphcreate.php";
-
 $vpath_mrtgbase="";
 $vpath_kanshiphp="";
+$user="";
 
-function branch($_page,$_param){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo '<form name="F" action="'.$_page.'" method="get">';
-  echo '<input type=hidden name=param value="'.$_param.'">';
-  echo '<input type="submit" name="next" value="Waiting...">';
-  echo '</form>';
-}
 function cfgtemplate($ip,$comm,$gtype,$os,$ttl){
-    global $vpath_mrtgbase;
-    $fname='mrtgcfg\\'.$ip.'.'.$gtype.'.cfg';  //\\が必要
+    global $pgm, $vpath_mrtgbase, $vpath_kanshiphp;
+    $fname=$vpath_kanshiphp.'\\mrtgcfg\\'.$ip.'.'.$gtype.'.cfg';  //\\が必要
+    writeloge($pgm,$fname);
     $snmpget=$vpath_mrtgbase.'\\ubin\\snmp'.$gtype.'get.exe '.$ip.' '.$os.' '.$comm;
     $fp = fopen($fname,'w');
     $data = array();
@@ -40,24 +34,26 @@ function cfgtemplate($ip,$comm,$gtype,$os,$ttl){
     fwrite($fp,$border."\r\n");
     for($cs=0;$cs<$cc;$cs++){
       fwrite($fp,$data[$cs]."\r\n");
+      
     }    
     fclose($fp);
 }
-$parm=array();
-if(!isset($_GET['param'])){
-  echo '<a href="GraphListPage.php">クリックして、ホストを選択して下さい</a>';
-  exit;
+$user=$_GET['user'];
+if(!isset($_GET['fradio'])){
+  $msg = "#error#".$user."#ホストを選択して下さい";
+  $nextpage = "GraphListPage.php";
+  branch($nextpage,$msg);
+  
 }
-$param=$_GET['param'];
-$parr=explode("#",$param);
-$cde=$parr[1]; // param -> class="error"
-$uid=$parr[2]; // user
-$parm=explode(",",$parr[3]);
-$host = $parm[0];
-if (isset($parm[13])){
-  $community = $parm[13];
+$fradio = explode(',',$_GET['fradio']);
+$host=$fradio[0];
+$ostype=$fradio[2];
+if (isset($fradio[13])){
+  $community = $fradio[13];
+}else{
+  $community = 'public';
 }
-if ($parm[2] == '0'){
+if ($ostype == '0'){
   $ostype = 'windows';
 } else {
   $ostype = 'unix';
@@ -69,17 +65,18 @@ if(count($rtnv)==2){
   $vpath_kanshiphp=$rtnv[1];
 }else{
   writeloge($pgm,"variable vpath_mmrtgbase,vpath_kanshiphp could not get path");
-  $nextpage='MonitorManager.php';
-  branch($nextpage,$uid);
-  exit;
+  $msg = "#error#".$user."#vpath_mmrtgbase,vpath_kanshiphp変数が取得出来ません";
+  $nextpage = "GraphListPage.php";
+  branch($nextpage,$msg);
+  
 }
-if (isset($parm[8])){
+if (isset($fradio[8])){
   cfgtemplate($host, $community, 'cpu', $ostype, 'CPU Load');
 }
-if (isset($parm[9])){
+if (isset($fradio[9])){
   cfgtemplate($host, $community, 'ram', $ostype, 'Memory Usage');
 }
-if (isset($parm[10])){
+if (isset($fradio[10])){
   cfgtemplate($host, $community, 'disk', $ostype, 'Disk Usage');
 }
 /// 合体
@@ -94,8 +91,9 @@ foreach($it as $line) {
     $file->fwrite($line);
   }
 }
-$nextpage='MonitorManager.php';
-branch($nextpage,$uid);
-exit;
-echo '</body></html>';
+$msg = "#notic#".$user."#ホスト".$host."のグラフ作成登録を完了しました";
+$nextpage = "GraphListPage.php";
+branch($nextpage,$msg);
+
+print '</body></html>';
 ?>

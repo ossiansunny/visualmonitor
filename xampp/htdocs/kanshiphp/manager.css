@@ -6,7 +6,7 @@ h3 { font-weight: bold; color: Gray; }
 .wihi { width: 120; }
 td { font-size: small; color: #006DD9; border-radius: 12%; }
 td.back { background-color: #f4a460;}
-td.host { font-size: 6px; font-weight: bold; }
+td.host { font-size: 10px; font-weight: bold; }
 .tablelayout { layout-fixed; }
 .viewname { font-weight: bold;  color: white; background-color: #3366ff; }
 .snmp { font-weight: bold; font-size: small; color: green; background-color: lightgray; }

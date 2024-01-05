@@ -1,27 +1,19 @@
 <?php
-
+require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "mailsendany.php";
 
 date_default_timezone_set('Asia/Tokyo');
 $pgm = "logout.php";
-
+$user="";
+$brcode="";
+$brmsg="";
+///
 if(!isset($_GET['param'])){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo '<form name="F" action="logout.php" method="get">';
-  echo '<input type="hidden" name="param" value="">';
-  echo '<input type="submit" name="next" style="display:none;" />';
-  echo '</form></body></html>';
-  echo '<script type="text/javascript">';
-  echo 'var keyvalue = sessionStorage.getItem("user");';
-  echo 'if (!keyvalue) {';
-  echo '  keyvalue = "unknown";';
-  echo '}';
-  echo 'document.forms["F"].elements["param"].value = keyvalue;';
-  echo '</script>';
+  paramGet($pgm);
 }else{
-  $user=$_GET['param'];
+  paramSet();
+  
   /// 終了メール
   $now=date('ymdHis');
   $tstamp = $now;
@@ -39,7 +31,7 @@ if(!isset($_GET['param'])){
   writeloge($pgm,$msg); 
   /// 終了メール
   $message=$user.' Logged out';
-  ///echo "進行中・・・";
+  /// "進行中・・・";
   $logname="LOGOUT ".$user;
   $sub=$logname;
   $rtn=mailsendany('loginlogout',$from,$to,$sub,$message);
@@ -51,22 +43,23 @@ if(!isset($_GET['param'])){
     $upsql='update admintb set authority="0"';
     putdata($upsql);
   }
-  echo '<!DOCTYPE html>';
-  echo '<html>';
-  echo '<head>';
-  echo '<meta charset="utf-8">';
-  echo '<title>サンプル</title>';
-  echo '<link rel="stylesheet" href="login.css">';
-  echo '</head>';
-  echo '<body>';
-  echo '<div class="login">';
-  echo '<div class="login-triangle"></div>';
-  echo '<h2 class="login-header"><img src="header/php.jpg" width="70" height="70">&emsp;&emsp;ログアウト</h2>';
-  echo '<p><font color="white">ブラウザの閉じる「X」でクローズして下さい</font></p>';
-  echo '</div>';
-  echo '<div class="login">';
-  echo '</div>';
-  echo '</body>';
-  echo '</html>';
+  print '<!DOCTYPE html>';
+  print '<html>';
+  print '<head>';
+  print '<meta charset="utf-8">';
+  print '<title>サンプル</title>';
+  print '<link rel="stylesheet" href="login.css">';
+  print '</head>';
+  print '<body>';
+  print '<div class="login">';
+  print '<div class="login-triangle"></div>';
+  print '<h2 class="login-header"><img src="header/php.jpg" width="70" height="70">&emsp;&emsp;ログアウト</h2>';
+  print '<p><font color="white">ブラウザの閉じる「X」でクローズして下さい</font></p>';
+  print '</div>';
+  print '<div class="login">';
+  print '</div>';
+  print '</body>';
+  print '</html>';
 }
 ?>
+

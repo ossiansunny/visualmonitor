@@ -1,17 +1,9 @@
 <?php
-
+require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "varread.php";
 require_once "mailsendany.php";
 
-function branch($page,$param){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo "<form name='F' action={$page} method='get'>";
-  echo "<input type=hidden name=param value={$param}>";
-  echo '<input type="submit" name="next" value="Waiting...">';
-  echo '</form>';
-}
 function mrtgcfgread($path){
   $array = array();
   $fp = fopen($path."\\newmrtg.cfg","r");  
@@ -33,48 +25,31 @@ function mrtgcfgread($path){
   fclose($fp);
   return $rtable;
 }
-$uid = "";
-$ecde="";
-$emsg="";
+$user = "";
+$brcode="";
+$brmsg="";
+$pgm="GraphListPlotPage.php";
 if(!isset($_GET['param'])){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo '<form name="F" action="GraphListPlotPage.php" method="get">';
-  echo '<input type="hidden" name="param" value="">';
-  echo '<input type="submit" name="next" style="display:none;" />';
-  echo '</form></body></html>';
-  echo '<script type="text/javascript">';
-  echo 'var keyvalue = sessionStorage.getItem("user");';
-  echo 'if (!keyvalue) {';
-  echo '  keyvalue = "unknown";';
-  echo '}';
-  echo 'document.forms["F"].elements["param"].value = keyvalue;';
-  echo '</script>';
+  paramGet($pgm);
+  ///
 }else{
-  $param=$_GET['param'];
-  if(substr($param,0,1)=="#"){
-    $parr=explode("#",$param);
-    $cde=$parr[1]; 
-    $uid=$parr[2];
-    $emsg=$parr[3];    
-  }else{
-    $uid=$_GET['param'];
-  }
+  paramSet();
+  ///
   $ttl1='<img src="header/php.jpg" width="30" height="30">';
   $ttl2='　▽　プロットグラフホスト一覧　▽　';
   $ttl=$ttl1.$ttl2;
-  echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
-  echo '<html lang="ja">';
-  echo '<head>';
-  echo '<link rel="stylesheet" href="kanshi1.css">';
-  echo '<title>Host List</title>';
-  echo '</head>';
-  echo '<body>';
-  if ($cde == "error"){
-    echo "<h3 class={$cde}>{$emsg}</h3><hr>";
+  print '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+  print '<html lang="ja">';
+  print '<head>';
+  print '<link rel="stylesheet" href="kanshi1_py.css">';
+  print '<title>Host List</title>';
+  print '</head>';
+  print '<body>';
+  if ($brcode=="error" or $brcode=="alert" or $brcode=="notic"){
+    print "<h3 class={$brcde}>{$brmsg}</h3><hr>";
   }
-  echo "<h2>{$ttl}</h2>";
-  echo "<h4>☆ホストを１つ選択して「グラフ表示」をクリックする</h4>";
+  print "<h2>{$ttl}</h2>";
+  print "<h4>☆ホストを１つ選択して「グラフ表示」をクリックする</h4>";
   $vpath_mrtg="";
   $vpatharr=array("vpath_mrtgbase");
   $rtnv=pathget($vpatharr);
@@ -90,18 +65,17 @@ if(!isset($_GET['param'])){
     $subj="Path変数不正";
     $body=$pgm."パス変数 vpath_mrtgbase 取得不可";
     mailsendany('other',$sender,$recv,$subj,$body);
-    echo "<h3><font color=red>変数vpath_mrtgbase取得不可、管理者に通知</font></h3>";         
-    echo "<a href='MonitorManager.php?param={$uid}'><span class=buttonyell> 監視モニターへ戻る</span></a>";
-    echo "</body>";
-    echo "</html>";
+    $msg="#error#".$user."#変数vpath_mrtgbase取得不可、管理者に通知";
+    $nextpage=$pgm;    
+    branch($nextpage,$msg);
   }
   $mrtgcfg = mrtgcfgread($vpath_mrtg);
   $sql="select * from host order by groupname";
   $data = getdata($sql);
   $c = count($data);
   $nsw=0;
-  echo '<form name="rform" method="get" action="viewgraphplot.php">';
-  echo '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
+  print '<form name="rform" method="get" action="viewgraphplot.php">';
+  print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
   for($i=0;$i<$c;$i++){
     $ssw = "0";
     $sdata = explode(',',$data[$i]);
@@ -125,27 +99,31 @@ if(!isset($_GET['param'])){
         if($sdata[9]!=""){$gtype=$gtype . ";" . "RAM";}
         if($sdata[10]!=""){$gtype=$gtype . ";" . "Disk";}
         $gtype=trim($gtype,';');
-        echo "<tr><td><input type=radio name=fradio value={$data[$i]}></td>";
-        echo "<td><input type=text name=host value={$sdata[0]}></td>";
-        echo "<td><input type=text name=graphtype value={$gtype}></td>";
-        echo "<td><input type=text name=viewname value={$sdata[5]}></td>";
-        echo "<td><input type=text name=active value={$act}></td></tr>";
-        echo "<input type=hidden name=user value={$uid}>";
+        print "<tr><td><input type=radio name=fradio value={$data[$i]}></td>";
+        print "<td><input type=text name=host value={$sdata[0]}></td>";
+        print "<td><input type=text name=graphtype value={$gtype}></td>";
+        print "<td><input type=text name=viewname value={$sdata[5]}></td>";
+        print "<td><input type=text name=active value={$act}></td></tr>";
+        print "<input type=hidden name=user value={$user}>";
         $nsw=1; 
       }
     }
   }
   if ($nsw==1){
-    echo '<tr><td><br></td></tr>';
-    echo '<tr><td colspan=2>&emsp;<input class=button type="submit" name="display" value="グラフ表示" ></td></tr>';
+    print '<tr><td><br></td></tr>';
+    print '<tr><td colspan=2 align=center>&emsp;<input class=button type="submit" name="display" value="グラフ表示/メール添付" ></td></tr>';
   }else{
-    echo "<h4><font color=red>snmp監視対象ホストがありません</font></h4>";
+    $msg="#error#".$user."#snmp監視対象ホストがありません";
+    $nextpage=$pgm;    
+    //branch($nextpage,$msg);
+    print '<h4><span class=buttonyell>グラフ監視対象ホストがありません</span></h4>';    
   }  
-  echo "</table>";
-  echo "</form>";
+  print "</table>";
+  print "</form>";
 }
     
-echo '<br>';
-echo "<a href='MonitorManager.php?param={$uid}'><span class=buttonyell> 監視モニターへ戻る</span></a>";
-echo '</body></html>';
+print '<br>';
+print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell> 監視モニターへ戻る</span></a>";
+print '</body></html>';
 ?>
+

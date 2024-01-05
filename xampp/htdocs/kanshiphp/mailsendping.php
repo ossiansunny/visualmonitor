@@ -1,9 +1,10 @@
-
 <?php
 date_default_timezone_set('Asia/Tokyo');
 require_once 'mysqlkanshi.php';
 require_once 'phpsendmail.php';
+///
 $pgm="mailsendping.php";
+///
 function ping($mdata,$mtype){
   /// 管理DB展開 mailアドレスで必要
   global $pgm;
@@ -27,7 +28,7 @@ function ping($mdata,$mtype){
   $snmpt='';
   if($action=='1' || $action=='4'){
     $prsn='PING';
-  }else if($action=='2' || $action=='3'){
+  }elseif($action=='2' || $action=='3'){
     $prsn='PING(SNMP)';
   } 
   
@@ -36,7 +37,7 @@ function ping($mdata,$mtype){
     $sub0='Problem';
     $sub1='Alert';
     $info='PING Status - Packet loss/ Timed out';
-  }else if($mtype=='RECOVERY'){
+  }elseif($mtype=='RECOVERY'){
     $stat='UP';
     $sub0='Information';
     $sub1='Recovery';
@@ -69,13 +70,10 @@ function ping($mdata,$mtype){
   for($cs=0;$cs<$cc;$cs++){
     $bodystr=$bodystr.$body[$cs]."\r\n";
   }
-  
-    $sub2=$viewn;
-    $sub3=$prsn; /// PING|SERVICE
-    $sub4=$stat; ///$sub4='WARNING|Down|UP|UNKNOWN|CRITICAL|RECOVERY';
-    $ttl='**'.$sub0.' Service ' .$sub1. ' ' .$sub2. '/' .$sub3. ' is ' .$sub4. '**'; 
-  
-  }
+  $sub2=$viewn;
+  $sub3=$prsn; /// PING|SERVICE
+  $sub4=$stat; ///$sub4='WARNING|Down|UP|UNKNOWN|CRITICAL|RECOVERY';
+  $ttl='**'.$sub0.' Service ' .$sub1. ' ' .$sub2. '/' .$sub3. ' is ' .$sub4. '**'; 
   $flg=phpsendmail("", "", $fromaddr, $toaddr, $ttl, $bodystr);
   if($flg==0){
     $msg="send mail success by phpsendmail";
@@ -88,3 +86,4 @@ function ping($mdata,$mtype){
   
 }
 ?>
+

@@ -1,6 +1,7 @@
 <?php
+require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-
+///
 function matching($data,$keystr){
   $rtncd=FALSE;
   $keyarray=explode(' ',$keystr);
@@ -26,53 +27,41 @@ function myjoin($data){
   return $okstr;
 }
 
-$value="";
-
 $ttl1='<img src="header/php.jpg" width="30" height="30">';
 $ttl2=' ▽　覚　え　書　き　管　理　▽   ';
 $ttl=$ttl1 . $ttl2;
-  //# charset=UTF-8は日本語に必要
-echo '<html><head>';
-echo '<link rel="stylesheet" href="kanshi1_py.css">';
-echo '<script language="JavaScript">';
-echo 'function check(){';
-echo '  if (document.rform.onbtn.value == "delete"){';
-echo '    if (window.confirm("削除してよろしいですか？")){';
-echo '      return true;';
-echo '    }else{';
-echo '      window.alert("キャンセルします");';
-echo '      return false;';
-echo '    }';
-echo '  }else{';
-echo '    return true;';
-echo '  }';
-echo '}';
-echo 'function set_val(){';
-echo '  document.rform.onbtn.value = "delete";';
-echo '}';
-echo '</script>';
-echo '</head><body>';
-echo "<h2>{$ttl}</h2>";
+  /// charset=UTF-8は日本語に必要
+print '<html><head>';
+print '<link rel="stylesheet" href="kanshi1_py.css">';
+print '<script language="JavaScript">';
+print 'function check(){';
+print '  if (document.rform.onbtn.value == "delete"){';
+print '    if (window.confirm("削除してよろしいですか？")){';
+print '      return true;';
+print '    }else{';
+print '      window.alert("キャンセルします");';
+print '      return false;';
+print '    }';
+print '  }else{';
+print '    return true;';
+print '  }';
+print '}';
+print 'function set_val(){';
+print '  document.rform.onbtn.value = "delete";';
+print '}';
+print '</script>';
+print '</head><body>';
 ///
 /// 画面表示処理-------------------
 ///
+$pgm="HistoryPage.php";
 $user="";
+$brcode="";
+$brmsg="";
 $displaysw='';
 $rows='';
 if(!(isset($_GET['display']) || isset($_GET['select']) || isset($_GET['search']) || isset($_GET['param']))){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo '<form name="F" action="HistoryPage.php" method="get">';
-  echo '<input type="hidden" name="param" value="">';
-  echo '<input type="submit" name="next" style="display:none;" />';
-  echo '</form></body></html>';
-  echo '<script type="text/javascript">';
-  echo 'var keyvalue = sessionStorage.getItem("user");';
-  echo 'if (!keyvalue) {';
-  echo '  keyvalue = "unknown";';
-  echo '}';  
-  echo 'document.forms["F"].elements["param"].value = keyvalue;';
-  echo '</script>';
+  paramGet($pgm);
 }elseif(isset($_GET['display'])){
   $user=$_GET['user'];
   if (isset($_GET['all'])){
@@ -117,11 +106,8 @@ if(!(isset($_GET['display']) || isset($_GET['select']) || isset($_GET['search'])
   /// 履歴データ読み 
   foreach ($data as $rowsrec){    
     $sdata=explode(',',$rowsrec);
-    //echo $sdata[2]."<br>";
-
     if(strpos($sdata[2],$keystr) !== false){
       $rows[]=$rowsrec;
-      //var_dump($rows);
     }else{
       if(strpos($sdata[3],$keystr) !== false) {
         $rows[]=$rowsrec;
@@ -131,32 +117,39 @@ if(!(isset($_GET['display']) || isset($_GET['select']) || isset($_GET['search'])
 /// 履歴データ読み　終了
 
 }else{
-  $user=$_GET['param'];
+  paramSet();
+///
+  if ($brcode=='error' or $brcode=='notic' or $brcode=='alert'){
+    print "<h4 class={$ercode}>{$brmsg}</h4><hr>";
+  }
+///
   $sql='select * from historylog order by type, logtime desc';
   $rows=getdata($sql);
 }  
+///
+  print "<h2>{$ttl}</h2>";
   if (empty($rows)){
-    echo '<h4><font color=red>ログがありません</font></h4>';
+    print '<h4><font color=red>ログがありません</font></h4>';
   }else{
-    echo '<h3>最新順に表示、「変更」または「削除」するものを１つ選択して下さい<br>';
-    echo '各種タイプのログを選択表示できます<br>';
-    echo '</h3>';
-    echo '&nbsp;&nbsp;<form method="get" action="HistoryPage.php">';
-    echo '&nbsp;&nbsp;件名または内容を検索→';
-    echo '&nbsp;&nbsp;<input type="text" name="keys" value="" size="40">';
-    echo "<input type=hidden name=user value={$user}>";
+    print '<h3>最新順に表示、「変更」または「削除」するものを１つ選択して下さい<br>';
+    print '各種タイプのログを選択表示できます<br>';
+    print '</h3>';
+    print '&nbsp;&nbsp;<form method="get" action="HistoryPage.php">';
+    print '&nbsp;&nbsp;件名または内容を検索→';
+    print '&nbsp;&nbsp;<input type="text" name="keys" value="" size="40">';
+    print "<input type=hidden name=user value={$user}>";
     
-    echo '&nbsp;&nbsp;<input class="buttonyell" type="submit" name="search" value="検索開始"></form>';
-    echo '<hr><table class="nowrap">';
-    echo '<tr><th>選択</th><th >ログタイプ</th><th>日付:時刻</th><th>件名</th><th>内容</th></tr>';
+    print '&nbsp;&nbsp;<input class="buttonyell" type="submit" name="search" value="検索開始"></form>';
+    print '<hr><table class="nowrap">';
+    print '<tr><th>選択</th><th >ログタイプ</th><th>日付:時刻</th><th>件名</th><th>内容</th></tr>';
     /// historylog
     ///[0]type [1]logtime [2]subject  [3]contents
     ///  
     $iro='';
-    echo '<form name="rform" method="get" action="viewhistorylog.php" onsubmit="return check()">';
-    echo '<input class=button type="submit" name="update" value="変更実行" >';
-    echo '&nbsp;&nbsp;<input class=buttondel type="submit" name="delete" value="削除実行" onClick="set_val()">';
-    echo '<br><br>';
+    print '<form name="rform" method="get" action="viewhistorylog.php" onsubmit="return check()">';
+    print '<input class=button type="submit" name="update" value="変更実行" >';
+    print '&nbsp;&nbsp;<input class=buttondel type="submit" name="delete" value="削除実行" onClick="set_val()">';
+    print '<br><br>';
     foreach ($rows as $rowsrec){
       $sdata=explode(',',$rowsrec,4);
       if ($sdata[0]=='1'){
@@ -192,62 +185,63 @@ if(!(isset($_GET['display']) || isset($_GET['select']) || isset($_GET['search'])
       }
       $strdata = myjoin($sdata); //## for post string to vieweventlog.py
       $triro="";
-      echo '<tr>';
-      echo "<td class=vatop><input type='radio' name='select' value={$strdata} ></td>";
-      echo "<td class={$iro}><span class=vatop >{$logtype}</span></td>";
-      echo "<td class=vatop>{$logtime}</td>";
-      echo "<td class=vatop>{$websubject}</td>";
-      echo "<td width='60'>{$webcontents}</td>";
-      echo '</tr>';
+      print '<tr>';
+      print "<td class=vatop><input type='radio' name='select' value={$strdata} ></td>";
+      print "<td class={$iro}><span class=vatop >{$logtype}</span></td>";
+      print "<td class=vatop>{$logtime}</td>";
+      print "<td class=vatop>{$websubject}</td>";
+      print "<td width='60'>{$webcontents}</td>";
+      print '</tr>';
     } //end of for
-    echo '</table>';
-    echo '<br><input class=button type="submit" name="update" value="変更実行" >';
-    echo '&nbsp;&nbsp;<input class=buttondel type="submit" name="delete" value="削除実行" onClick="set_val()">';
-    echo '<input type="hidden" name="onbtn">';
-    echo '</form>';
+    print '</table>';
+    print '<br><input class=button type="submit" name="update" value="変更実行" >';
+    print '&nbsp;&nbsp;<input class=buttondel type="submit" name="delete" value="削除実行" onClick="set_val()">';
+    print '<input type="hidden" name="onbtn">';
+    print '</form>';
   }
 
-  echo '<hr>';
-  echo '<a id="selectlog"/>';
-  echo '<form name="dform" method="get" action="HistoryPage.php">';
-  echo '<h3>ログタイプを選択表示出来ます</h3>';
-  echo '<input type="hidden" name="display" value="option" >';
-  echo "<input type=hidden name=user value={$user}>";
-  echo '<table border="1" class=dsptb><tr>';
-  echo '<td class=dsptd><input class=buttonwhite type="submit" name="plan" value="計画中表示" ></td>';
-  echo '<td class=dsptd><input class=buttonyell type="submit" name="prog" value="処理中表示" ></td>';
-  echo '<td class=dsptd><input class=buttonorang type="submit" name="idea" value="参考表示" ></td>';
-  echo '<td class=dsptd><input class=buttondel type="submit" name="tips" value="注意表示" ></td>';
-  echo '<td class=dsptd><input class=buttongray type="submit" name="save" value="履歴保存表示" ></td>';
-  echo '<td class=dsptd><input class=button type="submit" name="all" value="全て表示" ></td>'; 
-  echo '</tr></table>';
-  echo '</form>';
+  print '<hr>';
+  print '<a id="selectlog"/>';
+  print '<form name="dform" method="get" action="HistoryPage.php">';
+  print '<h3>ログタイプを選択表示出来ます</h3>';
+  print '<input type="hidden" name="display" value="option" >';
+  print "<input type=hidden name=user value={$user}>";
+  print '<table border="1" class=dsptb><tr>';
+  print '<td class=dsptd><input class=buttonwhite type="submit" name="plan" value="計画中表示" ></td>';
+  print '<td class=dsptd><input class=buttonyell type="submit" name="prog" value="処理中表示" ></td>';
+  print '<td class=dsptd><input class=buttonorang type="submit" name="idea" value="参考表示" ></td>';
+  print '<td class=dsptd><input class=buttondel type="submit" name="tips" value="注意表示" ></td>';
+  print '<td class=dsptd><input class=buttongray type="submit" name="save" value="履歴保存表示" ></td>';
+  print '<td class=dsptd><input class=button type="submit" name="all" value="全て表示" ></td>'; 
+  print '</tr></table>';
+  print '</form>';
   
-  echo '<hr>';
+  print '<hr>';
   $dte=date('ymdHis');
-  echo '<table>';
-  echo '<form name="iform" method="get" action="viewhistorylog.php">';
-  echo '<h3>追加データを入力して「作成実行」をクリック</h3>';
-  echo '<h4><font color=red>’（&#039;）、”（&quot;）、〈（&lt;）、〉（&gt;）はDBレコード上()内文字にて書かれます<br>';
-  echo '「\\」は「\\\\」、「\\\\」は「\\\\\\\\」として入力して下さい</font></h4>';
-  echo '<table class="nowrap">';
-  echo '<tr><th >ログタイプ</th><th>日付:時刻</th><th>件名</th><th>内容</th></tr>';
-  echo '<tr>';
-  echo '<td><select name="logtype">';
-  echo '<option value="1">計画中</option>';
-  echo '<option value="2">処理中</option>';
-  echo '<option value="7">参考</option>';
-  echo '<option value="8">注意</option>';
-  echo '<option value="9">履歴保存</option>';
-  echo '</select></td>';
-  echo "<td> <input type='text' name='date' size=9 value={$dte} readonly></td>";
-  echo '<td> <input type="text" name="subj" value="" size=25></td>';
-  echo '<td><textarea name="mesg" cols="70">ここに詳細を書く、改行で複数行可能</textarea></td>';
-  echo '</tr>';
-  echo '</table>';
-  echo '<br><input class=button type="submit" name="add" value="作成実行" >';
-  echo '</form>';
-  echo '<br><br>';
-  echo "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>"; 
-  echo '</body></html>';
+  print '<table>';
+  print '<form name="iform" method="get" action="viewhistorylog.php">';
+  print '<h3>追加データを入力して「作成実行」をクリック</h3>';
+  print '<h4><font color=red>’（&#039;）、”（&quot;）、〈（&lt;）、〉（&gt;）はDBレコード上()内文字にて書かれます<br>';
+  print '「\\」は「\\\\」、「\\\\」は「\\\\\\\\」として入力して下さい</font></h4>';
+  print '<table class="nowrap">';
+  print '<tr><th >ログタイプ</th><th>日付:時刻</th><th>件名</th><th>内容</th></tr>';
+  print '<tr>';
+  print '<td><select name="logtype">';
+  print '<option value="1">計画中</option>';
+  print '<option value="2">処理中</option>';
+  print '<option value="7">参考</option>';
+  print '<option value="8">注意</option>';
+  print '<option value="9">履歴保存</option>';
+  print '</select></td>';
+  print "<td> <input type='text' name='date' size=9 value={$dte} readonly></td>";
+  print '<td> <input type="text" name="subj" value="" size=25></td>';
+  print '<td><textarea name="mesg" cols="70">ここに詳細を書く、改行で複数行可能</textarea></td>';
+  print '</tr>';
+  print '</table>';
+  print '<br><input class=button type="submit" name="add" value="作成実行" >';
+  print '</form>';
+  print '<br><br>';
+  print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>"; 
+  print '</body></html>';
 ?>
+

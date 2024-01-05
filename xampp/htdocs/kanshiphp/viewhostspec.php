@@ -1,8 +1,8 @@
 <?php
-echo '<html><head>';
-echo '<link rel="stylesheet" href="kanshi1_py.css">';
-echo '<title>ホストデータの表示</title>';
-echo '</head><body>';
+print '<html><head>';
+print '<link rel="stylesheet" href="kanshi1_py.css">';
+print '<title>ホストデータの表示</title>';
+print '</head><body>';
 
 require_once "mysqlkanshi.php";
 
@@ -48,7 +48,7 @@ $user = $_GET['user'];
 $sql="select * from host where host='".$host."'";
 $data = getdata($sql);
 if(empty($data)){
-  echo "ホストデータがありません<br>";
+  print "ホストデータがありません<br>";
 }else{
   $sdata = explode(',',$data[0]);
   $groupname = $sdata[1];
@@ -88,33 +88,33 @@ if(empty($data)){
   $image = $sdata[12];
 
   if($resultsw == "0") {
-    echo "<h2>▽　監視対象ホスト：{$viewname}　▽</h2>";
+    print "<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　監視対象ホスト：{$viewname}　▽</h2>";
   }else{
-    echo "<h2><font color='red'>▽　監視対象ホスト：{$viewname}　▽</font></h2>";
+    print "<h2><font color='red'><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　監視対象ホスト：{$viewname}　▽</font></h2>";
   }
-  echo '<table border=1>';
-  echo '<tr><th>ホスト名</th><th>グループ名</th><th>OS種類</th><th>結果</th><th>死活</th><th>表示名</th><th>メール</th></tr>';
-  echo '<tr>';
-  echo "<td>{$host}</td>";
-  echo "<td>{$groupname}</td>";
-  echo "<td>{$ostype}</td>";
-  echo "<td>{$result}</td>";
-  echo "<td>{$action}</td>";
-  echo "<td>{$viewname}</td>";
-  echo "<td>{$mailopt}</td>";
-  echo '</tr>';
-  echo '<tr><th>TCPポート</th><th>CPU警告</th><th>メモリ警告</th><th>ディスク警告</th><th colspan="2">監視プロセス</th><th>画像</th></tr>';
-  echo '<tr>';
-  echo "<td>{$tcpport}</td>";
-  echo "<td>{$cpulim}</td>";
-  echo "<td>{$ramlim}</td>";
-  echo "<td>{$disklim}</td>";
-  echo "<td colspan='2'>{$process}</td>";
-  echo "<td>{$image}</td>";
-  echo '</tr>';
-  echo '</table>';
+  print '<table border=1>';
+  print '<tr><th>ホスト名</th><th>グループ名</th><th>OS種類</th><th>結果</th><th>死活</th><th>表示名</th><th>メール</th></tr>';
+  print '<tr>';
+  print "<td>{$host}</td>";
+  print "<td>{$groupname}</td>";
+  print "<td>{$ostype}</td>";
+  print "<td>{$result}</td>";
+  print "<td>{$action}</td>";
+  print "<td>{$viewname}</td>";
+  print "<td>{$mailopt}</td>";
+  print '</tr>';
+  print '<tr><th>TCPポート</th><th>CPU警告</th><th>メモリ警告</th><th>ディスク警告</th><th colspan="2">監視プロセス</th><th>画像</th></tr>';
+  print '<tr>';
+  print "<td>{$tcpport}</td>";
+  print "<td>{$cpulim}</td>";
+  print "<td>{$ramlim}</td>";
+  print "<td>{$disklim}</td>";
+  print "<td colspan='2'>{$process}</td>";
+  print "<td>{$image}</td>";
+  print '</tr>';
+  print '</table>';
 
-  echo '<br><br>';
+  print '<br><br>';
 
   if($sdata[4]=="2"){
     $sql="select * from statistics where host='".$host."'";
@@ -156,13 +156,14 @@ if(empty($data)){
         $irop="sunko";
         $irot="sunko";
       }
-      echo "<h3>SNMP取得情報 {$tstamp} </h3>";
-      echo '<table border=1><tr><th>CPU使用率</th><th>メモリ使用率</th><th>ディスク使用率</th><th>停止監視プロセス</th><th>閉鎖TCPポート</th><tr>';
-      echo "<tr><td class={$iroc}>{$ucpu}</td><td class={$iror}>{$uram}</td><td class={$irod}>{$udisk}</td><td class={$irop}>{$upro}</td><td class={$irot}>{$utcp}</td></tr></table>";
+      print "<h3>SNMP取得情報 {$tstamp} </h3>";
+      print '<table border=1><tr><th>CPU使用率</th><th>メモリ使用率</th><th>ディスク使用率</th><th>停止監視プロセス</th><th>閉鎖TCPポート</th><tr>';
+      print "<tr><td class={$iroc}>{$ucpu}</td><td class={$iror}>{$uram}</td><td class={$irod}>{$udisk}</td><td class={$irop}>{$upro}</td><td class={$irot}>{$utcp}</td></tr></table>";
     }
   }
-  echo '<br><br>';
+  print '<br><br>';
 }
-echo "<a href='MonitorManager.php?param={$user}'><span class=button>監視モニターへ戻る</button></a>";
-echo '</body></html>';
+print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</button></a>";
+print '</body></html>';
 ?>
+

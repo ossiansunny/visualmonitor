@@ -18,8 +18,8 @@ function phpsnmptcpopenwin($host,$community,&$data) {
     foreach ($keyv4 as $v4data){
       $ar2=explode('"',$v4data);
       if ($ar2[1] == '0.0.0.0'){   
-        $ar3=explode('.',$ar2[2]); //echo $v4port.'\r\n';
-        //echo $ar3[1].'<br>';
+        $ar3=explode('.',$ar2[2]); //print $v4port.'\r\n';
+        //print $ar3[1].'<br>';
         $v4port=$ar3[1];
         $v4item[$cnt]=$v4port;
         $cnt++;
@@ -27,7 +27,7 @@ function phpsnmptcpopenwin($host,$community,&$data) {
     }    
     
   }
-  /// snmp ipv6èàóù
+  /// snmp ipv6????
   $v6array = array();
   $v6array = snmprealwalk($host, $community, ".1.3.6.1.2.1.6.19.1.7.2",1000000,1);
   if(!$v6array){
@@ -38,12 +38,12 @@ function phpsnmptcpopenwin($host,$community,&$data) {
     $v6item = array();
     $cnt=0;
     foreach ($keyv6 as $v6data){
-      //echo $v6data.'<br>';
+      //print $v6data.'<br>';
       $ar2 = explode('"',$v6data);
       if ($ar2[1]=='00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00') {
         $ar3=explode('.',$ar2[2]);
         $v6port=$ar3[1]; 
-        //echo $v6port.'<br>';
+        //print $v6port.'<br>';
         $v6item[$cnt]=$v6port;
         $cnt++;
       }    
@@ -81,7 +81,7 @@ function phpsnmptcpopenwin($host,$community,&$data) {
         }
       }
       if ($oflg == 0){
-        /// v6É}ÉbÉ`ÇπÇ∏
+        /// v6 found
         array_push($resarray,$ditem);        
       }   
     }
@@ -197,4 +197,5 @@ function phpsnmptcpopen($host,$community,&$data) {
 
 
 ?>
+
 

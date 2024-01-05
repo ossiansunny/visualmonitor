@@ -1,14 +1,6 @@
 <?php
+require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-
-function branch($_page,$_param){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo "<form name='F' action={$_page} method='get'>";
-  echo "<input type=hidden name=param value={$_param}>";
-  echo '<input type="submit" name="next" value="Waiting...">';
-  echo '</form>';
-}
 
 function arraycheck($data){
   $dataarr=array();
@@ -20,7 +12,7 @@ function arraycheck($data){
   return $dataarr;
 }
 $pgm = "vieweventlog.php";
-$userid=$_GET['userid'];
+$user=$_GET['user'];
 $auth=$_GET['authcd'];
 ///-----------------------------------------------------------
 ///---- fckbox delete,fromtime,totime select
@@ -30,85 +22,96 @@ $auth=$_GET['authcd'];
 ///---  "4:snmpvalue(NULL)" "5:kanrisha(NULL)" "6:kanrino(NULL)"  
 ///---  "7:confclose" "8:mailsend" "9:message(NULL)"
 ///-----------------------------------------------------------
-if (isset($_GET['delete'])){
-  /// delete 処理
-  if (isset($_GET['ckdata'])){
-    $ffckbox=$_GET['ckdata'];
-    $fckbox=arraycheck($ffckbox);
-    foreach ($fckbox as $fckrec){
-      $sdata=explode(',',$fckrec);
-      $delsql='delete from eventlog where host="'.$sdata[0].'" and eventtime="'.$sdata[1].'"';
-      putdata($delsql);
-    }
+if (! isset($_GET['evdata'])){
+  if (! isset($_GET['rangedel'])){
     $nextpage='EventLogPage.php';
-    branch($nextpage,$userid);
-    echo '</body></html>';
+    $msg='#error#'.$user.'#データを選択して下さい';
+    branch($nextpage,$msg);
+  }
+}
+$ev_host = "";
+$ev_time = "";
+$ev_type = "";
+$ev_snmptype = "";
+$ev_snmpval = "";
+$ev_kanri = "";
+$ev_kanrino = "";
+$ev_cnfcls = "";
+$ev_mlsend = "";
+$ev_msg = "";
+if (isset($_GET['evdata'])){
+  $fckrec=$_GET['evdata'];
+  $sdata=explode(',',$fckrec);
+  $ev_host = $sdata[0];
+  $ev_time = $sdata[1];
+  $ev_type = $sdata[2];
+  $ev_snmptype = $sdata[3];
+  $ev_snmpval = $sdata[4];
+  $ev_kanri = $sdata[5];
+  $ev_kanrino = $sdata[6];
+  $ev_cnfcls = $sdata[7];
+  $ev_mlsend = $sdata[8];
+  $ev_msg = $sdata[9];
+}
+if (isset($_GET['delete'])){
+  $delsql='delete from eventlog where host="'.$ev_host.'" and eventtime="'.$ev_time.'"';
+  putdata($delsql);
+  $nextpage='EventLogPage.php';
+  $msg='#notic#'.$user.'#データが正常に選択削除されました';
+  branch($nextpage,$msg);
   /// 範囲指定削除処理
-  }elseif (isset($_GET['fromtime']) && isset($_GET['totime'])){
+}elseif(isset($_GET['rangedel'])){
+  if (isset($_GET['fromtime']) and isset($_GET['totime'])){
     $patt='/^[0-9]{2}-[0-9]{2}-[0-9]{2}$/';
     if (preg_match($patt,$_GET['fromtime']) && preg_match($patt,$_GET['totime'])){
       $fromval=str_replace('-','',$_GET['fromtime']).'000000'; 
-      $toval=str_replace('-','',$_GET['totime']).'235959';
-      $delsql='delete from eventlog where eventtime between '.$fromval.' and '.$toval;
+      $toval=str_replace('-','',$_GET['totime']).'999999';
+      $delsql='delete from eventlog where eventtime between "'.$fromval.'" and "'.$toval.'"';
       putdata($delsql);
       $nextpage='EventLogPage.php';
-      branch($nextpage,$userid);
-      echo '</body></html>';
+      $msg='#notic#'.$user.'#データが正常に範囲削除されました';
+      writeloge($pgm,$msg.' '.$delsql); 
+      branch($nextpage,$msg);
     }else{
-      echo "<a href='EventLogPage.php?param={$userid}'>削除範囲が不正です</a>";
-      exit();
+      $nextpage='EventLogPage.php';
+      $msg='#error#'.$user.'#指定した範囲が不正です';
+      branch($nextpage,$msg);
     }
   }else{
-    echo "<a href='EventLogPage.php?param={$userid}'>クリックして、ホストを選択して下さい</a>";
-    exit();
+    $nextpage='EventLogPage.php';
+    $msg='#error#'.$user.'#指定した範囲が不正です';
+    branch($nextpage,$msg);    
   }
 }
-
-echo '<html><head><meta>';
-echo '<link rel="stylesheet" href="kanshi1.css">';
-echo '</head><body>';
-echo '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　ログデータの表示と処理　▽</h2>';
-echo '<h4>選択したデータ全てに下記の「必要な処理」をします</h4>';
-
-if (! isset($_GET['ckdata'])){
-  /// 選択なしの処理
-  echo "<a href='EventLogPage.php?=param={$userid}'>クリックして、ホストを選択して下さい</a>";
-  exit();
-}else{
-  /// 選択ありの処理
-  $ffckbox=$_GET['ckdata'];
-  $fckbox=arraycheck($ffckbox);
-}
-
-///---- 選択処理 ---
-echo '<table border="1">';
-echo '<tr><th>対象ホスト</th><th>イベント種類</th><th>snmp結果</th><th>snmp状態</th><th>管理者</th><th>管理者番号</th><th>確認</th><th>メール送信</th><th>メッセージ</th></tr>';
-foreach ($fckbox as $fckrec){
-  $sdata=explode(',',$fckrec);
-  $host = $sdata[0];
-  $evtime = $sdata[1];
-  $evtype = $sdata[2];
-  $snmptype = $sdata[3];
+print '<html><head><meta>';
+print '<link rel="stylesheet" href="kanshi1.css">';
+print '</head><body>';
+print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　ログデータの表示と処理　▽</h2>';
+print '<h4>選択したデータに下記の「必要な処理」をします</h4>';
+///---- 画面表示処理 ---
+print '<table border="1">';
+print '<tr><th>対象ホスト</th><th>イベント種類</th><th>snmp結果</th><th>snmp状態</th><th>管理者</th><th>障害管理番号</th><th>確認</th><th>メール送信</th><th>メッセージ</th></tr>';
+$host=$ev_host;
   ///--- イベントタイプ処理 
-  if ($evtype=='1'){
+  if ($ev_type=='1'){
     $ctype ="監視正常";
     $triro = "trblk";
-  }elseif ($evtype=='2'){
+  }elseif ($ev_type=='2'){
     $ctype ="監視異常";
     $triro = "trred";
-  }elseif ($evtype=='4'){
+  }elseif ($ev_type=='4'){
     $ctype ="対象削除";
     $triro = "trylw";
-  }elseif ($evtype=='5'){
+  }elseif ($ev_type=='5'){
     $ctype ="新規作成";
     $triro = "trylw";
-  }elseif ($evtype=='6'){
+  }elseif ($ev_type=='6'){
     $ctype ="内容修正";
     $triro = "trylw";
-  }elseif ($evtype=='7'){
+  }elseif ($ev_type=='7'){
     $ctype ="監視開始";
     $triro = "trylw";
-  }elseif ($evtype=='0'){
+  }elseif ($ev_type=='0'){
     $ctype ="Login/Out";
     $triro = "trblk";
   }else{
@@ -116,119 +119,116 @@ foreach ($fckbox as $fckrec){
     $triro = "trred";
   }
   ///--- snmpタイプ処理
-  if ($snmptype=='2'){
+  if ($ev_snmptype=='2'){
     $stype ="CPU警告";
-  }elseif ($snmptype=='3'){
+  }elseif ($ev_snmptype=='3'){
     $stype ="RAM警告";
-  }elseif ($snmptype=='4'){
+  }elseif ($ev_snmptype=='4'){
     $stype ="HDD警告";
-  }elseif ($snmptype=='5'){
+  }elseif ($ev_snmptype=='5'){
     $stype ="Process警告";
-  }elseif ($snmptype=='6'){
+  }elseif ($ev_snmptype=='6'){
     $stype ="PORT警告";
   }else{
     $stype ='';
   }
   ///--- snmp測定値処理
-  if (is_null($sdata[4]) || $sdata[4]==''){
+  if (is_null($ev_snmpval) || $ev_snmpval==''){
     $okspp='';
   }else{
-    $snmpval=$sdata[4]; 
+    $snmpval=$ev_snmpval; 
     $okspp=$snmpval;
   }
   ///--- 報告者、障害番号処理
-  if (is_null($sdata[5]) || $sdata[5]==''){
+  if (is_null($ev_kanri) || $ev_kanri==''){
     $kmei = '21001';
   }else{
-    $kmei = $sdata[5];
+    $kmei = $ev_kanri;
   }
-  if (is_null($sdata[6]) || $sdata[6]==''){
+  if (is_null($ev_kanrino) || $ev_kanrino==''){
     $rdsql="select * from admintb";
     $rows=getdata($rdsql);
-    $adata=$rows[0];
-    $rtnkno=$adata[10]; 
+    $admindata=$rows[0];
+    $rtnkno=$admindata[10]; // admintbの管理者 
     $kno=date('ymd').sprintf('%04d',$rtnkno);
     $upkno=intval($rtnkno)+1;
     $svkno=sprintf('%04d',$upkno);
     $upsql='update admintb set kanrino='.$svkno;
     putdata($upsql);
   }else{
-    $kno = $sdata[6];
+    $kno = $ev_kanrino;
   }
   /// 確認、未確認処理
-  $concl=$sdata[7];
-  if ($concl=='1'){ 
+  if ($ev_cnfcls=='1'){ 
     $cc ="確認済";
-  }elseif ($concl=='2'){ 
+  }elseif ($ev_cnfcls=='2'){ 
     $cc ="確認？";
-  }elseif ($concl=='3'){ 
+  }elseif ($ev_cnfcls=='3'){ 
     $cc ="クローズ";
   }else{
     $cc= "未確認";
   }  
   /// メール送信、未送信処理 
-  $mlsend=$sdata[8];
-  if ($mlsend=='0'){
+  if ($ev_mlsend=='0'){
     $ms ="未送信";
-  }elseif ($mlsend=='1'){
+  }elseif ($ev_mlsend=='1'){
     $ms ="送信済";
   }else{
     $ms = "不明";
   }  
   /// メッセージ処理
-  if (is_null($sdata[9]) || $sdata[9]==''){
+  if (is_null($ev_msg) || $ev_msg==''){
     $msg = 'None';
   }else{
-    $msg = $sdata[9]; 
+    $msg = $ev_msg; 
   }
-  echo '<tr>';
-  echo "<td class={$triro}>{$host}</td>";
-  echo "<td class={$triro}>{$ctype}</td>";
-  echo "<td class={$triro}>{$stype}</td>";
-  echo "<td class={$triro}>{$okspp}</td>";
-  echo "<td class={$triro}>{$kmei}</td>";
-  echo "<td class={$triro}>{$kno}</td>";
-  echo "<td class={$triro}>{$cc}</td>";
-  echo "<td class={$triro}>{$ms}</td>";
-  echo "<td class={$triro}>{$msg}</td>";
-  echo '</tr>';
+  print '<tr>';
+  print "<td class={$triro}>{$host}</td>";
+  print "<td class={$triro}>{$ctype}</td>";
+  print "<td class={$triro}>{$stype}</td>";
+  print "<td class={$triro}>{$okspp}</td>";
+  print "<td class={$triro}>{$kmei}</td>";
+  print "<td class={$triro}>{$kno}</td>";
+  print "<td class={$triro}>{$cc}</td>";
+  print "<td class={$triro}>{$ms}</td>";
+  print "<td class={$triro}>{$msg}</td>";
+  print '</tr>';
   
-} // enf of for
-echo '</table>';
+ // enf of for
+print '</table>';
 
 if ($auth=='1'){
-  echo '<h4>　必要な処理<br>';
+  print '<h4>　必要な処理<br>';
+  print '　注：障害確認、障害クローズは、ホスト単位で行われます<br>';
+  print '　　●障害確認　　　障害発生を確認したときの処理<br>';
+  print '　　　イベントログに確認済を表示<br>';
+  print '　　●障害クローズ　障害処置を完了したときの処理<br>';
+  print '　　　同じホストイベント全データを削除、メモに障害情報を保存<br>';
+  print '　　●メモを保存　　メモを残すときの処理<br>';
+  print '　　　任意の情報をメモに保存';
+  print '</h4>';
 
-  echo '　　□障害種類(5桁)、障害番号(10桁)を付与したい場合に入力する<br>';
-  echo '　　●障害を確認：&emsp;&emsp;&emsp;&emsp;&emsp;「障害確認」、「実行」<br>';
-  echo '　　●障害をクローズ：&emsp;&emsp;&emsp;障害種類、障害番号、メモメッセージ入力、「処置完了」、「実行」<br>';
-  echo '　　●メールを送信：&emsp;&emsp;&emsp;&emsp;障害種類、障害番号、メッセージ入力、「Mail送信」、「実行」<br>';
-  echo '　　●ログを削除：&emsp;&emsp;&emsp;&emsp;&emsp;「処置完了」後、「ログ削除」、「実行」<br>';
-  echo '　　●メモを保存：&emsp;&emsp;&emsp;&emsp;&emsp;障害種類、障害番号、メモメッセージ入力、「メモ保存」、「実行」<br>';
-  echo '　　複数チェック可能<br>';
-  echo '</h4>';
-
-  echo '<form name="logdbupform" method="get" action="eventlogupdeldb.php">';
-  foreach ($fckbox as $data){ //
-    echo "<input type='hidden' name='fckbox[]' value={$data} />"; 
-  }
-  $skind="例：無応答";
-  $snum="例：2310260001";
-  echo "&emsp;障害種類：<input type='text' name='kanrimei' size='8' maxlength='8' value={$skind} />";
-  echo "&emsp;障害番号：<input type='text' name='kanrino' size='12' maxlength='12' value={$snum} /><br>";
-  echo '&emsp;メッセージ：<input type="text" name="message" size="40" maxlength="60" value="" /><br><br>';
-  echo '&emsp;メモメッセージ：&emsp;';
-  echo '&emsp;<textarea name="memomsg" maxlength="200" placeholder="半角200、全角100文字以内、改行可能" cols="101"></textarea><br>';
-  echo "<input type=hidden name=user value={$userid}>";
-  echo '<br>&emsp;<span class=trylw>障害確認：</span><input type="checkbox" name="ckbox[]" value="confirm" />';
-  echo '&emsp;<span class=trylw>処置完了：</span><input type="checkbox" name="ckbox[]" value="close" />';
-  echo '&emsp;<span class=trylw>Mail送信：</span><input type="checkbox" name="ckbox[]" value="mlsend" />';
-  echo '&emsp;<span class=trylw>メモ保存：</span><input type="checkbox" name="ckbox[]" value="memo" /> ';
-  echo '&emsp;<span class=trred>ログ削除：</span><input type="checkbox" name="ckbox[]" value="logdel" /><br><br>';
-  echo '&emsp;&emsp;<input class=button type="submit" name="go" value="実行" />';
-  echo '</form>';
+  print '<form name="logdbupform" method="get" action="eventlogupdeldb.php">';
+  print "<input type='hidden' name='fckbox' value={$fckrec} />";
+  print "<input type='hidden' name='user' value={$user} />";
+  print '<hr>';
+  print '<h4>☆　障害確認は「障害確認」を実行します</h4>';  
+  print '<hr>';
+  print '<h4>☆　障害種類、障害管理番号、メモメッセージを入力して「処置完了」または「メモ保存」を実行します</h4>';
+  print "&emsp;障害種類：<input type='text' name='kanrimei' size='8' maxlength='8' placeholder='例：無応答'/>";
+  print "&emsp;障害管理番号：<input type='text' name='kanrino' size='12' maxlength='12' placeholder='例：2310260001'/><br>";
+  print '&emsp;メモメッセージ：<br>';
+  print '&emsp;<textarea name="memomsg" maxlength="200" placeholder="半角200、全角100文字以内、改行可能" cols="101"></textarea><br>';
+  print '<hr>';
+  print '<h4>☆　処置選択</h4>';
+  print '&emsp;<span class=trylw>障害確認：</span><input type="radio" name="cradio" value="confirm" />';
+  print '&emsp;<span class=trylw>処置完了：</span><input type="radio" name="cradio" value="close" />';
+  print '&emsp;<span class=trylw>メモ保存：</span><input type="radio" name="cradio" value="memo" /> ';
+  print '&emsp;&emsp;<input class=button type="submit" name="go" value="実行" />';
+  print '</form>';
 }
-echo '<br>';
-echo "<a href='MonitorManager.php?param={$userid}'><span class=button>監視モニターへ戻る</span></a>"; 
-echo '</body></html>';
+print '<br>';
+print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>"; 
+print '</body></html>';
 ?>
+

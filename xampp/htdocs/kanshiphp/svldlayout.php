@@ -1,21 +1,13 @@
 <?php
+require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 error_reporting(E_ERROR | E_PARSE);
 
-function branch($_page,$_param){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo "<form name='F' action={$_page} method='get'>";
-  echo "<input type=hidden name=param value={$_param}>";
-  echo '<input type="submit" name="next" value="Waiting...">';
-  echo '</form>';
-}
-
-echo '<html><body><head>';
-echo '<link rel="stylesheet" href="kanshi1_py.css">';
-echo '</head><body>';
-echo '<h2>▽　レイアウト処理結果　▽</h2>';
-echo '<br>';
+print '<html><body><head>';
+print '<link rel="stylesheet" href="kanshi1_py.css">';
+print '</head><body>';
+print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　レイアウト処理結果　▽</h2>';
+print '<br>';
 
 $msg='';
 $terms=$_GET['terms'];
@@ -23,32 +15,33 @@ $tosave=$_GET['tosave'];
 $user=$_GET['user'];
 
 //$debug_alert = "<script type='text/javascript'>alert('一時停止');</script>";
-//echo $debug_alert;
+//print $debug_alert;
 
 ///
 if(empty($terms)){
-  $msg='#error#".$user."#レイアウトの「選択」がされていません';
+  $msg="#error#".$user."#レイアウトの「選択」がされていません";
   $nextpage="ShowLayout.php";
   branch($nextpage,$msg);
-  exit; 
+   
 }else{
-  $sql="select dataflag from g".$terms;
-  $rows=getdata($sql);
-  foreach ($rows as $lflag){
-    if ($lflag == "0"){
-      $msg='#error#".$user."#レイアウトが完成されていません';
-      $nextpage="ShowLayout.php";
-      branch($nextpage,$msg);
-      exit;
+  if (! isset($_GET['dele'])){
+    $sql="select dataflag from g".$terms;
+    $rows=getdata($sql);
+    foreach ($rows as $lflag){
+      if ($lflag == "0"){
+        $msg="#error#".$user."#レイアウトが完成されていません";
+        $nextpage="ShowLayout.php";
+        branch($nextpage,$msg);
+      }
     }
   }
 }
 
 if($terms=='layout' && $tosave==''){  
-  $msg='#error#".$user."#レイアウト保存の「保存先」がありません'; 
+  $msg="#error#".$user."#レイアウト保存の「保存先」がありません"; 
   $nextpage="ShowLayout.php";
   branch($nextpage,$msg);
-  exit;  
+    
 }else if($terms=='layout' && $tosave!==''){
   ///　レイアウトと保存先がある場合の処理
   ///　現用を保存先へ保存 
@@ -61,7 +54,10 @@ if($terms=='layout' && $tosave==''){
   putdata($sdrsql);
   putdata($scrsql);
   $tosavearr=explode('_',$tosave);
-  echo "<h4>のグループとホストの現用レイアウトが {$tosavearr[1]} へ保存されました</h4>";
+  $msg="#notic#".$user."#グループとホストの現用レイアウトが".$tosavearr[1]."へ保存されました";
+  $nextpage="ShowLayout.php";
+  branch($nextpage,$msg);
+  ///
 }else if(!empty($terms) && $tosave==''){
   ///  保存先が無い場合は、指定レイアウトを現用にするか、削除か
   if(empty($_GET['dele'])){ 
@@ -77,8 +73,10 @@ if($terms=='layout' && $tosave==''){
     putdata($scrsql);
     $loadlayarr=explode('_',$loadlay);
     /// $loadlay.'からlayoutへ読込みレイアウト名を取得し下記表示<br>';
-    echo "<h4>レイアウト {$loadlayarr[1]} のグループとホストのレイアウトが現用になりました</h4>";
-    
+    $msg="#notic#".$user."#レイアウト".$loadlayarr[1]."のグループとホストのレイアウトが現用になりました";
+    $nextpage="ShowLayout.php";
+    branch($nextpage,$msg);
+    ///
   }else{
     /// 指定レイアウトを削除
     $dellay=$_GET['terms']; // termsからlayout_xxが来るので、groupの場合はgをつけglayoutにする
@@ -88,14 +86,17 @@ if($terms=='layout' && $tosave==''){
     putdata($sdrsql);
     $dellayarr=explode('_',$dellay);
     /// $loadlay.'からlayoutへ読込みレイアウト名を取得し下記表示<br>';
-    echo "<h4>レイアウト {$dellayarr[1]} のグループとホストのレイアウトが削除されました</h4>";
-    
+    $msg="#notic#".$user."#レイアウト".$dellayarr[1]."のグループとホストのレイアウトが削除されました";
+    //writeloge($pgm,$msg);
+    $nextpage="ShowLayout.php";
+    branch($nextpage,$msg);
+    ///
   }
 }
-
 if($msg!=''){
-  echo "<h4><font color=red>{$msg}</font></h4>";
+  print "<h4><font color=red>{$msg}</font></h4>";
 }
-echo "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
-echo '</body></html>';
+print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
+print '</body></html>';
 ?>
+

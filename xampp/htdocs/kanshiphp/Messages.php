@@ -2,19 +2,32 @@
 <?php
 require_once "mysqlkanshi.php";
 require_once "alarmwindow.php";
+///
+$pgm="messages.php";
 $statmsg="";
 $cde="";
 $rows=getstatus();
-$statmsg=$rows[1];
 $cde=$rows[0];
-$pgm="messages.php";
-echo '<html lang="ja">';
-echo '<head>';
-echo '<meta http-equiv="refresh" content="10">';
-echo '<link rel="stylesheet" href="kanshi1.css">';
-echo '</head>';
-echo '<body>';
-echo "<h4 class=iro.{$cde}>{$statmsg}</h4>";
-echo '</body>';
-echo '</html>';
+$statmsg=$rows[1];
+for ($count=1;$count < 5;$count++){
+  if (empty($statmsg) || $statmsg==" " || is_null($statmsg)){
+    $rows=getstatus();
+    $cde=$rows[0];
+    $statmsg=$rows[1];
+    continue;
+  }else{
+    break;
+  }
+} 
+
+print '<html lang="ja">';
+print '<head>';
+print '<meta http-equiv="refresh" content="10">';
+print '<link rel="stylesheet" href="kanshi1.css">';
+print '</head>';
+print '<body>';
+print '<h4 class="iro'.$cde.'">'.$statmsg.'</h4>';
+print '</body>';
+print '</html>';
 ?>
+

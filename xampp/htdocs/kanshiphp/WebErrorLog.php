@@ -1,15 +1,14 @@
 <?php
+require_once "BaseFunction.php";
 require_once "varread.php";
 require_once "mysqlkanshi.php";
-header("Content-Type:text/html; charset=Shift_JIS");
-function branch($_page,$_param){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo "<form name='F' action={$_page} method='get'>";
-  echo "<input type=hidden name=param value={$_param}>";
-  echo '<input type="submit" name="next" value="Waiting...">';
-  echo '</form>';
-}
+///
+$pgm="WebErrorLog.php";
+$user="";
+$brcode="";
+$brmsg="";
+///
+/*
 if(isset($_GET['remove'])){
   $user = $_GET['user'];
   $dellogs=$_GET['dellog'];
@@ -23,33 +22,24 @@ if(isset($_GET['remove'])){
   }  
   $nextpage="MonitorManager.php";
   branch($nextpage,$user);
-  exit;
 }elseif(!isset($_GET['param'])){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo '<form name="F" action="WebErrorLog.php" method="get">';
-  echo '<input type="hidden" name="param" value="">';
-  echo '<input type="submit" name="next" style="display:none;" />';
-  echo '</form></body></html>';
-  echo '<script type="text/javascript">';
-  echo 'var keyvalue = sessionStorage.getItem("user");';
-  echo 'if (!keyvalue) {';
-  echo '  keyvalue = "unknown";';
-  echo '}';
-  echo 'document.forms["F"].elements["param"].value = keyvalue;';
-  echo '</script>';
+*/
+if(!isset($_GET['param'])){
+  paramGet($pgm);
+  ///
 }else{
-  $user=$_GET['param'];
+  paramSet();
+  ///
   $usql='select authority from user where userid="'.$user.'"';
   $rows=getdata($usql);
   $udata=explode(',',$rows[0]);
   $auth=$udata[0];
-  echo '<html><head><meta>';
-  echo '<link rel="stylesheet" href="kanshi1_py.css">';
-  echo '</head><body>';
-  echo '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;¤@WebƒGƒ‰[ƒƒO@¤</h2>';
-  $line_num = 20;   /// •\¦‚·‚és”
-  echo "<h3>ÅV {$line_num} s</h3>";
+  print '<html><head><meta>';
+  print '<link rel="stylesheet" href="kanshi1_py.css">';
+  print '</head><body>';
+  print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;â–½ã€€Webã‚¨ãƒ©ãƒ¼ãƒ­ã‚°ã€€â–½</h2>';
+  $line_num = 20;   /// è¡¨ç¤ºã™ã‚‹è¡Œæ•°
+  print "<h3>æœ€æ–° {$line_num} è¡Œ</h3>";
   $vpath_apache="";
   $vpatharr=array("vpath_apache");
   $rtnv=pathget($vpatharr);
@@ -67,15 +57,15 @@ if(isset($_GET['remove'])){
         $start_index = 0;
       }
       for ( $i=$start_index; $i<count($contents); $i++ ) {
-        echo $contents[$i] . '<br />';
+        print $contents[$i] . '<br />';
       }
-      echo "^^^^^^^^^^^^^ ÅIs ^^^^^^^^^^^^^";
-      echo '<form action="WebErrorLog.php" method="get">';
-      echo "<input type='hidden' name='user' value={$uid} >";
-      //echo '<input class=button type="submit" name="end" value="•\¦I—¹" />';
+      print "^^^^^^^^^^^^^ æœ€çµ‚è¡Œ ^^^^^^^^^^^^^";
+      print '<form action="WebErrorLog.php" method="get">';
+      print "<input type='hidden' name='user' value={$uid} >";
+      //print '<input class=button type="submit" name="end" value="è¡¨ç¤ºçµ‚äº†" />';
       if ($auth=='1'){      
+        /*
         $result=glob($vpath_apache.'\logs\*_*.log');
-        //var_dump($result);
         $dellog="";
         foreach($result as $rec){        
           $filename=basename($rec);
@@ -88,25 +78,26 @@ if(isset($_GET['remove'])){
         }
         $dellog=rtrim($dellog,",");
         if ($dellog!=""){
-          echo "<hr><h3>íœo—ˆ‚éƒƒO</h3><table><tr>";
+          print "<hr><h3>å‰Šé™¤å‡ºæ¥ã‚‹ãƒ­ã‚°</h3><table><tr>";
           $dellogarr=explode(',',$dellog);
           foreach($dellogarr as $arrrec){
-            echo "<td>{$arrrec}&emsp;</td>";
+            print "<td>{$arrrec}&emsp;</td>";
           }
-          echo '</tr></table>';
-          echo "<input type='hidden' name='dellog' value={$dellog} />";
-          echo "<input type=hidden name=user value={$user}>";
-          echo '&nbsp;&nbsp;<input class=buttondel type="submit" name="remove" value="ã‹LƒƒOíœ" />';
+          print '</tr></table>';
+          print "<input type='hidden' name='dellog' value={$dellog} />";
+          print "<input type=hidden name=user value={$user}>";
+          print '&nbsp;&nbsp;<input class=buttondel type="submit" name="remove" value="ä¸Šè¨˜ãƒ­ã‚°å‰Šé™¤" />';
         }
+        */
       }
-      echo '</form>';    
-      echo "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>ŠÄ‹ƒ‚ƒjƒ^[‚Ö–ß‚é</span></a>";
-      echo '</body></html>';
+      print '</form>';    
+      print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>ç›£è¦–ãƒ¢ãƒ‹ã‚¿ãƒ¼ã¸æˆ»ã‚‹</span></a>";
+      print '</body></html>';
     }else{
-      echo "<h4>$currpath</h4>";
-      echo "<h3>•\¦‚·‚×‚«ã‹Lƒtƒ@ƒCƒ‹‚ª‚ ‚è‚Ü‚¹‚ñAƒ}ƒjƒ…ƒAƒ‹‚ğQÆ‚µ‚Ä‰º‚³‚¢</h3>";
-      echo "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>ŠÄ‹ƒ‚ƒjƒ^[‚Ö–ß‚é</span></a>";
-      echo '</body></html>';
+      print "<h4>$currpath</h4>";
+      print "<h3>è¡¨ç¤ºã™ã¹ãä¸Šè¨˜ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Šã¾ã›ã‚“ã€ã‚¨ãƒ©ãƒ¼ãŒç„¡ã„ã‹åˆã¯ãƒãƒ‹ãƒ¥ã‚¢ãƒ«ã‚’å‚ç…§ã—ã¦ä¸‹ã•ã„</h3>";
+      print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>ç›£è¦–ãƒ¢ãƒ‹ã‚¿ãƒ¼ã¸æˆ»ã‚‹</span></a>";
+      print '</body></html>';
     }
   }else{
     writeloge($pgm,"variable vpath_apache could not get path");
@@ -115,12 +106,12 @@ if(isset($_GET['remove'])){
     $sdata=explode(',',$rows[0]);
     $recv=$sdata[3];
     $sender=$sdata[4];
-    $subj="Path•Ï”•s³";
-    $body=$pgm."ƒpƒX•Ï” vpath_apache æ“¾•s‰Â";
+    $subj="Pathå¤‰æ•°ä¸æ­£";
+    $body=$pgm."ãƒ‘ã‚¹å¤‰æ•° vpath_apache å–å¾—ä¸å¯";
     mailsendany('other',$sender,$recv,$subj,$body);
-    echo "&emsp;<h3><font color=red>•Ï”vpath_phpæ“¾•s‰ÂAŠÇ—Ò‚É’Ê’m</font></h3><br>";
-    echo "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>ŠÄ‹ƒ‚ƒjƒ^[‚Ö–ß‚é</span></a>";
-    echo '</body></html>';
+    print "&emsp;<h3><font color=red>å¤‰æ•°vpath_phpå–å¾—ä¸å¯ã€ç®¡ç†è€…ã«é€šçŸ¥</font></h3><br>";
+    print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>ç›£è¦–ãƒ¢ãƒ‹ã‚¿ãƒ¼ã¸æˆ»ã‚‹</span></a>";
+    print '</body></html>';
   }
 }
 

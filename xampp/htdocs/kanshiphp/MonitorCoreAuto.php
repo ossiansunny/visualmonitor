@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set('Asia/Tokyo');
-require_once 'mysqlkanshi.php';
+require_once 'BaseFunction.php';
 require_once 'winhostping.php';
 require_once 'mailsendping.php';
 require_once 'snmpagent.php';
@@ -8,6 +8,8 @@ require_once 'snmpagent.php';
 $agentflag="";
 $kanrino="";
 $user="";
+$brcode="";
+$brmsg="";
 $pgm = "MonitorCoreAuto.php";
 
 function agentcheck(){
@@ -86,6 +88,31 @@ function eventlog($hostrecarray,$cde){
   writelogd($pgm,$msg);
   putdata($insql);  
 }
+function mailservercheck(){
+  $mssql='select * from mailserver';
+  $rows=getdata($mssql);
+  $row=explode(',',$rows[0]);
+  $server=$row[0];
+  $port=$row[1];
+  $status=$row[4];
+  /// status=1の場合、ping試験で死活確認
+  if ($status=='1'){
+    $rtn = hostping($server);
+    $musql="";
+    if ($rtn != 0){
+      delstatus('Mail Server Active');
+      delstatus('Mail Server InActive');
+      setstatus('1','Mail Server InActive');
+      $musql="update mailserver set status='1'";
+    }else{
+      delstatus('Mail Server InActive');
+      delstatus('Mail Server Active');
+      setstatus('0','Mail Server Active');
+      $musql="update mailserver set status='0'";
+    }
+    putdata($musql);
+  }
+}
 
 //----------------viewscan-------------------------------
 //--------------------------------------------------------
@@ -125,12 +152,12 @@ function viewscan(){
             }
           }else{
             /// statistics gtype=0にする
-            $usql='update statistics set gtype="0" where host="'.$c_host.'"';
-            $rtn=putdata($usql);
-            if (!empty($rtn)){ /// connection error || sql error || not found
-              writeloge($pgm,"Failed DB Access: ".$usql); 
-              eventlog($itemarray,"a"); /// a DB異常
-            }
+           $ssql='select * from statistics where host="'.$c_host.'"';
+           $srtn=getdata($ssql);
+           if (isset($srtn)){
+             $usql='update statistics set gtype="0" where host="'.$c_host.'"';
+             $rtn=putdata($usql);
+           } 
           }  
         /// 前回結果 異常　result 0,2
         }else if ($c_result=='0' || $c_result=='2'){ /// result=0 or 2
@@ -150,20 +177,18 @@ function viewscan(){
             resultdbupdate($c_host,"3"); /// update result=3
             $gsql='select gtype from statistics where host="'.$c_host.'"';
             $rows=getdata($gsql);
-            $gtype=$rows[0];   /// undefine offset
-            /// statistics gtype="5" -> gtype=6
-            if ($gtype=="5"){
-              $usql='update statistics set gtype="6" where host="'.$c_host.'"';
-              $rtn=putdata($usql);
-              if (!empty($rtn)){ /// connection error || sql error || not found
-                writeloge($pgm,"Failed DB Access: ".$usql); 
-                eventlog($itemarray,"a"); /// a DB異常
-              } else{
+            if (isset($rows)){
+              $gtype=$rows[0];   /// undefine offset
+              /// statistics gtype="5" -> gtype=6
+              if ($gtype=="5"){
+                $usql='update statistics set gtype="6" where host="'.$c_host.'"';
+                putdata($usql);
                 eventlog($itemarray,"3");  ///確認 event
+              
+              } elseif ($gtype!="6"){
+                /// statistics gtype="6" -> eventlog skip
+                eventlog($itemarray,"2");  ///error event
               }
-            } elseif ($gtype!="6"){
-              /// statistics gtype="6" -> eventlog skip
-              eventlog($itemarray,"2");  ///error event
             }
           }
         /// 前回結果 障害中最終　result 9
@@ -184,21 +209,12 @@ function viewscan(){
 ///
 
 if(!isset($_GET['param'])){ /// ユーザ取得依頼
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo '<form name="F" action="MonitorCoreAuto.php" method="get">';
-  echo '<input type="hidden" name="param" value="">';
-  echo '<input type="submit" name="next" style="display:none;" />';
-  echo '</form></body></html>';
-  echo '<script type="text/javascript">';
-  echo 'var keyvalue = sessionStorage.getItem("user");';
-  echo 'if (!keyvalue) {';
-  echo '  keyvalue = "unknown";';
-  echo '}';  
-  echo 'document.forms["F"].elements["param"].value = keyvalue;';
-  echo '</script>';
+  print 'paramGet()';
+  paramGet($pgm);
+  ///
 }else{     
-  $user=$_GET['param'];
+  paramSet();
+  ///
   $sql='select * from admintb';
   $rows=getdata($sql);
   $kanridata=explode(',',$rows[0]);
@@ -213,14 +229,14 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   $msg='Debug: coreval='.$coreval;
   writelogd($pgm,$msg);
 
-  echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
-  echo '<html lang="ja">';
-  echo '<head>';
-  echo "<meta http-equiv='refresh' content={$coreval}>";
-  echo '<link rel="stylesheet" href="kanshi1.css">';
-  echo '</head>';
-  echo '<body>';
-  echo "<h4>Core Refresh {$coreval}sec</h4>";
+  print '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+  print '<html lang="ja">';
+  print '<head>';
+  print "<meta http-equiv='refresh' content={$coreval}>";
+  print '<link rel="stylesheet" href="kanshi1.css">';
+  print '</head>';
+  print '<body>';
+  print "<h4>Core Refresh {$coreval}sec</h4>";
 
 
   //--------------------表示処理--------------
@@ -251,13 +267,13 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
     putagent('127.0.0.1','private','ok'); ///syslocationへokセット
     $usql='update statistics set agent="ok" where host="127.0.0.1"';
     if ($oldflag=='ng'){
-      writeloge($pgm,$usql);      
+      writelogd($pgm,$usql);      
     }
   }else{             /// 127.0.0.1 to set ng by snmpset
     putagent('127.0.0.1','private','ng'); //syslocationへngセット
     $usql='update statistics set agent="ng" where host="127.0.0.1"';
     if ($oldflag=='ok'){
-        writeloge($pgm,$usql);
+        writelogd($pgm,$usql);
     }  
   }  
   $rtn=putdata($usql);
@@ -274,7 +290,10 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   $corestamp=time(); 
   $usql='update processtb set corestamp="'.strval($corestamp).'"';
   putdata($usql);
-  echo '</body></html>';
+  /// mailserver active check
+  mailservercheck();
+  print '</body></html>';
 }
 ?>
+
 

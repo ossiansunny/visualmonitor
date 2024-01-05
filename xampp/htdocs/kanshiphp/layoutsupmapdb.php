@@ -2,9 +2,6 @@
 require_once "mysqlkanshi.php";
 require_once "dataflagreset.php";
 
-echo '<html><head><meta>';
-echo '<link rel="stylesheet" href="kanshi1.css">';
-echo '</head><body>';
 $pgm = "layoutsupmapdb.php";
 $groupname=array();
 $groupname=$_GET['groupname'];
@@ -35,7 +32,11 @@ for ($i=0;$i<$max;$i++){
 /// ホストデータなしの場合、グループデータフラグをリセット
 dataflagreset($layout);
 
-echo '<h4>変更処理が終わりました、「監視モニターへ戻る」をクリックして下さい</h4>';
-echo "<a href='MonitorManager.php?param={$user}'><span class=button>監視モニターへ戻る</span></a>";
-echo '</body></html>';
+print '<html><head><meta>';
+print '<link rel="stylesheet" href="kanshi1.css">';
+print '</head><body>';
+print '<h4>変更処理が終わりました、「監視モニターへ戻る」をクリックして下さい</h4>';
+print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
+print '</body></html>';
 ?>
+

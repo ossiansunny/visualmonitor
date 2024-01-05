@@ -1,14 +1,6 @@
 <?php
+require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-
-function branch($_page,$_param){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo "<form name='F' action={$_page} method='get'>";
-  echo "<input type=hidden name=param value={$_param}>";
-  echo '<input type="submit" name="next" value="Waiting...">';
-  echo '</form>';
-}
 
 function getkanrino($authtype){
   $cnt=0;
@@ -26,34 +18,17 @@ function getkanrino($authtype){
   return strval($cnt);
 }
 
+$pgm="UserPage.php";
 $brmsg="";
 $user="";
 $brcode="";
 
 if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) || isset($_GET['add']))){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo '<form name="F" action="UserPage.php" method="get">';
-  echo '<input type="hidden" name="param" value="">';
-  echo '<input type="submit" name="next" style="display:none;" />';
-  echo '</form></body></html>';
-  echo '<script type="text/javascript">';
-  echo 'var keyvalue = sessionStorage.getItem("user");';
-  echo 'if (!keyvalue) {';
-  echo '  keyvalue = "unknown";';
-  echo '}';
-  echo 'document.forms["F"].elements["param"].value = keyvalue;';
-  echo '</script>';
+  paramGet($pgm);
+  ///
 }elseif(isset($_GET['param'])){
-  $inform=$_GET['param'];
-  if (substr($inform,0,1)=="#"){
-    $brarr=explode("#",ltrim($inform,"#"),4);
-    $brcode=$brarr[0]; /// code
-    $user=$brarr[1];   /// user
-    $brmsg=$brarr[2];  /// message
-  }else{
-    $user=$inform;
-  }
+  paramSet();
+  ///
 }elseif(isset($_GET['update'])){
     $user=$_GET['user'];
     if ( ! isset($_GET['select'])){
@@ -116,33 +91,33 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
   $ttl1='<img src="header/php.jpg" width="30" height="30">';
   $ttl2=' ▽　ユーザー管理　▽   ';
   $ttl=$ttl1 . $ttl2;
-  echo '<html><head>';
-  echo '<link rel="stylesheet" href="kanshi1_py.css">';
-  echo '<script language="JavaScript">';
-  echo 'function check(){';
-  echo '  if (document.rform.onbtn.value == "delete"){';
-  echo '    if (window.confirm("削除してよろしいですか？")){';
-  echo '      return true;';
-  echo '    }else{';
-  echo '      window.alert("キャンセルします");';
-  echo '      return false;';
-  echo '    }';
-  echo '  }else{';
-  echo '    return true;';
-  echo '  }';
-  echo '}';
-  echo 'function set_val(){';
-  echo '  document.rform.onbtn.value = "delete";';
-  echo '}';
-  echo '</script>';
-  echo '</head><body>';
+  print '<html><head>';
+  print '<link rel="stylesheet" href="kanshi1_py.css">';
+  print '<script language="JavaScript">';
+  print 'function check(){';
+  print '  if (document.rform.onbtn.value == "delete"){';
+  print '    if (window.confirm("削除してよろしいですか？")){';
+  print '      return true;';
+  print '    }else{';
+  print '      window.alert("キャンセルします");';
+  print '      return false;';
+  print '    }';
+  print '  }else{';
+  print '    return true;';
+  print '  }';
+  print '}';
+  print 'function set_val(){';
+  print '  document.rform.onbtn.value = "delete";';
+  print '}';
+  print '</script>';
+  print '</head><body>';
   /// エラー表示
   if ($brcode=="alert" || $brcode=="error" || $brcode=="notic"){
-    echo "<h3 class={$brcode}>{$brmsg}</h3><hr>";
+    print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
   }
 
-  echo "<h2>{$ttl}</h2>";
-  echo "<h4><font color=red>{$errormsg}</font></h4>";
+  print "<h2>{$ttl}</h2>";
+  print "<h4><font color=red>{$errormsg}</font></h4>";
   //
   //--------------------View Process --------------------
   //
@@ -151,12 +126,12 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
   $sql='select * from user order by userid';
   $rows=getdata($sql);
   if (empty($rows)){
-    echo '<h4><font color=red>表示すべきデータがありません</font></h4>';
+    print '<h4><font color=red>表示すべきデータがありません</font></h4>';
   }else{
-    echo '<h3>「変更」または「削除」するものを１つ選択して下さい</h3>';
-    echo '&nbsp;&nbsp;<form method="get" action="UserPage.php" onsubmit="return check()">';
-    echo '<table class="nowrap">';
-    echo '<tr><th>選択</th><th >ユーザーID</th><th>パスワード</th><th>権限</th><th>ユーザー名</th><th>コード</th><th>作成変更日</th></tr>';
+    print '<h3>「変更」または「削除」するものを１つ選択して下さい</h3>';
+    print '&nbsp;&nbsp;<form method="get" action="UserPage.php" onsubmit="return check()">';
+    print '<table class="nowrap">';
+    print '<tr><th>選択</th><th >ユーザーID</th><th>パスワード</th><th>権限</th><th>ユーザー名</th><th>コード</th><th>作成変更日</th></tr>';
     $iro='';
     $idx=0;
     foreach ($rows as $rowsrec){
@@ -173,54 +148,55 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
       $ucode=$sdata[4];
       $tstamp=$sdata[5];
       $triro="";
-      echo '<tr>';
-      echo '<td class=vatop><input type=radio name=select value="'.strval($idx).'" ></td>';
-      echo "<td class={$iro}><input type=text name=uid[] value={$uid} size=9 readonly></td>";
-      echo "<td class={$iro}><input type=text name=upass[] value={$upass} size=9 ></td>";
-      //echo '<td class="'.$iro.'"><input type=text name=auth[] value='.$auth.' size=9 ></td>';
+      print '<tr>';
+      print '<td class=vatop><input type=radio name=select value="'.strval($idx).'" ></td>';
+      print "<td class={$iro}><input type=text name=uid[] value={$uid} size=9 readonly></td>";
+      print "<td class={$iro}><input type=text name=upass[] value={$upass} size=9 ></td>";
+      //print '<td class="'.$iro.'"><input type=text name=auth[] value='.$auth.' size=9 ></td>';
       $ot=array('','');
       $ot[intval($auth)]="selected";
-      echo "<td class={$iro}><select name=auth[] >";
-      echo "<option value='0'{$ot[0]}>ユーザー</option>";
-      echo "<option value='1'{$ot[1]}>管理者</option>";
-      echo '</select></td>';  
-      echo "<td class={$iro}><input type=text name=uname[] value={$uname} size=19 ></td>";
-      echo "<td class={$iro}><input type=text name=ucode[] value={$ucode} size=4 readonly></td>";
-      echo "<td class={$iro}><input type=text name=tstamp[] value={$tstamp} size=10 readonly></td>";
-      echo '</tr>';
+      print "<td class={$iro}><select name=auth[] >";
+      print "<option value='0'{$ot[0]}>ユーザー</option>";
+      print "<option value='1'{$ot[1]}>管理者</option>";
+      print '</select></td>';  
+      print "<td class={$iro}><input type=text name=uname[] value={$uname} size=19 ></td>";
+      print "<td class={$iro}><input type=text name=ucode[] value={$ucode} size=4 readonly></td>";
+      print "<td class={$iro}><input type=text name=tstamp[] value={$tstamp} size=10 readonly></td>";
+      print '</tr>';
       $idx++;
     } //end of for
-    echo '</table>';
-    echo "<input type=hidden name=user value={$user}>";
-    echo '<br><input class=button type="submit" name="update" value="変更実行" >';
-    echo '&nbsp;&nbsp;<input class=buttondel type="submit" name="delete" value="削除実行" onClick="set_val()">';
-    echo '<input type="hidden" name="onbtn">';
-    echo '</form>';
+    print '</table>';
+    print "<input type=hidden name=user value={$user}>";
+    print '<br><input class=button type="submit" name="update" value="変更実行" >';
+    print '&nbsp;&nbsp;<input class=buttondel type="submit" name="delete" value="削除実行" onClick="set_val()">';
+    print '<input type="hidden" name="onbtn">';
+    print '</form>';
   }
-  echo '<hr>';
+  print '<hr>';
   $tstamp = date('ymdHis');
-  echo '<table>';
-  echo '<form name="iform" method="get" action="UserPage.php">';
-  echo '<h3>追加ユーザーを入力して「作成実行」をクリック</h3>';
-  echo '<table class="nowrap">';
-  echo '<tr><th>ユーザーID</th><th>パスワード</th><th>権限</th><th>ユーザー名</th><th>コード</th><th>作成変更日</th></tr>';
-  echo '<tr>';
-  echo '<td> <input type="text" name="uid" size=9 value="" placeholder="MAX半角10桁"></td>';
-  echo '<td> <input type="text" name="upass" size=9 value="" placeholder="MAX半角10桁"></td>';
-  echo '<td><select name="auth">';
-  echo '<option value="0">一般ユーザー</option>';
-  echo '<option value="1">管理者</option>';
-  echo '</select></td>';
-  echo '<td> <input type="text" name="uname" size=19 value="" placeholder="MAX全角10桁"></td>';
-  echo '<td> <input type="text" name="ucode" value="" size=4 placeholder="自動採番" readonly></td>';
-  echo "<td> <input type='text' name='tstamp' value={$tstamp} size=10 readonly></td>";
-  echo '</tr>';
-  echo '</table>';
-  echo "<input type=hidden name=user value={$user}>";
-  echo '<br><input class=button type="submit" name="add" value="作成実行" >';
-  echo '</form>';
-  echo '<br><br>';
-  echo "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>"; 
-  echo '</body></html>';
+  print '<table>';
+  print '<form name="iform" method="get" action="UserPage.php">';
+  print '<h3>追加ユーザーを入力して「作成実行」をクリック</h3>';
+  print '<table class="nowrap">';
+  print '<tr><th>ユーザーID</th><th>パスワード</th><th>権限</th><th>ユーザー名</th><th>コード</th><th>作成変更日</th></tr>';
+  print '<tr>';
+  print '<td> <input type="text" name="uid" size=9 value="" placeholder="MAX半角10桁"></td>';
+  print '<td> <input type="text" name="upass" size=9 value="" placeholder="MAX半角10桁"></td>';
+  print '<td><select name="auth">';
+  print '<option value="0">一般ユーザー</option>';
+  print '<option value="1">管理者</option>';
+  print '</select></td>';
+  print '<td> <input type="text" name="uname" size=19 value="" placeholder="MAX全角10桁"></td>';
+  print '<td> <input type="text" name="ucode" value="" size=4 placeholder="自動採番" readonly></td>';
+  print "<td> <input type='text' name='tstamp' value={$tstamp} size=10 readonly></td>";
+  print '</tr>';
+  print '</table>';
+  print "<input type=hidden name=user value={$user}>";
+  print '<br><input class=button type="submit" name="add" value="作成実行" >';
+  print '</form>';
+  print '<br><br>';
+  print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>"; 
+  print '</body></html>';
 
 ?>
+

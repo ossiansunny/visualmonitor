@@ -70,3 +70,4 @@ function mailsendany($type,$from,$to,$subject,$msg){
 
 }
 ?>
+

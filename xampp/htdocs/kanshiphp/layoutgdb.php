@@ -1,7 +1,7 @@
 <?php
-echo '<html><head>';
-echo '<link rel="stylesheet" href="kanshi1.css">';
-echo '</head><body>';
+print '<html><head>';
+print '<link rel="stylesheet" href="kanshi1.css">';
+print '</head><body>';
 
 require_once 'mysqlkanshi.php';
 $gname = array();
@@ -31,12 +31,13 @@ putdata($sdrsql);
 $scpsql='create table '.$layout.' like layout';
 putdata($scpsql);
 
-echo '<h2>▽　グループレイアウト作成　その３　▽</h2>';
+print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　グループレイアウト作成　その３　▽</h2>';
 ?>
-<h4>レイアウト名称： <?php echo $laynick; ?> のグループ情報を書き込み、ホスト情報をリセットしました</h4>
+<h4>レイアウト名称： <?php print $laynick; ?> のグループ情報を書き込み、ホスト情報をリセットしました</h4>
 <?php
-echo '<br>';
-echo "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
+print '<br>';
+print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
 
-echo '</body></html>';
+print '</body></html>';
 ?>
+

@@ -81,7 +81,6 @@ if(count($rtnv)==2){
   }
   fclose($rfp);
   fclose($wfp);
-  echo "mysqlkanshi.phpをmysqlkanshitmp.phpへコピーしました";
 /////////////
 // createkanshidb.sql作成
 //////////////
@@ -108,7 +107,7 @@ if(count($rtnv)==2){
   $mysql=$vpath_xampp."\\mysql\\bin\\mysql";
   $cmd=$mysql." -u root --skip-password < ".$sqlpath;
   $out = shell_exec($cmd);
-  echo "Mysql kanshidbを作成、ユーザー、パスワードを設定しました";
+  echo 'mysqlにkanshiデータベースを設定しました';
 }else{
   echo "パスが得られません、kanshiphp.iniを見直して下さい";
 }

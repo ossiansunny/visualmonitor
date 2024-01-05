@@ -13,8 +13,7 @@ function mailactive($mailhost){
   }
 }
 
-function hostping($host)
-{
+function hostping($host){
    /// WindowsとUNIXのpingパラメータが違う
    $r = exec("ping -n 1 $host" , $output, $result);
    $sw = 0;
@@ -34,3 +33,4 @@ function hostping($host)
    }
 } 
 ?>
+

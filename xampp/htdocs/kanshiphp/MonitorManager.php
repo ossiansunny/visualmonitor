@@ -1,4 +1,5 @@
 <?php
+require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 require_once 'layoutsform.php';
 require_once 'winhostping.php';
@@ -36,22 +37,17 @@ function screatearray($hdata,$garr,&$hhai){ ///$hdata is host layout record
   }
 }
 
+$pgm="MonitorManager.php";
+$user="";
+$brcode="";
+$brmsg="";
+///
 if(!isset($_GET['param'])){
-  echo '<html>';
-  echo '<body onLoad="document.F.submit();">';
-  echo '<form name="F" action="MonitorManager.php" method="get">';
-  echo '<input type="hidden" name="param" value="">';
-  echo '<input type="submit" name="next" style="display:none;" />';
-  echo '</form></body></html>';
-  echo '<script type="text/javascript">';
-  echo 'var keyvalue = sessionStorage.getItem("user");';
-  echo 'if (!keyvalue) {';
-  echo '  keyvalue = "unknown";';
-  echo '}';
-  echo 'document.forms["F"].elements["param"].value = keyvalue;';
-  echo '</script>';
+  paramGet($pgm);
+  ///
 }else{
-  $uid=$_GET['param'];
+  paramSet();
+  ///
   $sql="select * from admintb";
   $rows=getdata($sql);
   $adata=explode(',',$rows[0]);
@@ -86,21 +82,32 @@ if(!isset($_GET['param'])){
   $ttlimg=$rows[0];
   $mainttl='haikeiimg/'.$ttlimg;
 
-  echo '<html><head>';
-  echo "<meta http-equiv='Refresh' content={$interval}>";
-  echo '<link rel="stylesheet" href="manager.css">';
-  echo '</head><body>';
-  echo '<p style="position: relative;">';
-  echo "<img src={$mainttl} width='600' height='50' alt='Title' /><br />";
-  echo "<span style='position: absolute; top: 5px; left: 5px; width: 500px; color: white; font-size: 25px; font-weight: bold'>{$title}</span>";
-  echo '</p>';
-  echo "<h2>{$subtitle}</h2>";
+  print '<html><head>';
+  print "<meta http-equiv='Refresh' content={$interval}>";
+  print '<link rel="stylesheet" href="manager.css">';
+  print '</head><body>';
+  print '<p style="position: relative;">';
+  print "<img src={$mainttl} width='600' height='50' alt='Title' /><br />";
+  print "<span style='position: absolute; top: 5px; left: 5px; width: 500px; color: white; font-size: 25px; font-weight: bold'>{$title}</span>";
+  print '</p>';
+  print "<h2>{$subtitle}</h2>";
   $gis=date('G:i:s');
-  echo "<table><tr class=big><td>&ensp;&ensp;ユーザー&ensp;</td><td class=okcolor>{$uid}</td>";
-  echo "<td>&ensp;&ensp;モニターコア&ensp;&ensp;</td><td class={$bkcolor}><span class={$blk}>{$runmsg}</span></td><td>&ensp;{$blkmsg}</td></tr></table>";
-  echo "<br><table><tr class=big><td>&ensp;&ensp;監視時刻&ensp;</td><td class=okcolor>{$gis}</td>";
-  echo "<td>&ensp;&ensp;SNMPカウントダウン　</td><td class=okcolor>{$countdown}</td></tr></table>";
-  echo '</form><br>';
+  if ($user=='unknown'){
+    $vuser='Lost User';
+    $vcolor='ngcolor';
+  }else{
+    $vuser=$user;
+    $vcolor='okcolor';
+  }
+  print "<table><tr class=big><td>&ensp;&ensp;ユーザー&ensp;</td><td class={$vcolor}>{$vuser}</td>";
+  print "<td>&ensp;&ensp;モニターコア&ensp;&ensp;</td><td class={$bkcolor}><span class={$blk}>{$runmsg}</span></td><td>&ensp;{$blkmsg}</td></tr></table>";
+  if ($user=='unknown'){
+    print "<table><tr><td class={$vcolor}>&ensp;&ensp;ユーザが失われました、ログアウトし、新たなログインを実行して下さい</td></tr></table>";
+  }
+  //print "<td>&ensp;&ensp;モニターコア&ensp;&ensp;</td><td class={$bkcolor}><span class={$blk}>{$runmsg}</span></td><td>&ensp;{$blkmsg}</td></tr></table>";
+  print "<br><table><tr class=big><td>&ensp;&ensp;監視時刻&ensp;</td><td class=okcolor>{$gis}</td>";
+  print "<td>&ensp;&ensp;SNMPカウントダウン　</td><td class=okcolor>{$countdown}</td></tr></table>";
+  print '</form><br>';
   $garr = array(); // group 配列テーブル
   $grponedata=array();
   /// group 配列テーブル作成
@@ -112,9 +119,9 @@ if(!isset($_GET['param'])){
   $sql='select * from layout order by gshid';
   $rows=getdata($sql);
   screatearray($rows,$garr,$sarr);
-  layoutsform($uid,$garr,$sarr);
+  layoutsform($user,$garr,$sarr);
   $dtm=date('ymdHis');
-  $usql='select authority from user where userid="'.$uid.'"';
+  $usql='select authority from user where userid="'.$user.'"';
   $rows=getdata($usql);
   $udata=explode(',',$rows[0]);
   $auth=$udata[0];
@@ -123,5 +130,6 @@ if(!isset($_GET['param'])){
     putdata($upsql);
   }
 }
-echo '</body></html>';
+print '</body></html>';
 ?>
+

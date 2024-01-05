@@ -134,13 +134,14 @@ function mailsendsnmp($mdata,$mtype,$mvalue,$updown){
   if($flg==0){
     $mmsg='success '.$bodystr.' '.$toaddr.' '.$fromaddr."\r\n";
     writelogd('mailsendsnmp debug',$mmsg);
-    //echo $mmsg;
+    //print $mmsg;
     return 0;
   }else{
     $mmsg='failed '.$bodystr.' '.$toaddr.' '.$fromaddr."\r\n";
-    echo $mmsg;
+    //print $mmsg;
     writeloge('mailsendsnmp debug',$mmsg);
     return 1;
   }
 }
 ?>
+

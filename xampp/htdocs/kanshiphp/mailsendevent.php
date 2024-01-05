@@ -88,3 +88,4 @@ function mailsendevent($edata,$ekanrimei,$ekanrino,$econfclose,$message){
   return $flg;
 }
 ?>
+
