@@ -25,25 +25,12 @@ Function Include(strFile)
 End Function
 '--------------------------------------------
 '=============================================
+
 Function SysWriter(str)
-  Dim objWshShell
-  Dim fso, fi
-  Dim LogFileName
-  Dim wkNow
-  'ファイル名に設定する日付をyyyymmdd形式で取得します。'
-  wkNow = Year(Now())
-  wkNow = wkNow & Right("0" & Month(Now()) , 2)
-  wkNow = wkNow & Right("0" & Day(Now()) , 2)
-  'カレントディレクトリを取得して、カレントディレクトリのlogsフォルダ内にlogファイルを作成します。'
-  Set objWshShell = WScript.CreateObject("WScript.Shell")
-  Set fso = CreateObject("Scripting.FileSystemObject")
-  LogFileName = vp_mrtg & "\ubin\gnuplot\logs\" & wkNow & ".log"
-  'ファイルを開く
-  '存在しない場合は作成する
-  Set fi = fso.OpenTextFile(LogFileName, 8, true)
-  fi.WriteLine (Date() & " " & Time() & ": " & str) 'ログを書き込む
-  Set fi = Nothing
-  Set objWshShell = Nothing
+  Dim objswWsh,strmsg
+  Set objswWsh = CreateObject("Wscript.Shell")
+  strmsg = Replace(str," ","_")
+  objswWsh.Run vp_mrtg & "\ubin\gnuplot\SysWriter.vbs " &  strmsg ,,True  
 End Function
 
 Function writeProcess(ByVal host, ByVal key, ByVal cpu, ByVal ram, ByVal disk)
@@ -59,7 +46,6 @@ End Function
 
 host = WScript.Arguments(0)
 SysWriter("....."& host & " vsadmake.vbs enter.....")
-
 ' delete host.ad
 Dim delFilePath, objDEL
 delFilePath = vp_plot & "\plotimage\" & host & ".ad"
@@ -86,8 +72,11 @@ Do Until inFile.AtEndOfStream
   newRam = lineArr(2)
   newDisk = lineArr(3)
   If oldKey <> newKey Then
-    If oldKey <> "99" Then
+    If oldKey = "99" Then
+      'WScript.Echo "oldKey is 99"
+    Else
        writeProcess host, oldKey, oldCpu, oldRam, oldDisk
+       'WScript.Echo "writeProcess:" & host & " " & oldKey & " " & oldCpu & " " & oldRam & " " & oldDisk
     End If
     oldKey = newKey
     oldCpu = newCpu
@@ -103,6 +92,10 @@ Do Until inFile.AtEndOfStream
     If newDisk > oldDisk Then
       oldDisk = newDisk
     End If 
+      
   End If
+  
 Loop
+writeProcess host, oldKey, oldCpu, oldRam, oldDisk
+'WScript.Echo "writeProcess:" & host & " " & oldKey & " " & oldCpu & " " & oldRam & " " & oldDisk
 SysWriter("....." & host & " vsadmake.vbs exit.....") 

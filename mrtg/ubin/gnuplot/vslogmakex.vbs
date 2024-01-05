@@ -1,19 +1,33 @@
 '=============================================
-argcount=WScript.Arguments.Count
-If argcount <> 2 Then
-  WScript.Echo "à¯êîÉGÉâÅ["
-  Wscript.Quit
-End If
-vp_mrtg=WScript.Arguments(0)
-vp_plot=WScript.Arguments(1)
-'SysWriter("PATH " & vp_plot & "; " & vp_mrtg)
+Dim fso
+Set fso = CreateObject("Scripting.FileSystemObject")
+baseDir=fso.getParentFolderName(WScript.ScriptFullName)
+path = baseDir & "\readvar.vbs"
+Include(path)
+param = "vpath_plothome,vpath_mrtgbase"
+rtn = readvar(param)
+rtnArr=Split(rtn,",")
+vp_plot=rtnArr(0)
+vp_mrtg=rtnArr(1)
+SysWriter("PATH " & vp_plot & "; " & vp_mrtg)
+'--------------------------------------------
+'---- ã§óLfunction ì«Ç›çûÇ›
+Function Include(strFile)
+  Dim objFso, objWsh, strPath
+  Set objFso = Wscript.CreateObject("Scripting.FileSystemObject")
+  Set objWsh = objFso.OpenTextFile(strFile)
+  ExecuteGlobal objWsh.ReadAll()
+  objWsh.Close
+  Set objWsh = Nothing
+  Set objFso = Nothing
+End Function
 '--------------------------------------------
 '=============================================
 Function SysWriter(str)
   Dim objswWsh,strmsg
   Set objswWsh = CreateObject("Wscript.Shell")
   strmsg = Replace(str," ","_")
-  objswWsh.Run vp_mrtg & "\ubin\gnuplot\SysWriter.vbs " &  strmsg ,,True  
+  objswWsh.Run "SysWriter.vbs " &  strmsg ,,True  
 End Function
 
 Function getSnmp(ByVal getType,ByVal getHost,ByVal getOs,ByVal getComm)

@@ -12,6 +12,7 @@ rtn = readvar(param)
 rtnArr=Split(rtn,",")
 vp_plot=rtnArr(0)
 vp_mrtg=rtnArr(1)
+'Wscript.Echo vp_plot
 '--------------------------------------------
 '---- 共有function 読み込み
 Function Include(strFile)
@@ -27,36 +28,25 @@ End Function
 '=============================================
  
 Function SysWriter(str)
-  Dim objWshShell
-  Dim fso, fi
-  Dim LogFileName
-  Dim wkNow
-  'ファイル名に設定する日付をyyyymmdd形式で取得します。'
-  wkNow = Year(Now())
-  wkNow = wkNow & Right("0" & Month(Now()) , 2)
-  wkNow = wkNow & Right("0" & Day(Now()) , 2)
-  'カレントディレクトリを取得して、カレントディレクトリのlogsフォルダ内にlogファイルを作成します。'
-  Set objWshShell = WScript.CreateObject("WScript.Shell")
-  Set fso = CreateObject("Scripting.FileSystemObject")
-  LogFileName = vp_mrtg & "\ubin\gnuplot\logs\" & wkNow & ".log"
-  'ファイルを開く
-  '存在しない場合は作成する
-  Set fi = fso.OpenTextFile(LogFileName, 8, true)
-  fi.WriteLine (Date() & " " & Time() & ": " & str) 'ログを書き込む
-  Set fi = Nothing
-  Set objWshShell = Nothing
+  Dim objswWsh,strmsg
+  Set objswWsh = CreateObject("Wscript.Shell")
+  strmsg = Replace(str," ","_")
+  objswWsh.Run vp_mrtg & "\ubin\gnuplot\SysWriter.vbs " &  strmsg ,,True  
 End Function
 
-'---------- 処理 --------------
+'---------- process --------------
+' 
 host = WScript.Arguments(0)
 SysWriter("....." & host & " vslogcopy.vbs enter.....")
 ' 5日間隔でコピー
 Dim w_Day
 w_Day = Day(Now())
+
 If w_Day="5" Or w_Day="10" Or w_Day="15" Or w_Day="20" Or w_Day="25" Or w_Day="30" Then
   src = vp_plot & "\plotimage\" & host & ".log"
   dst = vp_plot & "\plotimage\" & host & ".log.backup"
   Set objFS = CreateObject("Scripting.FileSystemObject")
   objFS.CopyFile src, dst, True
+  SysWriter("Copied " & src & " to " & dst & "every 5 days") 
 End If
 SysWriter("....." & host & " vslogcopy.vbs exit.....") 
