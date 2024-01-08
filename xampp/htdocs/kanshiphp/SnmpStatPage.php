@@ -1,7 +1,7 @@
 <?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-$pgm="SnmpStatPageex.php";
+$pgm="SnmpStatPage.php";
 $value="";
 $host="";
 $tstamp="";

@@ -238,7 +238,6 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   print '<body>';
   print "<h4>Core Refresh {$coreval}sec</h4>";
 
-
   //--------------------表示処理--------------
   ///-------------- refresh処理 --------------
   $starttime=date('ymdHis');
@@ -258,6 +257,63 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   viewscan(); 
   writelogd($pgm,"--------------->> viewscan exit");
   ///--------------------------------------------
+  $h_sql="select host,snmpcomm,agenthost from host where host like '127%'";
+  $h_rows=getdata($h_sql);
+  if(! isset($h_rows)){
+    writeloge($pgm,"Failed No statistics: ".$h_sql); 
+    eventlog($itemarray,"a"); /// 
+    branch($pgm,$user);
+  }
+  foreach ($h_rows as $h_rowrec){
+    $hdata=explode(',',$h_rowrec);
+    $h_host=$hdata[0];
+    $h_comm=$hdata[1];
+    $h_agthost=$hdata[2];
+    $s_sql="select agent from statistics where host='".$h_host."'";
+    $s_rows=getdata($s_sql);
+    if(! isset($s_rows)){
+      writeloge($pgm,"Failed No statistics: ".$s_sql); 
+      eventlog($itemarray,"a"); /// 
+      branch($pgm,$user);
+    }
+    if($h_host=='127.0.0.1'){
+      $oldflag=$s_rows[0];
+      $usql="";
+      $agentflag=agentcheck();
+      if ($agentflag=='0'){ /// 127.0.0.1にsnmpsetでok set
+        putagent('127.0.0.1','private','ok'); ///syslocationへokセット
+        $usql='update statistics set agent="ok" where host="127.0.0.1"';
+        if ($oldflag=='ng'){
+          writelogd($pgm,$usql);      
+        }
+      }else{             /// 127.0.0.1 to set ng by snmpset
+        putagent('127.0.0.1','private','ng'); //syslocationへngセット
+        $usql='update statistics set agent="ng" where host="127.0.0.1"';
+        if ($oldflag=='ok'){
+          writelogd($pgm,$usql);
+        }  
+      }  
+      $rtn=putdata($usql);
+      if (!empty($rtn)){ /// connection error || sql error || not found
+        writeloge($pgm,"Failed DB Access: ".$usql); 
+        eventlog($itemarray,"a"); /// a DB異常
+        branch($pgm,$user);
+      }
+    }else{
+      $astat=getagent($h_agthost,$h_comm);
+      $usql="update statistics set agent='".$astat."' where host='".$h_host."'";
+      $rtn=putdata($usql);
+      if (!empty($rtn)){ /// connection error || sql error || not found
+        writeloge($pgm,"Failed DB Access: ".$usql); 
+        eventlog($itemarray,"a"); /// a DB異常
+        branch($pgm,$user);
+      }
+    }  
+  }
+
+
+
+/* 
   $sql='select agent from statistics where host="127.0.0.1"';
   $rows=getdata($sql);
   $oldflag=$rows[0];
@@ -281,6 +337,8 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
     writeloge($pgm,"Failed DB Access: ".$usql); 
     eventlog($itemarray,"a"); /// a DB異常
   }
+*/
+  ///
   $endtime=date('ymdHis');
   $etimeux=strtotime($endtime);
   $stimeux=strtotime($starttime);

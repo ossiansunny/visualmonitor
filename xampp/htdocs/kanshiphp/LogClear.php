@@ -24,7 +24,7 @@ print '<h2><img src="header/php.jpg" width="30" height="30">&ensp;&ensp;▽　�
 print '<h4>本日以外の選択したログを全て削除します<br>';
 print '削除したいログ種類を選択して、「削除」を実行して下さい</h4>';
 
-print '<form name="upform" method="get" action="logcleardelex.php">';
+print '<form name="upform" method="get" action="logcleardel.php">';
 print '<table border=1>';
 print '<tr><th colspan=3>ログ種類</th></tr>';
 print '<tr>';

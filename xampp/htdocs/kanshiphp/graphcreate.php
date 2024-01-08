@@ -17,7 +17,7 @@ $user="";
 function cfgtemplate($ip,$comm,$gtype,$os,$ttl){
     global $pgm, $vpath_mrtgbase, $vpath_kanshiphp;
     $fname=$vpath_kanshiphp.'\\mrtgcfg\\'.$ip.'.'.$gtype.'.cfg';  //\\が必要
-    writeloge($pgm,$fname);
+    writelogd($pgm,$fname);
     $snmpget=$vpath_mrtgbase.'\\ubin\\snmp'.$gtype.'get.exe '.$ip.' '.$os.' '.$comm;
     $fp = fopen($fname,'w');
     $data = array();

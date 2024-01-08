@@ -88,9 +88,9 @@ if(empty($data)){
   $image = $sdata[12];
 
   if($resultsw == "0") {
-    print "<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　監視対象ホスト：{$viewname}　▽</h2>";
+    print "<h2><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;▽　監視対象ホスト：{$viewname}　▽</h2>";
   }else{
-    print "<h2><font color='red'><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　監視対象ホスト：{$viewname}　▽</font></h2>";
+    print "<h2><font color='red'><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;▽　監視対象ホスト：{$viewname}　▽</font></h2>";
   }
   print '<table border=1>';
   print '<tr><th>ホスト名</th><th>グループ名</th><th>OS種類</th><th>結果</th><th>死活</th><th>表示名</th><th>メール</th></tr>';

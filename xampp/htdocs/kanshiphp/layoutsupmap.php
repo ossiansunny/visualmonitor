@@ -101,7 +101,7 @@ $user=$_GET['user'];
 print '<html><head><meta>';
 print '<link rel="stylesheet" href="kanshi1.css">';
 print '</head><body>';
-print "<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;グループ名、ホスト名変更  ／  レイアウト名：{$layout}</h2>";
+print "<h2><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;グループ名、ホスト名変更  ／  レイアウト名：{$layout}</h2>";
 print '<h4>現用レイアウトのグループ名、ホスト名／IPアドレスが変更出来ます、変更したら「実行」をクリックして下さい<br>';
 print '変更しないものは、そのまま反映されます</h4>';
 $gtable='g'.$layout;

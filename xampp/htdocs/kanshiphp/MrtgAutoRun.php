@@ -21,20 +21,20 @@ $vpath_mrtgbase="";
 $vpath_plothome="";
 $vpatharr=array("vpath_mrtgbase","vpath_plothome");
 $rtnv=pathget($vpatharr);
-//var_dump($rtnv);
 if(count($rtnv)==2){
   $vpath_mrtgbase=$rtnv[0];
   $vpath_plothome=$rtnv[1];  
   $cmd=$vpath_mrtgbase.'\\ubin\\mrtgrun.vbs '.$vpath_mrtgbase;
   $out2 = shell_exec($cmd);
-  writelogd($pgm,$cmd);
+  writelogd($pgm,"call ".$cmd);
+  //$cmd='e:\\VisualMonitor\\mrtg\\gnuplot\\vslogmake.vbs';
   $cmd=$vpath_mrtgbase.'\\ubin\\gnuplot\\vslogmake.vbs '.$vpath_mrtgbase.' '.$vpath_plothome;
   //print PHP_EOL."vslogmake:".$cmd.PHP_EOL;
   $out3 = shell_exec($cmd);
-  writelogd($pgm,$cmd);
+  writelogd($pgm,"call ".$cmd);
 }else{
-  $msg="PATH変数 vpath_mrtgbase vpath_plothomeが得られない、kanshiphp,iniをチェック ";
-  writelogd($pgm,$msg);
+  $msg="パス変数 vpath_mrtgbase vpath_plothomeが得られない kanshiphp.iniをチェック";
+  writeloge($pgm,$msg);
   print "<h4>{$msg}</h4>";
 }
 
@@ -43,11 +43,5 @@ print '</html>';
 
 ?>
 
-<h4>{$msg}</h4>";
-}
 
-print '</body>';
-print '</html>';
-
-?>
 

@@ -139,9 +139,11 @@ if (isset($_GET['delete'])){
   $oldaction=$_GET['oldaction'];  
   $oldaction=$_GET['oldaction'];
   $comm="";
-  if ($action=='2' || $action=='3'){
-    if (isset($_GET['comm']) && $_GET['comm']!=""){
+  if ($action=='2' or $action=='3' or $action='4'){
+    if (isset($_GET['comm']) and $_GET['comm']!=""){
       $comm=$_GET['comm'];
+    }elseif(substr($host,0,3)=='127'){
+      $comm='remote';
     }else{
       $comm='public';
     }
@@ -241,7 +243,13 @@ if (isset($_GET['delete'])){
   }
   $oksval=rtrim($svalue,',');
   $upsql=$sql.$oksval;
+  if(substr($host,0,3)=='127'){
+    $agthost=$_GET['agenthost'];
+    $upsql=$upsql.",agenthost='".$agthost."'";
+    $issw='1';
+  }
   $upsql=$upsql." where host='".$host."'";
+  writelogd($pgm,$upsql);
   if ($issw!='0'){
     putdata($upsql);
     //------------------------------------------
@@ -311,6 +319,7 @@ if (isset($_GET['delete'])){
   $process=$sdata[11];
   $image=$sdata[12];
   $comm=$sdata[13];
+  $agenthost=$sdata[14];
   ///
   print "<h2><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;▽　更新/削除 対象ホスト： {$host} 　▽</h2>";
   ///
@@ -362,25 +371,38 @@ if (isset($_GET['delete'])){
   print '</select></td>';
   print '</tr>';
   ///
-  print '<tr><th>TCPポート</th><th>CPU警告</th><th>メモリ警告</th><th>ディスク警告</th><th colspan="2">監視プロセス</th><th>SNMPコミュニティ</th></tr>';
-  print '<tr>';
-  print "<td><input type=text name=tcpport value={$tcpport}></td>";
-  print "<td><input type=text name=cpulim size=10 value={$cpulim}></td>";
-  print "<td><input type=text name=ramlim size=8  value={$ramlim}></td>";
-  print "<td><input type=text name=disklim size=10  value={$disklim}></td>";
-  print "<td colspan='2'><input type=text name=process  size=30 value={$process}></td>";
-  print "<td><input type=text name=comm size=10 value={$comm}></td>";
+  if (substr($host,0,3)!='127'){
+    print '<tr><th>TCPポート</th><th>CPU警告</th><th>メモリ警告</th><th>ディスク警告</th><th colspan="2">監視プロセス</th><th>SNMPコミュニティ名</th></tr>';
+    print '<tr>';
+    print "<td><input type=text name=tcpport value={$tcpport}></td>";
+    print "<td><input type=text name=cpulim size=10 value={$cpulim}></td>";
+    print "<td><input type=text name=ramlim size=8  value={$ramlim}></td>";
+    print "<td><input type=text name=disklim size=10  value={$disklim}></td>";
+    print "<td colspan='2'><input type=text name=process  size=30 value={$process}></td>";
+    print "<td><input type=text name=comm size=10 value={$comm}></td>";
+  }else{
+    print '<tr><th colspan=2>エージェントホスト名</th><th>SNMPコミュニティ名</th><th colspan=4></th></tr>';
+    print '<tr>';
+    print "<td colspan=2><input type=text name=agenthost size=35 value={$agenthost}></td>";
+    print "<td><input type=text name=comm size=10 value={$comm}></td>";
+    print '<td colspan=4><input type=text name=dummy size=60 value=""></td>';
+  }  
+  /// 
   print "<input type=hidden name=fdata value={$data}>";    ##// all data
   print "<input type=hidden name=oldaction value={$oldaction}>";    ##// old action
   print '</tr>';
   print '</table>';
   ///
-  print '<h4>ＴＣＰポート欄&emsp;&emsp;ポート番号；区切 <br>ＣＰＵ警告欄&emsp;&emsp;&emsp;警告値：危険値<br>メモリ警告欄&emsp;&emsp;&emsp;警告値：危険値<br>ディスク警告欄&emsp;&emsp;警告値：危険値<br>監視プロセス欄&emsp;&emsp;プロセス名；区切、インターネット内のサーバーは先頭に「&」</h4>';
+  if (substr($host,0,3)!='127'){
+    print '<h4>ＴＣＰポート欄&emsp;&emsp;ポート番号；区切 <br>ＣＰＵ警告欄&emsp;&emsp;&emsp;警告値：危険値<br>メモリ警告欄&emsp;&emsp;&emsp;警告値：危険値<br>ディスク警告欄&emsp;&emsp;警告値：危険値<br>監視プロセス欄&emsp;&emsp;プロセス名；区切、プライベートMIBサーバーは先頭に「&」可能</h4>';
+  } else {
+    print '<h4>エージェントホスト名欄&emsp;&emsp;他監視サイトのエージェントホスト名<br>SNMPコミュニティ名欄&emsp;&emsp;エージェントホストのコミュニティ名</h4>';
+  }
   print "<input type=hidden name=user value={$user}>";
   print '&emsp;&emsp;&emsp;<input class=button type="submit" name="update" value="更新実行">';
   print '</form>';
   print '<br>';
-  print '<font color=red>*****「削除」を実行すると、ホスト情報が消えるので注意 *****</font><br>';
+  print '<font color=red>「削除」を実行すると、ホスト情報が消えるので注意 </font><br>';
   ///
   print '<form name="deletedb" type="get" action="hostupdel.php" onSubmit="return check(\''.$host.'\';">';
   print "<input type=hidden name=user value={$user}>";

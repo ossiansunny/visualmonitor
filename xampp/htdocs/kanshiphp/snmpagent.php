@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ///----------------Unix/Windows---------------
 function getagent($host,$community) {
+  /// sysLocation.0にok サイト内全てok ng サイト内にpingエラーあり 
   $resstr = snmpget($host, $community, ".1.3.6.1.2.1.1.6.0");
   $str=explode(':',$resstr);
   $strval=trim($str[1]);

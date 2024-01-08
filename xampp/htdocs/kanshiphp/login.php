@@ -8,6 +8,9 @@ require_once "alarmwindow.php";
 ///
 date_default_timezone_set('Asia/Tokyo');
 $pgm = "login.php";
+$user="";
+$brcode="";
+$brmsg="";
 ///
 function mailstatset($server,$port,$from,$to,$subj,$body){
   $pingsw=hostping($server);
@@ -76,8 +79,7 @@ function setsess($value){
 $fsw=0;  /// 初回=0 param有り=1
 $ercde="0"; /// "1":no mailserer
 $esw=0;
-$brcode="";
-$brmsg="";
+
 $mailserver="";
 $mailport=587;
 /// get admin data
@@ -98,17 +100,17 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
   /// login ボタン押した時の処理
   if (isset($_GET['login'])){  
     /// 初期化処理（現在使用していない）
-    if (isset($_GET['init'])){ 
-      if ($_GET['init']=="on"){
-        echo "Initialize";
-        $upsql='update admintb set kanriname=null';
-        putdata($upsql);
-        writeloge($pgm,"----- VisualMonitor has Initialized -----");
-        $sub = "Initialize " . $user;
-        $message=$user.' Initialized';
-        mailsendany('loginlogout',$fromaddr,$toaddr,$sub,$message);
-      }
-    }
+    //if (isset($_GET['init'])){ 
+    //  if ($_GET['init']=="on"){
+    //    echo "Initialize";
+    //    $upsql='update admintb set kanriname=null';
+    //    putdata($upsql);
+    //    writeloge($pgm,"----- VisualMonitor has Initialized -----");
+    //    $sub = "Initialize " . $user;
+    //    $message=$user.' Initialized';
+    //    mailsendany('loginlogout',$fromaddr,$toaddr,$sub,$message);
+    //  }
+    //}
     /// login処理
     $passwd=$_GET['passwd'];
     $user=$_GET['user'];
@@ -124,17 +126,17 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
       $msg="#2002#".$user."#●入力したユーザー".$user."がありません、&lt;br&gt;ログイン出来るユーザーでログインして下さい";
       writeloge($pgm,$msg);
       branch($pgm,$msg);
-      echo '</body></html>';
+      //echo '</body></html>';
     }else{ 
       /// userあり
       foreach ($udata as $urec){  
         $sdata=explode(',',$urec);
         if ($passwd != $sdata[1]){
           /// password一致せず
-          $msg="#2002#".$user." ●パスワードが不正です、&lt;br&gt;正しいパスワードでログインして下さい";
+          $msg="#2002#".$user."#●パスワードが不正です、&lt;br&gt;正しいパスワードでログインして下さい";
           writeloge($pgm,$msg);
           branch($pgm,$msg);
-          echo '</body></html>';
+          //echo '</body></html>';
         }else{
           /// password一致
           $msg=$user." Login Successfull";
@@ -255,10 +257,9 @@ echo '</form>';
 echo '</div>';
 echo '<div class="login">';
 ///
-
-if ($esw == 1){
+if ($esw == 1){ /// loginエラー
   echo "<div><h4><font color=red>{$brmsg}</font></h4></div>";
-}else if ($esw == 2){
+}else if ($esw == 2){ /// mailserver エラー
   echo "<div><h4><font color=yellow>{$brmsg}</font></h4></div>";
 }else {
   echo "<div><h4><font color=white>{$brmsg}</font></h4></div>";

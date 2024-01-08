@@ -167,8 +167,8 @@ function layoutsform($user,$garr,$sarr){
             $statval=explode(',',$statdata[0]);
             if($result != "1"){ /// 障害中 statistics データ表示しない
               print '<td></td>'; 
-            }else if($hostname!='127.0.0.1'){ ///agent以外の処理
-              if ($statval[2]=='9'){
+            }else if(substr($hostname,0,3)!='127'){ ///agent 127.x.x.x以外の処理
+              if ($statval[2]=='9'){ /// statisticsのgtype欄
                 $agst='aprob';
                 print "<td class=snmp align=center><table><tr><td class={$agst} align=center>standby</td></tr></table></td>";
               } else {
@@ -181,8 +181,8 @@ function layoutsform($user,$garr,$sarr){
                 $cb5=jdgnc($statval[8],$hostinfo[7]);  ///port            
                 print "<td class=snmp align=center><table border=0><tr><td class={$cb1}>c</td><td class={$cb2}>r</td><td class={$cb3}>d</td><td class={$cb4}>p</td><td class={$cb5}>t</td></tr></table></td>";
               }
-            }else{ /// 127.0.0.1  Managerの処理
-              if($statval[5]=='ok'){
+            }else{ /// 127.x.x.x  Managerの処理
+              if($statval[5]=='ok'){ /// statisticsのagent欄
                 $amsg='No Problem ';
                 $agst='snorm';
               }else{
