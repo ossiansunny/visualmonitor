@@ -139,7 +139,7 @@ if (isset($_GET['delete'])){
   $oldaction=$_GET['oldaction'];  
   $oldaction=$_GET['oldaction'];
   $comm="";
-  if ($action=='2' or $action=='3' or $action='4'){
+  if ($action=='2' or $action=='3' or $action=='4'){
     if (isset($_GET['comm']) and $_GET['comm']!=""){
       $comm=$_GET['comm'];
     }elseif(substr($host,0,3)=='127'){
