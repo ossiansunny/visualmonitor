@@ -139,7 +139,7 @@ function hostcreate(){
   }
   $delsql="delete from host where host='".$hostmei."'";
   putdata($delsql);
-  $insql="insert into host values('".$hostmei."','".$groupname."','".$ostype."','".$result."','".$action."','".$viewname."','".$mailopt."','".$tcpport."','".$cpulimit."','".$ramlimit."','".$disklimit."','".$process."','".$image."','".$comm."')";
+  $insql="insert into host values('".$hostmei."','".$groupname."','".$ostype."','".$result."','".$action."','".$viewname."','".$mailopt."','".$tcpport."','".$cpulimit."','".$ramlimit."','".$disklimit."','".$process."','".$image."','".$comm."','')";
   putdata($insql); 
   ///
   /// statisticsレコードの削除と作成
