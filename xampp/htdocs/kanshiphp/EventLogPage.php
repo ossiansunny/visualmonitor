@@ -198,7 +198,7 @@ if(!isset($_GET['param'])){
         }
       }elseif($snmpval=='7'){
         $snmpval='保留';
-      }elseif($evlsnmptyp=='5' and $snmpval='empty'){
+      }elseif($evlsnmptyp=='5' and $snmpval=='empty'){
         $snmpval='指定なし';
         $etyp='監視正常';
       } 
