@@ -109,6 +109,7 @@ function hostcreate(){
     $trapsw = '1';
   }
 ///
+/*
   if ($action=='2' || $action=='3'){
     $status=snmpactive($hostmei,$comm);
     if ($status==1){
@@ -126,6 +127,8 @@ function hostcreate(){
       branch($nextpage,$msg);
     }
   }
+*/
+  
   if ($image == ''){
     if ($ostype=='0'){
       $image="pc.png";
@@ -138,8 +141,8 @@ function hostcreate(){
     }
   }
   $delsql="delete from host where host='".$hostmei."'";
-  putdata($delsql);
-  $insql="insert into host values('".$hostmei."','".$groupname."','".$ostype."','".$result."','".$action."','".$viewname."','".$mailopt."','".$tcpport."','".$cpulimit."','".$ramlimit."','".$disklimit."','".$process."','".$image."','".$comm."')";
+  putdata($delsql);  //ok
+  $insql="insert into host values('".$hostmei."','".$groupname."','".$ostype."','".$result."','".$action."','".$viewname."','".$mailopt."','".$tcpport."','".$cpulimit."','".$ramlimit."','".$disklimit."','".$process."','".$image."','".$comm."','')";
   putdata($insql); 
   ///
   /// statisticsレコードの削除と作成
@@ -147,12 +150,10 @@ function hostcreate(){
   $delsql="delete from statistics where host='".$hostmei."'";
   putdata($delsql);
   $msg = $hostmei . " 既存SNMP状態レコード削除完了";
-  writeloge($pgm,$msg);
   $insql="insert into statistics (host,tstamp,gtype) values('".$hostmei."','000000000000','9')";
   putdata($insql); 
   $dbrc=putdata($insql);
   $msg = $hostmei . " SNMP状態レコード作成完了";
-  writeloge($pgm,$msg);
   ///
   /// eventレコードの作成
   ///
@@ -161,7 +162,6 @@ function hostcreate(){
   $insql="insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$hostmei."','".$etime."','".$etype."','".$user."')";
   putdata($insql); 
   $msg = $insql . " イベントレコード作成完了";
-  writeloge($pgm,$msg);
   ///
   if ($trapsw=='1'){
     $processx=mb_substr($process,1); //top char strip
@@ -222,7 +222,7 @@ if (isset($_GET['create'])){
   print '<h4>&emsp;&emsp;&emsp;☆各項目の文字列間に空白を入れないこと（例：[abc def]はNG, [abcdef]または[abc_def]はOK）</h4>';
   print '<form name="newhost" method="get" action="NewHostPage.php">';
   print '&emsp;<span class=kom>ホスト名：</span>&ensp;<input type="text" name="hostname" placeholder="ホスト名又はIPアドレス" size="25" maxlength="25" value="" required/>';
-  $sql='select * from serverimage order by image';
+  $sql='select * from serverimage';
   $rows=getdata($sql);
   $rowcnt=count($rows);
   print '&emsp;<span class=kom>モニター画像：</span>&ensp;<select name="image">';

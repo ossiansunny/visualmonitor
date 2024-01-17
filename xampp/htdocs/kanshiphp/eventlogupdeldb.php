@@ -68,7 +68,13 @@ if ($ck_radio=='confirm'){     // 「障害確認」ボタン ---> statistics gt
   $usql='update host set result="8" where host="'.$ev_host.'"';
   putdata($usql); 
   writelogd($pgm,$usql);
-}elseif ($ck_radio=='close'){  // 「処置完了」ボタン ---> statistics gtype=7
+}elseif ($ck_radio=='close'){
+  /// 「処置完了」ボタン ---> statistics gtype=7
+  if ($ev_cfcs!='2'){
+    $msg="#error#".$user."#クローズ処理は「確認済」ログを選択して下さい";
+    $nextpage="EventLogPage.php";
+    branch($nextpage,$msg);
+  }
   $confclose = "2";          // confclose=2
   mailsendevent($fckbox,$kanrimei,$kanrino,$confclose,$memomsg);
   $dsql="delete from eventlog where host='".$ev_host."'";

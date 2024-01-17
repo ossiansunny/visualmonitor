@@ -28,12 +28,12 @@ print '<form name="upform" method="get" action="logcleardel.php">';
 print '<table border=1>';
 print '<tr><th colspan=3>ログ種類</th></tr>';
 print '<tr>';
-print '&emsp;&emsp;&emsp;&emsp;<td><span class=trylw>監視ログ：</span><input type="radio" name="log" value="監視" ></td>';
-print '&emsp;&emsp;&emsp;&emsp;<td><span class=trylw>Webログ：</span><input type="radio" name="log" value="Web" ></td>';
+print '&emsp;&emsp;&emsp;&emsp;<td><span class=trylw>監視ログ：</span><span class=trblk><input type="radio" name="log" value="監視" ></span></td>';
+print '&emsp;&emsp;&emsp;&emsp;<td><span class=trylw>Webログ：</span><span class=trblk><input type="radio" name="log" value="Web" ></span></td>';
 print "<input type='hidden' name='user' value={$user}>";
-print '&emsp;&emsp;&emsp;&emsp;<td><span class=trylw>プロットログ：</span><input type="radio" name="log" value="プロット" ></td>';
+print '&emsp;&emsp;&emsp;&emsp;<td><span class=trylw>プロットログ：</span><span class=trblk><input type="radio" name="log" value="プロット" ></span></td>';
 print '</tr></table><br>';
-print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<input class="buttondel" type="submit" name="show" value="削除"><br><br>';
+print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<input class="buttondel" type="submit" name="show" value="削除"></span><br><br>';
 print '</form>';  
 
 print '&ensp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="MonitorManager.php"><span class=buttonyell>監視モニターへ戻る</span></a>';

@@ -59,10 +59,10 @@ if(!isset($_GET['param'])){
   /// 画面表示処理-
   ///
   print '<h3>ログは、最新のものから出力されます</h3>';
-  print '<h3>☆障害確認する場合は、赤行「監視異常」又はレンガ色「監視注意」を選択し、「選択実行」をクリックします<br>';
-  print '☆障害クローズをする場合は、確認黄色の「障害確認済」を選択し、「選択実行」をクリックします<br>';
-  print '☆単一ログを削除する場合は、「選択削除実行」をクリックします<br>';
-  print '☆ログの範囲を削除する場合は、範囲を指定して「範囲削除実行」をクリックします</h4>'; 
+  print '<h3>☆障害確認する場合は、<span class=trred>赤色背景行「監視異常」</span>又は<span class=trpnk>レンガ色背景行「監視注意」</span>を選択し、<span class=trblk>「選択実行」</span>をクリックします<br>';
+  print '☆障害クローズをする場合は、<span class=trylw>黄色背景行確認欄「障害確認済」</span>を選択し、<span class=trblk>「選択実行」</span>をクリックします<br>';
+  print '☆単一ログを削除する場合は、〇を選択し<span class=trred>「選択削除実行」</span>をクリックします<br>';
+  print '☆ログの範囲を削除する場合は、範囲yy-mm-ddを入力して<span class=trred>「範囲削除実行」</span>をクリックします</h4>'; 
   print '<table class="nowrap">';
   print '<tr><th >日付:時刻</th><th>ホスト</th><th>イベント種類</th><th>snmp監視</th><th>snmp状態</th><th>管理者</th><th>障害管理番号</th><th>確認</th><th>処置メール</th></tr>';
 
@@ -78,9 +78,9 @@ if(!isset($_GET['param'])){
     $evleventtyp=$sdata[2];
     $evlsnmptyp=$sdata[3];
     $evlsnmpval=$sdata[4];
-    $evlcnfcls=$sdata[7];
-    $evlmailopt=$sdata[8];    
-    $strdata = myjoin($sdata); ///## vieweventlog.phpへ渡すデータ
+    $evlcnfcls=$sdata[7];  ///
+    $evlmailopt=$sdata[8]; ///   
+    //$strdata = myjoin($sdata); ///## vieweventlog.phpへ渡すデータ
     $edt=$sdata[1];
     $dte = substr($edt,0,2)."-".substr($edt,2,2)."-".substr($edt,4,2)." ".substr($edt,6,2).":".substr($edt,8,2).":".substr($edt,10,2);
     $styp="";
@@ -90,7 +90,9 @@ if(!isset($_GET['param'])){
     $kanrisha="";
     $kanrino="";
     $triro="";
-
+    //if ($evlsnmptyp=='7'){
+    //  var_dump($strdata);
+    //}
     if (! is_null($evlsnmpval)){ //##snmpvale
       $snmpval=$evlsnmpval;
       if ($snmpval=='allok'){
@@ -111,7 +113,7 @@ if(!isset($_GET['param'])){
       $triro = "trred";
     }elseif ($evleventtyp=='3'){ // ##
       $etyp='監視管理';
-      $triro = "trblk";
+      $triro = "trylw";
     }elseif ($evleventtyp=='4'){
       $etyp='対象削除';
       $triro = "trylw";
@@ -125,11 +127,11 @@ if(!isset($_GET['param'])){
       $etyp='監視開始';
       $triro = "trylw";
     }elseif ($evleventtyp=='0'){
-      $etyp='Login';
-      $triro = "trblk";
+      $etyp='ログイン';
+      $triro = "trylw";
     }elseif ($evleventtyp=='9'){
-      $etyp='Logout';
-      $triro = "trblk";
+      $etyp='ログアウト';
+      $triro = "trylw";
     }elseif ($evleventtyp=='a'){
       $etyp='DBアクセス';
       $triro = "trred";
@@ -138,7 +140,7 @@ if(!isset($_GET['param'])){
       $triro = "trred";
     } // endif
     /// event type 削除　新規　修正
-    if ($evleventtyp=="4" || $evleventtyp=="5" || $evleventtyp=="6"){ // event type=削除　新規　修正
+    if ($evleventtyp=="4" or $evleventtyp=="5" or $evleventtyp=="6"){ // event type=削除　新規　修正
       $styp="";
       $ctyp="";
       $mtyp="";
@@ -150,64 +152,69 @@ if(!isset($_GET['param'])){
         }elseif ($evlsnmptyp=='1'){
           //$styp='無応答';
           $styp="";
-        }elseif ($evlsnmptyp=='2'){ //##cpu
-          if ($evleventtyp=='7' and $nwc[0]=='n'){ // 監視開始&n
+        }elseif ($evlsnmptyp=='2'){ /// cpu
+          if ($evleventtyp=='7' and $nwc[0]=='n'){ ///監視開始+n
             $styp='CPU負荷%';
-          }elseif($evleventtyp=='1' and $nwc[0]=='n'){
+          }elseif($evleventtyp=='1' and $nwc[0]=='n'){ ///監視正常+n
             $styp='CPU負荷%';
-            $etyp='監視正常';            
+            $etyp='監視正常';
           }else{
             $styp='CPU負荷%';
             $etyp='監視注意';
           }  
-        }elseif ($evlsnmptyp=='3'){ //##ram
-          if ($evleventtyp=='7' && $nwc[0]=='n'){
+        }elseif ($evlsnmptyp=='3'){ /// ram
+          if ($evleventtyp=='7' and $nwc[0]=='n'){ ///監視開始+n
             $styp='メモリ負荷%';
-          }elseif($evleventtyp=='1' and $nwc[0]=='n'){
+          }elseif($evleventtyp=='1' and $nwc[0]=='n'){ ///監視正常+n
             $styp='メモリ負荷%';
             $etyp='監視正常';            
           }else{
             $styp='メモリ負荷%';
             $etyp='監視注意';            
           }
-        }elseif ($evlsnmptyp=='4'){ //##disk
-          if ($evleventtyp=='7' && $nwc[0]=='n'){
+        }elseif ($evlsnmptyp=='4'){ /// disk
+          if ($evleventtyp=='7' and $nwc[0]=='n'){ ///監視開始+n
             $styp='ディスク負荷%';
-          }elseif($evleventtyp=='1' and $nwc[0]=='n'){
+          }elseif($evleventtyp=='1' and $nwc[0]=='n'){ ///監視正常+n
             $styp='ディスク負荷%';
             $etyp='監視正常';            
           }else{
             $styp='ディスク負荷%';
             $etyp='監視注意';            
           }
-        }elseif ($evlsnmptyp=='5'){ //##process
+        }elseif ($evlsnmptyp=='5'){ /// process
           $styp='プロセス未稼働';
-          $etyp='監視注意';           
+          //$etyp='監視注意';           
         }elseif ($evlsnmptyp=='6'){ //##tcpport
           $styp='ポート閉鎖';
-          $etyp='監視注意';           
+          //$etyp='監視注意';           
         }elseif ($evlsnmptyp=='7'){ 
-          $styp='保留';
+          $styp='クローズ待ち';
         }else{
           $styp='';
         }
       } // endif A
-      if ($snmpval==''){
-        if ($evlsnmptyp=='2' || $evlsnmptyp=='3' || $evlsnmptyp=='4' || $evlsnmptyp=='5' || $evlsnmptyp=='6'){
-          $snmpval='データロスト';          
+      if ($snmpval=='' or !isset($snmpval)){
+        if ($evlsnmptyp=='2' or $evlsnmptyp=='3' or $evlsnmptyp=='4' or $evlsnmptyp=='5' or $evlsnmptyp=='6'){
+          $snmpval='データロスト';
         }
-      }elseif($snmpval=='7'){
-        $snmpval='保留';
-      }elseif($evlsnmptyp=='5' and $snmpval='empty'){
+      }
+      if($snmpval=='7'){
+        $snmpval='クローズ待ち';
+      }
+      if($evlsnmptyp=='5' and $snmpval=='empty'){
         $snmpval='指定なし';
         $etyp='監視正常';
+        $triro = "trblk";
       } 
-      if ($evlcnfcls != '0'){         // イベントログの確認項目が「確認」
+      if ($evlcnfcls != '0'){ /// イベントログの確認項目が「確認」
         $etype='監視管理';
         if ($evlcnfcls=='1'){
           $ctyp='障害確認';
           $styp="";
           $snmpval="";
+          $triro = "trblk";
+          //var_dump($sdata);
         }elseif ($evlcnfcls=='2'){
           $ctyp='障害確認済';
           $triro="trylw";
@@ -227,13 +234,15 @@ if(!isset($_GET['param'])){
       }
       
     }
-    if ($etyp=='監視注意'){
+    /// 
+    if ($etyp=='監視注意' and $evlcnfcls!='1'){
       $triro= 'trpnk';
-    }elseif($etyp='監視正常'){
-      $triro= 'trblk';
     }
  // endif 
-    print "<tr class={$triro}><td class={$triro}><input type='radio' name='evdata' value={$strdata} >{$dte}</td>";
+    if($evlcnfcls=='1'){
+      var_dump($triro);
+    }
+    print "<tr class={$triro}><td class={$triro}><input type='radio' name='evdata' value={$rowsrec} >{$dte}</td>";
     print "<td class={$triro} width=200> &nbsp;{$sdata[0]}</td>";
     print "<td class={$triro}> &nbsp;{$etyp}</td>";
     print "<td class={$triro}> &nbsp;{$styp}</td>";
@@ -242,7 +251,7 @@ if(!isset($_GET['param'])){
     print "<td class={$triro}> &nbsp;{$kanrino}</td>";
     
     if ($evlcnfcls=='1') {
-      print "<td class=trylw> &nbsp;{$ctyp}</td>";
+      print "<td class=trblk> &nbsp;{$ctyp}</td>";
     } elseif ($evlcnfcls=='2') {
       print "<td class=trylw> &nbsp;{$ctyp}</td>";
     } else {

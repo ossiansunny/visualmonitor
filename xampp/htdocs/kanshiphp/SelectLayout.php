@@ -31,10 +31,10 @@ if (!isset($_GET['param'])){
     $itemarray=explode(',',$item);
     print '<tr>';
     if ($itemarray[0]=='layout'){
-      print "<td ><input type='radio' name='terms' value={$itemarray[0]}>現用</td>";
+      print "<td class=trylw><span class=trblk><input type='radio' name='terms' value={$itemarray[0]}></span>現用</td>";
     }else{
       $layname=explode('_',$itemarray[0]);
-      print "<td><input type='radio' name='terms' value={$itemarray[0]}>{$layname[1]}</td>";
+      print "<td class=trylw><span class=trblk><input type='radio' name='terms' value={$itemarray[0]}></span>{$layname[1]}</td>";
     }
     print '</tr>';
   }

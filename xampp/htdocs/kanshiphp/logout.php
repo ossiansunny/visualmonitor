@@ -23,7 +23,7 @@ if(!isset($_GET['param'])){
   
   $to=$adata[3];
   $from=$adata[4];
-  $logname='LOGOUT '.$user;
+  $logname='LOGOUT_'.$user;
   /// Write Event Log
   $insql = "insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$logname."','".$tstamp."','9','".$user."')";
   putdata($insql); 

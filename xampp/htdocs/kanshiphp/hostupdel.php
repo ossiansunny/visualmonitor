@@ -30,7 +30,7 @@ function snmpcheck($host,$ostype,$comm){
       writelogsendmail('SNMP応答チェック無応答',$host);
     }
   }
-  return $status;
+  return $status; /// 0:ok 1:ng
 }
 
 function cksemicolon($_data,$host){
@@ -136,10 +136,10 @@ if (isset($_GET['delete'])){
   $groupname='notused';
   $ostype=$_GET['ostype'];
   $action=$_GET['action'];
-  $oldaction=$_GET['oldaction'];  
-  $oldaction=$_GET['oldaction'];
+  $oldaction=$_GET['oldaction']; 
+  //writeloge($pgm,'$action='.$action.' oldaction='.$oldaction); /////// 
   $comm="";
-  if ($action=='2' or $action=='3' or $action='4'){
+  if ($action=='2' or $action=='3' or $action=='4'){
     if (isset($_GET['comm']) and $_GET['comm']!=""){
       $comm=$_GET['comm'];
     }elseif(substr($host,0,3)=='127'){
@@ -148,7 +148,17 @@ if (isset($_GET['delete'])){
       $comm='public';
     }
     if ($action!=$oldaction){
-      snmpcheck($host,$ostype,$comm);
+      $rtnck=snmpcheck($host,$ostype,$comm);
+      if($rtnck!=0){
+        $msg = '#error#'.$user.'#ホスト'.$host.'SNMPコミュニティがアクセス不可、更新無効';
+        $nextpage = "HostListPage.php";
+        writelogd($pgm,$msg);
+        branch($nextpage,$msg);
+      }
+    }
+  }else{
+    if (isset($_GET['comm']) and $_GET['comm']!=""){
+      $comm=$_GET['comm'];
     }
   }
   $view = $_GET['viewname'];
@@ -235,6 +245,7 @@ if (isset($_GET['delete'])){
     $wtval = explode('|',$wtrec);
     if ($wtval[0]=='2'){ //## update target = 2
       $svalue=$svalue.$wtval[1]. "='" .$wtval[2]. "',";
+      //writeloge($pgm,'temporary '.$svalue); /////////////////
       $issw='1';
       if ($wtval[1]=='process' && $trapsw=='1'){
         $trapsw = '2';
@@ -249,7 +260,7 @@ if (isset($_GET['delete'])){
     $issw='1';
   }
   $upsql=$upsql." where host='".$host."'";
-  writelogd($pgm,$upsql);
+  //writeloge($pgm,$upsql);   /////////////////////////////
   if ($issw!='0'){
     putdata($upsql);
     //------------------------------------------

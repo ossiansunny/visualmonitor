@@ -40,11 +40,11 @@ if (!isset($_GET['param'])){
     print "<input type=hidden name=user value={$user}>";
     print '<tr>';
     if($item=='layout'){
-      print "<td ><input type='radio' name='terms' value={$item}>現用</td>";
-      print '<td ><input type=text name=tosave value="" size=10 ></td>';
+      print "<td class=trylw><span class=trblk><input type='radio' name='terms' value={$item}></span>現用</td>";
+      print '<td class=trylw><span class=trblk><input type=text name=tosave value="" size=10 ></span></td>';
       print '<td><input class=button type="submit" name="save" value="現用を保存先へ保存"></td>';
     }else{
-      print "<td><input type='radio' name='terms' value={$item}>{$itemarr[1]}</td>";
+      print "<td class=trylw><span class=trblk><input type='radio' name='terms' value={$item}></span>{$itemarr[1]}</td>";
       print '<td>現用</td>';
       print '<td><input class=button type="submit" name="load" value="レイアウトを現用へ読込"></td>';
       print '<td><input class=buttondel type="submit" name="dele" value="レイアウトを削除"></td>';

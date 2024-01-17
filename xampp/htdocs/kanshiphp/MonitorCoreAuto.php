@@ -138,7 +138,7 @@ function viewscan(){
       ///        
       /// action 1,2,3,4の場合 
       ///
-      if ($c_action=='1' || $c_action=="2" || $c_action=="3" || $c_action=="4"){  // action=1(ping),2(snmp),3(snmp通知なし),4(agent監視)
+      if ($c_action=='1' or $c_action=="2" or $c_action=="3" or $c_action=="4"){  // action=1(ping),2(snmp),3(snmp通知なし),4(agent監視)
         /// 前回結果 正常　result=1
         if ($c_result=='1'){  
           $rtn = hostping($c_host); // winhostping(windows command)
@@ -147,6 +147,9 @@ function viewscan(){
             resultdbupdate($c_host,"2"); ///ホストデータ更新 result=2
             writelogd($pgm,$msg1);
             eventlog($itemarray,"2"); ///イベントログ作成
+            /// clear statistics snmp value 
+            $usql='update statistics set cpuval="",ramval="",diskval="",process="",tcpport="" where host="'.$c_host.'"';
+            $rtn=putdata($usql);
             if ($c_mailopt=='1'){  // mailopr=1 mail send
               ping($grec,'PROBLEM');  ///メール送信
             }
@@ -160,14 +163,15 @@ function viewscan(){
            } 
           }  
         /// 前回結果 異常　result 0,2
-        }else if ($c_result=='0' || $c_result=='2'){ /// result=0 or 2
+        }else if ($c_result=='0' or $c_result=='2'){ /// result=0 or 2
           $rtn = hostping($c_host);  /// winhostping(winddows command)
-          $msg1="viewscan: ".$c_host. " result=2 new action rc=:".strval($rtn);
+          $msg1="viewscan: ".$c_host. " result=2 new action rc=".strval($rtn);
           writelogd($pgm,$msg1);
           /// ping ok
           if ($rtn == 0){
             resultdbupdate($c_host,"1"); /// update result=1
             eventlog($itemarray,"1");  ///normal event
+            writelogd($pgm,'host='.$c_host.'ping return=0');
             /// mail send check(active,dead and itemarray set)
             if ($c_mailopt=='1'){
               ping($grec,'RECOVERY'); ///send mail for ping
@@ -184,15 +188,16 @@ function viewscan(){
                 $usql='update statistics set gtype="6" where host="'.$c_host.'"';
                 putdata($usql);
                 eventlog($itemarray,"3");  ///確認 event
-              
-              } elseif ($gtype!="6"){
-                /// statistics gtype="6" -> eventlog skip
+              } 
+              if ($gtype!="6"){ /// statistics gtype="6" -> eventlog skip
+                /// gtype='0:未監視 4:無応答'
                 eventlog($itemarray,"2");  ///error event
+                writeloe($pgm,'write eventlog gtype='.$gtype);
               }
             }
           }
         /// 前回結果 障害中最終　result 9
-        }else if ($c_result=="9"){
+        }else if ($c_result=="4"){ /// 9
           resultdbupdate($c_host,"2"); /// update result=2 roundtrip
         
         /// 前回結果　障害中　result 3,4,5,6,7,8

@@ -19,6 +19,8 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
   paramGet($pgm);
 }else{
   /// admintbの更新
+  $now=date('ymdHis');
+  $tstamp = $now;
   if (isset($_GET['update'])){
     $user=$_GET['user'];
     $auth=$_GET['auth'];
@@ -52,6 +54,9 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
     if($uprc == 0){    
       $msg='AdminTB Updated sql: '.$upsqlmsg;
       writelogd($pgm,$msg);
+      $logname='GLOBAL_'.$user;
+      $insql = "insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$logname."','".$tstamp."','3','".$user."')";
+      putdata($insql);
       $message='Update admintb';
       mailsendany('adminsubject',$sender,$recv,$subj,$message);
     }else{
@@ -60,7 +65,7 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
     }
     $nextpage="MonitorManager.php";
     branch($nextpage,$user);
-    exit;
+    
   ///　画面表示処理
   }else{
     $user=$_GET['param'];

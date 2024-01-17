@@ -44,14 +44,15 @@ if (isset($_GET['evdata'])){
   $sdata=explode(',',$fckrec);
   $ev_host = $sdata[0];
   $ev_time = $sdata[1];
-  $ev_type = $sdata[2];
-  $ev_snmptype = $sdata[3];
-  $ev_snmpval = $sdata[4];
+  $ev_type = $sdata[2]; /// 3
+  $ev_snmptype = $sdata[3]; /// 7
+  $ev_snmpval = $sdata[4]; /// 7
   $ev_kanri = $sdata[5];
   $ev_kanrino = $sdata[6];
-  $ev_cnfcls = $sdata[7];
-  $ev_mlsend = $sdata[8];
+  $ev_cnfcls = $sdata[7];  /// 2
+  $ev_mlsend = $sdata[8];  /// 0
   $ev_msg = $sdata[9];
+  //var_dump($_GET['evdata']);
 }
 if (isset($_GET['delete'])){
   $delsql='delete from eventlog where host="'.$ev_host.'" and eventtime="'.$ev_time.'"';
@@ -84,7 +85,7 @@ if (isset($_GET['delete'])){
   }
 }
 print '<html><head><meta>';
-print '<link rel="stylesheet" href="kanshi1.css">';
+print '<link rel="stylesheet" href="kanshi1_py.css">';
 print '</head><body>';
 print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　ログデータの表示と処理　▽</h2>';
 print '<h4>選択したデータに下記の「必要な処理」をします</h4>';
@@ -99,6 +100,9 @@ $host=$ev_host;
   }elseif ($ev_type=='2'){
     $ctype ="監視異常";
     $triro = "trred";
+  }elseif ($ev_type=='3'){
+    $ctype ="監視管理";
+    $triro = "trylw";
   }elseif ($ev_type=='4'){
     $ctype ="対象削除";
     $triro = "trylw";
@@ -121,31 +125,50 @@ $host=$ev_host;
   ///--- snmpタイプ処理
   if ($ev_snmptype=='2'){
     $stype ="CPU警告";
+    $ctype="監視注意";
+    $triro="trpnk";
   }elseif ($ev_snmptype=='3'){
     $stype ="RAM警告";
+    $ctype="監視注意";
+    $triro="trpnk";
   }elseif ($ev_snmptype=='4'){
     $stype ="HDD警告";
+    $ctype="監視注意";
+    $triro="trpnk";
   }elseif ($ev_snmptype=='5'){
-    $stype ="Process警告";
+    $stype ="Process不在";    
   }elseif ($ev_snmptype=='6'){
-    $stype ="PORT警告";
+    $stype ="PORT閉鎖";
+  }elseif ($ev_snmptype=='7'){
+    $stype ="";
+    $cc = "";
+    if ($ev_cnfcls == "2"){
+      $cc = "確認済";
+    }
+    
+    if ($ev_mlsend == "1"){
+      $ms = "送信済";
+    }else{
+      $ms = "未送信";
+    }
   }else{
     $stype ='';
   }
   ///--- snmp測定値処理
-  if (is_null($ev_snmpval) || $ev_snmpval==''){
+  if (is_null($ev_snmpval) or $ev_snmpval=='' or $ev_snmptype=='7'){
     $okspp='';
   }else{
     $snmpval=$ev_snmpval; 
     $okspp=$snmpval;
   }
   ///--- 報告者、障害番号処理
-  if (is_null($ev_kanri) || $ev_kanri==''){
+  if (is_null($ev_kanri) or $ev_kanri==''){
     $kmei = '21001';
   }else{
     $kmei = $ev_kanri;
   }
-  if (is_null($ev_kanrino) || $ev_kanrino==''){
+  if (is_null($ev_kanrino) or $ev_kanrino==''){
+    /*
     $rdsql="select * from admintb";
     $rows=getdata($rdsql);
     $admindata=$rows[0];
@@ -155,14 +178,16 @@ $host=$ev_host;
     $svkno=sprintf('%04d',$upkno);
     $upsql='update admintb set kanrino='.$svkno;
     putdata($upsql);
+    */
+    $kno = '';
   }else{
     $kno = $ev_kanrino;
   }
   /// 確認、未確認処理
   if ($ev_cnfcls=='1'){ 
-    $cc ="確認済";
+    $cc ="確認";
   }elseif ($ev_cnfcls=='2'){ 
-    $cc ="確認？";
+    $cc ="確認済";
   }elseif ($ev_cnfcls=='3'){ 
     $cc ="クローズ";
   }else{
@@ -199,12 +224,12 @@ print '</table>';
 
 if ($auth=='1'){
   print '<h4>　必要な処理<br>';
-  print '　注：障害確認、障害クローズは、ホスト単位で行われます<br>';
-  print '　　●障害確認　　　障害発生を確認したときの処理<br>';
-  print '　　　イベントログに確認済を表示<br>';
-  print '　　●障害クローズ　障害処置を完了したときの処理<br>';
-  print '　　　同じホストイベント全データを削除、メモに障害情報を保存<br>';
-  print '　　●メモを保存　　メモを残すときの処理<br>';
+  print '　注：障害確認、障害解決は、対象ホスト単位で行われます<br>';
+  print '　　●障害確認（コンファーム）　障害発生を確認したときの処理<br>';
+  print '　　　イベントログに確認を表示<br>';
+  print '　　●障害解決（クローズ）　　　障害処置を完了したときの処理<br>';
+  print '　　　対象ホストイベント全データを削除、メモに障害情報を保存<br>';
+  print '　　●メモを保存　　　　　　　　メモを残すときの処理<br>';
   print '　　　任意の情報をメモに保存';
   print '</h4>';
 
@@ -212,18 +237,19 @@ if ($auth=='1'){
   print "<input type='hidden' name='fckbox' value={$fckrec} />";
   print "<input type='hidden' name='user' value={$user} />";
   print '<hr>';
-  print '<h4>☆　障害確認は「障害確認」を実行します</h4>';  
+  print '<h4>☆　障害確認は、<span class=trylw>「障害確認」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';  
   print '<hr>';
-  print '<h4>☆　障害種類、障害管理番号、メモメッセージを入力して「処置完了」または「メモ保存」を実行します</h4>';
+  print '<h4>☆　障害解決は、障害種類、障害管理番号、メモメッセージを入力し、<span class=trylw>「処置完了」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';
+  print '<h4>☆　メモを残したい場合は、障害種類、障害管理番号、メモメッセージを入力し、<span class=trylw>「メモ保存」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';
   print "&emsp;障害種類：<input type='text' name='kanrimei' size='8' maxlength='8' placeholder='例：無応答'/>";
   print "&emsp;障害管理番号：<input type='text' name='kanrino' size='12' maxlength='12' placeholder='例：2310260001'/><br>";
   print '&emsp;メモメッセージ：<br>';
   print '&emsp;<textarea name="memomsg" maxlength="200" placeholder="半角200、全角100文字以内、改行可能" cols="101"></textarea><br>';
   print '<hr>';
   print '<h4>☆　処置選択</h4>';
-  print '&emsp;<span class=trylw>障害確認：</span><input type="radio" name="cradio" value="confirm" />';
-  print '&emsp;<span class=trylw>処置完了：</span><input type="radio" name="cradio" value="close" />';
-  print '&emsp;<span class=trylw>メモ保存：</span><input type="radio" name="cradio" value="memo" /> ';
+  print '&emsp;<span class=trylw>障害確認</span><input type="radio" name="cradio" value="confirm" />';
+  print '&emsp;<span class=trylw>処置完了</span><input type="radio" name="cradio" value="close" />';
+  print '&emsp;<span class=trylw>メモ保存</span><input type="radio" name="cradio" value="memo" /> ';
   print '&emsp;&emsp;<input class=button type="submit" name="go" value="実行" />';
   print '</form>';
 }
