@@ -221,8 +221,8 @@ if(!(isset($_GET['display']) || isset($_GET['select']) || isset($_GET['search'])
   print '<table>';
   print '<form name="iform" method="get" action="viewhistorylog.php">';
   print '<h3>追加データを入力して「作成実行」をクリック</h3>';
-  print '<h4><font color=red>’（&#039;）、”（&quot;）、〈（&lt;）、〉（&gt;）はDBレコード上()内文字にて書かれます<br>';
-  print '「\\」は「\\\\」、「\\\\」は「\\\\\\\\」として入力して下さい</font></h4>';
+  print '<h3><font color=red>’英字、数字以外は全角で入力して下さい<br>';
+  print '件名内では改行が出来ません、１行のみです</font></h3>';
   print '<table class="nowrap">';
   print '<tr><th >ログタイプ</th><th>日付:時刻</th><th>件名</th><th>内容</th></tr>';
   print '<tr>';

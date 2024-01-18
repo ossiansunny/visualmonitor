@@ -43,9 +43,9 @@ if (isset($_GET['add'])){
   branch($nextpage,$msg);
 }else{
   /// 更新処理
-  print '<h4>履歴データを修正して、「更新実行」をクリックして下さい</h4>';
-  print '<h4><font color=red>半角の「\」は「\\\\」、「\\\\」は「\\\\\\\\」と入力します<br>';
-  print '表示できない特殊文字は全角を使って下さい</font></h4>';
+  print '<h3>履歴データを修正して、「更新実行」をクリックして下さい</h4>';
+  print '<h3><font color=red>英字、数字以外は全角を使用して下さい<br>';
+  print '件名は１行のみです</font></h3>';
   $strdata=$_GET['select'];
   $user=$_GET['user'];
   $sdata=explode(',',$strdata,4);

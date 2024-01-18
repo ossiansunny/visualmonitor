@@ -119,6 +119,7 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
     print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;img1:<img src=haikeiimg/ki.png width=50px heigh=15px>&emsp;img2:<img src=haikeiimg/umi.png width=50px heigh=15px>';
     print '&emsp;img3:<img src=haikeiimg/aka.png width=50px heigh=15px>&emsp;img4:<img src=haikeiimg/ha.png width=50px heigh=15px>';
     print '</h4>';
+    print '<h3><font color=red>&emsp;&emsp;&emsp;注意：入力文字は英字、数字は半角可能、それ以外は全角です。スペースも全角です。</font></h3>';
     ///
     print '<form name="kanriup" type="get" action="AdminPage.php">';
     print '<table border=1>';

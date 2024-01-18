@@ -164,7 +164,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               /// 開始メール送信 
               $sub=$logname;
               $message=$user.' Logged in';
-              mailsendany('loginlogout',$fromaddr,$toaddr,$sub,$message);
+              mailsendany('loginlogout',$fromaddr,$toaddr,'LOGIN',$message);
               /// メールサーバ死活チェック
               mailstatset($server,$port,$fromaddr,$toaddr,$subject,$body);
               $upsql='update admintb set kanriname="'.$userid.'",authority="'.$uauth.'",kanrino="'.$ucode.'"';

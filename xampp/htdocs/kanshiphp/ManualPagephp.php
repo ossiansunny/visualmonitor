@@ -29,6 +29,7 @@ print '<tr><td class=trblk><a href="manual/weberrorlog.pdf"><span class=trblk>�
 print '<tr><td class=trblk><a href="manual/initialize.pdf"><span class=trblk>〇</span></a></td><td class=trylw>監視アプリ初期化</td></tr>';
 print '<tr><td class=trblk><a href="manual/VMMIBインストール設定.pdf"><span class=trblk>〇</a></td><td class=trylw>VMMIBインストール設定</td></tr>';
 print '<tr><td class=trblk><a href="manual/apltracelog.pdf"><span class=trblk>〇</span></a></td><td class=trylw>アプリトレースとログ管理</td></tr>';
+print '<tr><td class=trblk><a href="manual/障害管理.pdf"><span class=trblk>〇</span></a></td><td class=trylw>障害管理</td></tr>';
 print '</table><br>';
 print "&ensp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
 print '</body>';
