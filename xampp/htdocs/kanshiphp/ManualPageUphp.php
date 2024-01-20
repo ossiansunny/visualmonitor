@@ -23,7 +23,7 @@ print '<tr><th>選択</th><th>マニュアル名</th></tr>';
 print '<tr><td class=trblk><a href="manual/serverimagemanage.pdf"><span class=trblk>〇</span></a></td><td class=trylw>サーバー画像管理</td>';
 print '<tr><td class=trblk><a href="manual/resourcegraph.pdf"><span class=trblk>〇</span></a></td><td class=trylw>リソースグラフ</td></tr>';
 print '<tr><td class=trblk><a href="manual/SNMPSpec.pdf"><span class=trblk>〇</span></a></td><td class=trylw>SNMP仕様</td></tr>';
-print '<tr><td class=trblk><a href="manual/障害管理.pdf"><span class=trblk>〇</span></a></td><td class=trylw>障害管理</td></tr>';
+print '<tr><td class=trblk><a href="manual/eventlogmngt.pdf"><span class=trblk>〇</span></a></td><td class=trylw>障害管理</td></tr>';
 print '</table><br>';
 print "&ensp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
 print '</body>';
