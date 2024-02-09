@@ -44,8 +44,8 @@ if (!isset($_GET['param'])){
   print '<table border=1>';
   print '<tr><th colspan=2>タイトル</th><th colspan=2>サブタイトル</th></tr>';
   print '<tr>';
-  print '<td colspan=2><input type=text name=title size=50 value='.$title.' ></td>';
-  print '<td colspan=2><input type=text name=subtitle size=50 value='.$subtitle.'></td>';
+  print '<td colspan=2><input type=text name=title size=50 value="'.$title.'" ></td>';
+  print '<td colspan=2><input type=text name=subtitle size=50 value="'.$subtitle.'"></td>';
   print '</tr>';
   print '<tr><th>画像名１</th><th>画像名２</th><th>画像名３</th><th>画像名４</th></tr>';
   print '<tr>';

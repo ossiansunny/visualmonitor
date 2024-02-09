@@ -47,20 +47,28 @@ if (isset($_GET['add'])){
   print '<h3><font color=red>英字、数字以外は全角を使用して下さい<br>';
   print '件名は１行のみです</font></h3>';
   $strdata=$_GET['select'];
+var_dump($strdata);
   $user=$_GET['user'];
   $sdata=explode(',',$strdata,4);
   $logtype=$sdata[0];
   $logtime=$sdata[1];
-  if (! is_null($sdata[2])){
-    $subject=$sdata[2];
+  //if (! is_null($sdata[2])){
+  //  $subject=$sdata[2];
+  //  $websubject=htmlspecialchars($subject,ENT_QUOTES);
+  //  $websubject=str_replace("\\","\\\\",$websubject);
+  //}else{
+  //  $websubject='';
+  //} 
+  $tsql="select * from historylog where logtime='".$logtime."'";
+  $rows=getdata($tsql);
+  $tdata=explode(',',$rows[0]);
+  if (! is_null($tdata[2])){
+    $subject=$tdata[2];
     $websubject=htmlspecialchars($subject,ENT_QUOTES);
     $websubject=str_replace("\\","\\\\",$websubject);
   }else{
     $websubject='';
   } 
-  $tsql="select * from historylog where logtime='".$logtime."'";
-  $rows=getdata($tsql);
-  $tdata=explode(',',$rows[0]);
   if (! is_null($tdata[3])){
     $contents=$tdata[3];
     $webcontents=htmlspecialchars($contents,ENT_QUOTES);

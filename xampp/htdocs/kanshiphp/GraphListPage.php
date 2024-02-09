@@ -1,10 +1,23 @@
 <?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
+require_once "varread.php";
 $brcode=""; // 通知コード
 $user=""; // ユーザID
 $brmsg=""; //メッセージ $user = "";
 $pgm="GraphListPage.php";
+$vpath_kanshiphp="";
+
+function mrtgcfgck($host,$stat){
+  global $vpath_kanshiphp;
+  //echo $vpath_kanshiphp."\\mrtgcfg\\".$host.".*";
+  $files = glob($vpath_kanshiphp."\\mrtgcfg\\".$host.".*");
+  if (empty($files)){
+    return "グラフ未作成";
+  }else{
+    return $stat;
+  }
+}
 
 if(!isset($_GET['param'])){
   paramGet($pgm);
@@ -12,6 +25,10 @@ if(!isset($_GET['param'])){
 }else{
   paramSet();
   ///
+  $vpatharr=array("vpath_kanshiphp");
+  $rtnv=pathget($vpatharr);
+  $vpath_kanshiphp=$rtnv[0];
+///
   $ttl1='<img src="header/php.jpg" width="30" height="30">';
   $ttl2='　▽　グラフホスト一覧　▽　';
   $ttl=$ttl1.$ttl2;
@@ -31,18 +48,21 @@ if(!isset($_GET['param'])){
   ///
   ///---SNMP監視対象一覧を表示---
   ///
-  print "<h4>☆ホストを１つ選択して「グラフ表示」「グラフ作成」「グラフ削除」のいずれかをクリックする</h4>";
+  print "<h4>☆ホストを１つ選択して「グラフ表示/メール添付」「グラフ作成」「グラフ削除」のいずれかをクリックする<br>";
+  print "☆グラフのメール添付には、ホストのメール「自動送信」が必要です</h4>";
   $sql="select * from host order by groupname";
   $data = getdata($sql);
   $c = count($data);
   print '<form name="rform" method="get" action="viewgraph.php">';
   print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
   $nsw=0;
+  $act="";
   for($i=0;$i<$c;$i++){
     $sdata = explode(',',$data[$i]);
     if($sdata[4]=="2"){ // snmp監視
       if($sdata[3]=="1"){$act="稼働中";}
       if($sdata[3]!="1"){$act="非稼働";}
+      $act=mrtgcfgck($sdata[0],$act);
       if($sdata[8]!="" || $sdata[9]!="" || $sdata[10]!="") {
         $gtype="";
         if($sdata[8]!=""){$gtype="CPU";}

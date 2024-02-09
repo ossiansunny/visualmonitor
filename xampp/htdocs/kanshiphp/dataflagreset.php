@@ -1,6 +1,6 @@
 <?php
 require_once "mysqlkanshi.php";
-/// ���C�A�E�g�̃f�[�^�쐬�σt���O�����Z�b�g
+/// レイアウトのデータ作成済フラグをリセット
 function dataflagreset($layout){
  $sql="select * from g".$layout." order by gsequence";
  $gname="";

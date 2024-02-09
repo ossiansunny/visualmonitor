@@ -5,7 +5,8 @@ function branch($_page,$_param){
   print '<html>';
   print '<body onLoad="document.F.submit();">';
   print "<form name='F' action={$_page} method='get'>";
-  print "<input type=hidden name=param value={$_param}>";
+  print '<input type=hidden name=param value="'.$_param.'">';
+  //print "<input type=hidden name=param value={$_param}>";
   print '<input type="submit" name="next" value="Waiting...">';
   print '</form>';
   exit();
@@ -38,7 +39,7 @@ function paramSet(){
     $user=$inform;
   }
   if ($user=='unknown'){
-    /// Lost User‚ğÔ(2)‚Å•\¦
+    /// Lost Userã‚’èµ¤(2)ã§è¡¨ç¤º
     setstatus("2","Lost User");
   }else{
     delstatus("Lost User");

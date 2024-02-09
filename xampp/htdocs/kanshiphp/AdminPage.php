@@ -54,7 +54,7 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
     if($uprc == 0){    
       $msg='AdminTB Updated sql: '.$upsqlmsg;
       writelogd($pgm,$msg);
-      $logname='GLOBAL_'.$user;
+      $logname=$user;
       $insql = "insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$logname."','".$tstamp."','3','".$user."')";
       putdata($insql);
       $message='Update admintb';
@@ -155,11 +155,11 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
     print '<tr>';
     print "<td colspan=2><input type=text name=recv size=22 value={$recv}></td>";
     print "<td colspan=2><input type=text name=sender size=22 value={$sender}></td>";
-    print "<td colspan=6><input type=text name=subj size=39 value={$subj}></td>";
+    print '<td colspan=6><input type=text name=subj size=39 value="'.$subj.'"></td>';
     print '</tr>';
     print '<tr><th colspan=9>本文</th></tr>';
     print '<tr>';
-    print "<td colspan=9><input type=text name=body size=95 value={$body}></td>";
+    print '<td colspan=9><input type=text name=body size=95 value="'.$body.'"></td>';
     print '</tr>';
     print '</table>';
     print "<input type=hidden name=user value={$user}>";

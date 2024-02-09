@@ -241,7 +241,7 @@ if ($auth=='1'){
   print '<hr>';
   print '<h4>☆　障害解決は、障害種類、障害管理番号、メモメッセージを入力し、<span class=trylw>「処置完了」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';
   print '<h4>☆　メモを残したい場合は、障害種類、障害管理番号、メモメッセージを入力し、<span class=trylw>「メモ保存」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';
-  print "&emsp;障害種類：<input type='text' name='kanrimei' size='8' maxlength='8' placeholder='例：無応答'/>";
+  print '&emsp;障害種類：<input type="text" name="kanrimei" size="8" maxlength="8" value="" placeholder="例：無応答"/>';
   print "&emsp;障害管理番号：<input type='text' name='kanrino' size='12' maxlength='12' placeholder='例：2310260001'/><br>";
   print '&emsp;メモメッセージ：<br>';
   print '&emsp;<textarea name="memomsg" maxlength="200" placeholder="半角200、全角100文字以内、改行可能" cols="101"></textarea><br>';

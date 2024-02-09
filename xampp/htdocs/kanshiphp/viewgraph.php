@@ -55,7 +55,7 @@ if($fradio[8]!=""){
     $gsw=1;
   }
   print "<h4>CPU Load Average</h4>";
-  print "<img alt='画像なし、未作成' src='http://{$server}/mrtg/mrtgimage/{$pngcpu}'>";
+  print "<img alt='画像なし、未作成または作成中' src='http://{$server}/mrtg/mrtgimage/{$pngcpu}'>";
 }else{
   print "<h4>CPU グラフ指定なし</h4>";
 }
@@ -67,7 +67,7 @@ if($fradio[9]!=""){
     $gsw=1;
   }
   print "<h4>Memory Usage</h4>";
-  print "<img alt='画像なし、未作成' src='http://{$server}/mrtg/mrtgimage/{$pngram}'>";
+  print "<img alt='画像なし、未作成または作成中' src='http://{$server}/mrtg/mrtgimage/{$pngram}'>";
 }else{
   print "<h4>Memory グラフ指定なし</h4>";
 }
@@ -76,10 +76,10 @@ if($fradio[10]!=""){
   $filename=$mrtghome.'\\mrtgimage\\'.$pngdisk;
   if (file_exists($filename)){
     $grapharray[2]=$pngdisk;
-    $gsw=1;
+    $gsw=1; /// graphあり
   }
   print "<h4>Disk Usage</h4>";
-  print "<img alt='画像なし、未作成' src='http://{$server}/mrtg/mrtgimage/{$pngdisk}'>";
+  print "<img alt='画像なし、未作成、または作成中' src='http://{$server}/mrtg/mrtgimage/{$pngdisk}'>";
 }else{
   print "<h4>Disk グラフ指定なし</h4>";
 }

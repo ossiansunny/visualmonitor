@@ -72,7 +72,7 @@ if (!isset($_GET['param']) and !isset($_GET['set']) and !isset($_GET['send'])){
     $type='set';
     $flg=mailstatset($server,$port,$authuser,$passwd,$from,$to,$subj,$body);
     if ($flg==0){
-      $msg='#notic#'.$user.'#設定完了、受信を確認して下さい';
+      $msg='#notic#'.$user.'#設定完了、「送信」で受信を確認して下さい';
       branch($pgm,$msg);
     }else{
       $msg='#error#'.$user.'#設定失敗';
@@ -140,7 +140,7 @@ print "<tr><td>SMTP認証ユーザー:</td><td><input type=text name=authuser si
 print "<tr><td>SMTP認証パスワード:</td><td><input type=text name=passwd size=38 value={$passwd} ></td></tr>";
 print '</table>';
 print '<h4>Fromアドレス、Toアドレスは、メールサーバの規則に従うこと<br>';
-print 'Subject,Bodyは任意の文字が入れられるが、&gt; &lt;は避ける<br></h4>';
+print 'Subject,Bodyは任意の文字が入れられるが、&gt; &lt;は避けること<br></h4>';
 
 $sql='select * from admintb';
 $rows=getdata($sql);
@@ -153,8 +153,8 @@ $body=$row[6];
 print '<table>';
 print "<tr><td>From Address:</td><td><input type=text name=from size=40 value={$fr_email}></td></tr>";
 print "<tr><td>To Address:</td><td><input type=text name=to size=40 value={$to_email}></td></tr>";
-print "<tr><td>Subject:</td><td><input type=text name=subj size=40 value={$ttl}></td></tr>";
-print "<tr><td>Body:</td><td><input type=text name=body size=80 value={$body}></td></tr></table><br>";
+print "<tr><td>Subject:</td><td><input type=text name=subj size=40 value='".$ttl."'></td></tr>";
+print "<tr><td>Body:</td><td><input type=text name=body size=80 value='".$body."'></td></tr></table><br>";
 print "<input type=hidden name=user value={$user}>";
 if ($auth=='1'){
   print '<tr><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class=button type=submit name=set value="設定"></td>';

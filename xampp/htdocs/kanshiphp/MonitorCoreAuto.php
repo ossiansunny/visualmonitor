@@ -155,11 +155,14 @@ function viewscan(){
             }
           }else{
             /// statistics gtype=0にする
-           $ssql='select * from statistics where host="'.$c_host.'"';
+           $ssql='select gtype from statistics where host="'.$c_host.'"';
            $srtn=getdata($ssql);
            if (isset($srtn)){
-             $usql='update statistics set gtype="0" where host="'.$c_host.'"';
-             $rtn=putdata($usql);
+             $cgtype=$srtn[0];
+             if (!($cgtype=='5' or $cgtype=='6')){ 
+               $usql='update statistics set gtype="0" where host="'.$c_host.'"';
+               putdata($usql);
+             }
            } 
           }  
         /// 前回結果 異常　result 0,2

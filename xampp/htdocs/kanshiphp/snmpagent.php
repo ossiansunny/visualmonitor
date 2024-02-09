@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ///----------------Unix/Windows---------------
 function getagent($host,$community) {
-  /// sysLocation.0‚Éok ƒTƒCƒg“à‘S‚Äok ng ƒTƒCƒg“à‚ÉpingƒGƒ‰[‚ ‚è 
+  /// sysLocation.0ã«ok ã‚µã‚¤ãƒˆå†…å…¨ã¦ok ng ã‚µã‚¤ãƒˆå†…ã«pingã‚¨ãƒ©ãƒ¼ã‚ã‚Š 
   $resstr = snmpget($host, $community, ".1.3.6.1.2.1.1.6.0");
   $str=explode(':',$resstr);
   $strval=trim($str[1]);

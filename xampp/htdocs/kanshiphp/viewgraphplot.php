@@ -29,7 +29,7 @@ if ($mailopt=='1'){
 }else{
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　プロットグラフ表示　▽</h2>';
 }
-print "<h3▽　{$ttl}　▽</h3>";
+print "<h3>▽　{$ttl}　▽</h3>";
 $gsw=0;
 //$grapharray=array("");
 if(!($fradio[8]=="" or $fradio[9]=="" or $fradio[10]=="")){

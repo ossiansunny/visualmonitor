@@ -34,16 +34,20 @@ if(count($rtnv)==4){
   echo $mrtgcfg." sucessfully created".PHP_EOL;
   /// ---------------------------------------------
   /// create newmrtg.cfg 
-  $kpath=$vpath_mrtgbase."\\newmrtg.cfg";
-  If (file_exists($kpath)){
-    $fileName=$kpath."\\*";
+  $mrtgpath=$vpath_mrtgbase;
+  If (file_exists($mrtgpath)){
+    $fileName=$mrtgpath."\\*";
     foreach(glob($fileName) as $val) {
-      echo $val.PHP_EOL;
+      echo 'Deleted '.$val.PHP_EOL;
       unlink($val);
     }
   }else{
-    mkdir($kpath);
+    mkdir($mrtgpath);
   }
+  touch($mrtgpath."\\newmrtg.cfg");
+  echo "Create newmrtg.cfg".PHP_EOL;
+  /// ----------------------------------------------
+  /// write contents on newmrtg.cfg
   $newmrtgcfg=$vpath_mrtgbase."\\newmrtg.cfg";
   $wfp = fopen($newmrtgcfg,'w');
   fwrite($wfp,"EnableIPv6: no\r\n");

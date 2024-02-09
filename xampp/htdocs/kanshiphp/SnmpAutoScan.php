@@ -294,7 +294,7 @@ for ($i=0;$i<$c;$i++){
         if ($statisupsw=="3"){ /// 3 監視正常 
           $upsql="update statistics set tstamp='".$tmstamp."',gtype='3',cpuval='".$snmpvalue[1]."',ramval='".$snmpvalue[2]."',agent='".$s_agent."',diskval='".$snmpvalue[3]."',process='".$snmpvalue[4]."',tcpport='".$snmpvalue[5]."' where host='".$snmpvalue[0]."'";
           putdata($upsql);
-        }elseif($statisupsw="4"){ /// 4 監視一部異常
+        }elseif($statisupsw=="4"){ /// 4 監視一部異常
           $upsql="update statistics set tstamp='".$tmstamp."',gtype='4',cpuval='".$snmpvalue[1]."',ramval='".$snmpvalue[2]."',agent='".$s_agent."',diskval='".$snmpvalue[3]."',process='".$snmpvalue[4]."',tcpport='".$snmpvalue[5]."' where host='".$snmpvalue[0]."'";
           putdata($upsql);
         }elseif($snmpgtype=="9"){

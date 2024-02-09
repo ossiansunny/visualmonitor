@@ -120,14 +120,15 @@ if(!(isset($_GET['display']) || isset($_GET['select']) || isset($_GET['search'])
   paramSet();
 ///
   if ($brcode=='error' or $brcode=='notic' or $brcode=='alert'){
-    print "<h4 class={$ercode}>{$brmsg}</h4><hr>";
+    print '<h4 class="'.$brcode.'">"'.$brmsg.'"</h4><hr>';
+    //print "<h4 class={$ercode}>{$brmsg}</h4><hr>";
   }
 ///
   $sql='select * from historylog order by type, logtime desc';
   $rows=getdata($sql);
 }  
 ///
-  print "<h2>{$ttl}</h2>";
+  print '<h2>'.$ttl.'</h2>';
   if (empty($rows)){
     print '<h4><font color=red>ログがありません</font></h4>';
   }else{
