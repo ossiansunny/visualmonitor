@@ -1,0 +1,15 @@
+htdocs=$1
+kanshibin="${htdocs}/bin"
+mrtgpath="${htdocs}/mrtg"
+plotpath="${htdocs}/plot"
+echo $plotpath
+grep Target ${mrtgpath}/newmrtg.cfg | awk 'BEGIN{FS="`"}{print $2}' > ${plotpath}/hosttemp
+cat ${plotpath}/hosttemp | awk '!colname[$2]++{print}' > ${plotpath}/hosttempone 
+while read item
+do
+  echo $item
+  host=`echo $item | awk '{print $2}'`
+  os=`echo $item | awk '{print $3}'`
+  comm=`echo $item | awk '{print $4}'`
+  ${kanshibin}/getsnmp $host $os $comm $htdocs 
+done < ${plotpath}/hosttempone

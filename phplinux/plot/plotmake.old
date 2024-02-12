@@ -1,0 +1,21 @@
+rm -f mkplot.plt2
+while read rcd
+do
+  host=`echo $rcd | awk 'BEGIN{FS=",;"}{print $1}'`
+  val=`echo $rcd | awk 'BEGIN{FS=",;"}{print $2}'`
+  echo $host
+  type=`echo $val | sed 's/;/ /g'`
+  #echo $type
+  for item in ${type[@]}
+  do
+    #echo "type:$item"
+    case $item in
+      cpu) echo -n 'cpu-data';;
+      disk) echo -n 'disk-data';;
+      ram) echo -n 'ram-data';;
+    esac
+    echo -n ' '
+  done
+  echo
+done <valuetemp
+

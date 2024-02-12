@@ -1,0 +1,1 @@
+/usr/bin/gnuplot -e 'path="/var/www/html/plot/plotimage"; ghost="192.168.1.139"' /var/www/html/bin/mkplot.plt

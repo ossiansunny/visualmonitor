@@ -1,0 +1,61 @@
+#!/bin/bash
+ipaddr=$1
+ostype=$2
+comm=$3
+ping -w 1 $ipaddr > /dev/null
+if [ $? -eq 0 ]
+#### ping ok
+then
+  if [ "$ostype" == 'windows' ]
+  then
+  #### windows
+    snmpwalk -v1 -c$comm $ipaddr .1.3.6.1.2.1.25.3.3.1.2 2> /dev/null > tempcpu
+    if [ $? -eq 0 ]
+    then
+      maxcpu=0
+      while read cpurec
+      do
+        cpu=`echo $cpurec | awk 'BEGIN{FS=":"}{print $4}'`
+        #echo "cpu: $cpu" 
+        if [ $cpu -gt $maxcpu ]
+        then
+          maxcpu=$cpu
+        fi
+      done <tempcpu 
+      echo $maxcpu
+      echo $maxcpu
+    else
+      echo 0
+      echo 0
+    fi
+  else
+  #### Linux
+    snmp=`snmpget -v1 -c$comm $ipaddr .1.3.6.1.4.1.2021.10.1.5.2 2> /dev/null`
+    if [ $? -eq 0 ]
+    then
+      cpu2=`echo $snmp | awk 'BEGIN{FS=":"}{print $4}'`
+      #echo $cpu2
+      cpu3=`snmpget -v1 -c$comm $ipaddr .1.3.6.1.4.1.2021.10.1.5.3 2> /dev/null | awk 'BEGIN{FS=":"}{print $4}'`
+      #echo $cpu3
+      if [ $cpu2 -gt $cpu3 ]
+      then
+        maxcpu=$cpu2
+      else
+        maxcpu=$cpu3
+      fi
+      if [ $maxcpu -gt 100 ]
+      then
+        maxcpu=100
+      fi
+      echo $maxcpu
+      echo 0
+    else
+      echo 0
+      echo 0
+    fi
+  fi
+else
+#### ping ng
+  echo 0
+  echo 0
+fi
