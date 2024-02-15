@@ -195,7 +195,7 @@ function viewscan(){
               if ($gtype!="6"){ /// statistics gtype="6" -> eventlog skip
                 /// gtype='0:未監視 4:無応答'
                 eventlog($itemarray,"2");  ///error event
-                writeloe($pgm,'write eventlog gtype='.$gtype);
+                writeloge($pgm,'write eventlog gtype='.$gtype);
               }
             }
           }
