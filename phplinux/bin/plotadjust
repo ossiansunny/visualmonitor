@@ -61,6 +61,7 @@ do
   #echo $garps
   echo "/usr/bin/gnuplot -e 'path="\"${imgpath}\""; ghost="\"${file}\""' ${kanshibin}/mkplot.plt" > ${imgpath}/${file}.exe
   #echo $file
+  ${htdocs}/bin/logwriter.sh 'plotiadjust' "gnuplot done $file" $htdocs
 done
 for file in ${host[@]}
 do
