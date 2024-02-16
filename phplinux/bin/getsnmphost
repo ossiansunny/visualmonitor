@@ -11,5 +11,7 @@ do
   host=`echo $item | awk '{print $2}'`
   os=`echo $item | awk '{print $3}'`
   comm=`echo $item | awk '{print $4}'`
+  ${htdocs}/bin/logwriter.sh 'getsnmphost' "start getsnmp $host $os $commi"  $htdocs
   ${kanshibin}/getsnmp $host $os $comm $htdocs 
+  ${htdocs}/bin/logwriter.sh 'getsnmphost' "end getsnmp $host $os $comm" $htdocs
 done < ${plotpath}/hosttempone
