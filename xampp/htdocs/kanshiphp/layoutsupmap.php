@@ -1,4 +1,5 @@
 <?php
+/// update 2024-2-17 add order by to select statements
 error_reporting(0);
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
@@ -110,13 +111,13 @@ $garr = array(); /// group array table
 $sarr = array(); 
 
 /// group 配列テーブル作成
-$sql='select * from '.$gtable;
+$sql='select * from '.$gtable.' order by gsequece';
 $gdata=getdata($sql);
 
 gcreatearray($gdata,$garr);
 
 /// ホストテーブル作成
-$sql='select * from '.$table;
+$sql='select * from '.$table. ' order by gshid';
 $sdata=getdata($sql);
 ///
 $sarr=screatearray($sdata,$garr);
