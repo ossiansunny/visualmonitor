@@ -1,7 +1,0 @@
-AdminPage.php:  //writelog($pgm,'not set param or update');
-hostinsertdb.php:  writelog('hostinsertdb.php',$msg);
-hostupdel.php:  //writelog('hostinsertdb.php',$msg);
-login.php:          writelog($pgm,$msg);
-loginadd.php:      writelog($pgm,$insql);
-mysqlkanshi.php:function writelog($pgm,$msg) {
-snmpdataget.php:      mysqlkanshi.writelog('debug',msg)
