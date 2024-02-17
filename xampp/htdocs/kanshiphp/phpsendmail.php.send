@@ -78,9 +78,9 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
       ///宛先
       $mail->addAddress($to, 'receiver');
       ///cc    
-      ///    $mail->addCC('vmadmin@centos75.sunnyblue.mydns.jp');
+      ///    $mail->addCC('vmadmin@host.domain');
       ///bcc
-      ///    $mail->addBCC('vmadmin@centos75.sunnyblue.mydns.jp');
+      ///    $mail->addBCC('vmadmin@host.domain');
 
       /// htmlメール指定
       ///    $mail->isHTML(true)a
