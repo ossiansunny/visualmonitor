@@ -1,11 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="ja">
 <head>
-<meta http-equiv="refresh" content="600">
+<meta http-equiv="refresh" content="60">
 <link rel="stylesheet" href="kanshi1.css">
 </head>
 <body>
-<h4>MRTG Refresh 600sec</h4>
+<h4>MRTG Refresh 60sec</h4>
 
 <?php
 require_once "mysqlkanshi.php";

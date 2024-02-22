@@ -151,7 +151,7 @@ for ($i=0;$i<$c;$i++){
     }elseif($snmpgtype=="0"){
       $host_result="1";
     }
-    if ($host_action=="2" && $host_result=="1"){ /// host recordのsnmp監視 and ping結果OK
+    if (($host_action=="2" or $host_action=="5") and $host_result=="1"){ /// host recordのsnmp監視 and ping結果OK
       /// hostdata Action=2(snmp) and Result=1(ping結果OK)
       $s_host = $stdata1[0];
       $s_stamp = $stdata1[1];      

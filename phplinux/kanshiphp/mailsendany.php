@@ -70,7 +70,7 @@ function mailsendany($type,$from,$to,$subject,$msg){
 
 }
 /*
-mailsendany('loginlogout','vmadmin@sunnyblue.mydns.jp','oshima@sunnyblue.mydns.jp','sub','body');
+mailsendany('loginlogout','sender','reciver','sub','body');
 */
 ?>
 

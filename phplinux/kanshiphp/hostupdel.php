@@ -3,6 +3,7 @@ require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "serverimagedisplay.php";
 require_once "hostping.php";
+require_once "hostncat.php";
 require_once "phpsnmpprocessset.php";
 require_once "phpsnmpactive.php";
 require_once "mailsendany.php";
@@ -21,7 +22,6 @@ function writelogsendmail($msg,$host){
   $subj='ホスト '.$host.' 保守アラート';
   mailsendany('hostupdate',$fromaddr,$toaddr,$subj,$msg);
 }
-/*
 function snmpcheck($host,$ostype,$comm){
   /// 監視対象いSNMPがインストールされているかチェック
   $status=0;  
@@ -33,7 +33,7 @@ function snmpcheck($host,$ostype,$comm){
   }
   return $status; /// 0:ok 1:ng
 }
-*/
+
 function cksemicolon($_data,$host){
   if (preg_match("/,/",$_data)){
     $rdata=str_replace(',',';',$_data);
@@ -149,15 +149,15 @@ if (isset($_GET['delete'])){
       $comm='public';
     }
     if ($action!=$oldaction){
-      $statusk=snmpactive($host,$comm);
-      if($atatus==1){
+      $rtnck=snmpcheck($host,$ostype,$comm);
+      if($rtnck!=0){
         $msg = '#error#'.$user.'#ホスト'.$host.'SNMPコミュニティがアクセス不可、更新無効';
         $nextpage = "HostListPage.php";
         writelogd($pgm,$msg);
         branch($nextpage,$msg);
       }
     }
-  }else{
+  }else{ /// action=0(監視なし),1(Ping監視),5(Ncat監視)
     if (isset($_GET['comm']) and $_GET['comm']!=""){
       $comm=$_GET['comm'];
     }
@@ -221,14 +221,16 @@ if (isset($_GET['delete'])){
     }
     $cct++;
   }
-  /// action 0から1に変化したらping、action 1が2へ又は3から2へ変化したらsnmp
+  /// action 0->1に変化したらping、
+  /// action 1->2 又は3->2へ変化したらsnmp
   $wtval4=explode('|',$wtarray[4]);
   if ($wtval4[0]=='2' && $wtval4[2]=='1') {  // actionの1列目=2(inactive) and 4
-    $hrc=hostping($host); // winhostping.php
+    $hrc=hostping($host); // hostping.php
     if ($hrc==1){
        $msg = '#error#'.$user.'#ホスト'.$host.'がpingに応答しない、更新無効';
        $nextpage = "HostListPage.php";
        writelogd($pgm,$msg);
+       branch($nextpage,$msg);
     }
   }elseif($wtval4[0]=='2' && $wtval4[2]=='2') {
     $hrc=snmpactive($host,$comm);
@@ -236,9 +238,20 @@ if (isset($_GET['delete'])){
       $msg = "#error".$user."#ホスト".$host ."がsnmp対応でないか無応答、更新無効";
       $nextpage = "HostListPage.php";
       writelogd($pgm,$msg);
+      branch($nextpage,$msg);
     }
   }
-  /// 
+  ///  action 5(Ncat)以外から5へ変更したら
+  if ($wtval4[0]=='5' && $wtval4[2]!='5') {
+    $hrc=hostncat($host);
+    if ($hrc==1){
+       $msg = '#error#'.$user.'#ホスト'.$host.'がNcatに応答しない、更新無効';
+       $nextpage = "HostListPage.php";
+       writelogd($pgm,$msg);
+       branch($nextpage,$msg);
+    }
+  }
+  ///
   $sql="update host set result='1',";
   $svalue="";
   $issw='0';
@@ -352,7 +365,7 @@ if (isset($_GET['delete'])){
   print "<option value='3'{$ot[3]}>Others</option>";
   print '</select></td>';
   print "<td><input type=text name=result size=3 value={$result} readonly></td>";
-  $ot=array('','','','','');
+  $ot=array('','','','','','');
   $ot[intval($action)]="selected";
   print '<td><select name=action>';
   print "<option value='0'{$ot[0]}>監視なし</option>";
@@ -360,6 +373,7 @@ if (isset($_GET['delete'])){
   print "<option value='2'{$ot[2]}>SNMP監視</option>";
   print "<option value='3'{$ot[3]}>SNMP通知なし</option>";
   print "<option value='4'{$ot[4]}>Agent監視</option>";
+  print "<option value='5'{$ot[5]}>Ncat監視</option>";
   print '</select></td>';
   $ot=array('','');
   print "<td><input type=text name=viewname size=14 value={$viewname}></td>";

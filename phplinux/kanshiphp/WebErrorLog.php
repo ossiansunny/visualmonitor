@@ -8,22 +8,6 @@ $user="";
 $brcode="";
 $brmsg="";
 ///
-/*
-if(isset($_GET['remove'])){
-  $user = $_GET['user'];
-  $dellogs=$_GET['dellog'];
-  $delarr = explode(',',$dellogs);
-  $vpath_weblog="";
-  $vpatharr=array("vpath_weblog");
-  $rtnv=pathget($vpatharr);
-  $vpath_weblog=$rtnv[0];  
-  foreach($delarr as $delrec){
-    unlink($vpath_weblog.'/'.$delrec);
-  }  
-  $nextpage="MonitorManager.php";
-  branch($nextpage,$user);
-}elseif(!isset($_GET['param'])){
-*/
 if(!isset($_GET['param'])){
   paramGet($pgm);
   ///
@@ -64,31 +48,7 @@ if(!isset($_GET['param'])){
       print "<input type='hidden' name='user' value={$uid} >";
       //print '<input class=button type="submit" name="end" value="表示終了" />';
       if ($auth=='1'){      
-        /*
-        $result=glob($vpath_weblog.'/*_*.log');
-        $dellog="";
-        foreach($result as $rec){        
-          $filename=basename($rec);
-          if (!($filename==$currelog || $filename==$curralog)){
-            $erac=explode('_',$filename);
-            if ($erac[0]=='error' || $erac[0]=='access'){
-              $dellog=$dellog.$filename.',';
-            }
-          }
-        }
-        $dellog=rtrim($dellog,",");
-        if ($dellog!=""){
-          print "<hr><h3>削除出来るログ</h3><table><tr>";
-          $dellogarr=explode(',',$dellog);
-          foreach($dellogarr as $arrrec){
-            print "<td>{$arrrec}&emsp;</td>";
-          }
-          print '</tr></table>';
-          print "<input type='hidden' name='dellog' value={$dellog} />";
-          print "<input type=hidden name=user value={$user}>";
-          print '&nbsp;&nbsp;<input class=buttondel type="submit" name="remove" value="上記ログ削除" />';
-        }
-        */
+        
       }
       print '</form>';    
       print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";

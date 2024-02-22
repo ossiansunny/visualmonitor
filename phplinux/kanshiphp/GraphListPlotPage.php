@@ -6,7 +6,6 @@ require_once "mailsendany.php";
 
 function mrtgcfgck($host,$path){
   $files = glob($path."/mrtgcfg/".$host.".*");
-  //echo $path.'/mrtgcfg/'.$host.'.*';
   if (! empty($files)){
     return "0"; //グラフ作成中
   }else{
@@ -39,16 +38,14 @@ if(!isset($_GET['param'])){
   print '</head>';
   print '<body>';
   if ($brcode=="error" or $brcode=="alert" or $brcode=="notic"){
-    print '<h3 class="'.$brcode.'">"'.$brmsg.'"</h3><hr>';
-    //print "<h3 class={$brcde}>{$brmsg}</h3><hr>";
+    print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
   }
-  print '<h2>'.$ttl.'</h2>';
+  print "<h2>{$ttl}</h2>";
   print "<h4>☆ホストを１つ選択して「グラフ表示／メール添付」をクリックする<br>";
   print "☆グラフのメール添付には、ホストのメール「自動送信」が必要です</h4>";
   $vpatharr=array("vpath_kanshiphp");
   $rtnv=pathget($vpatharr);
   $vpath_kanshiphp=$rtnv[0]; 
-  //echo $vpath_kanshiphp; 
   $sql="select * from host order by groupname";
   $data = getdata($sql);
   $c = count($data);
@@ -58,7 +55,6 @@ if(!isset($_GET['param'])){
   print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
   for($i=0;$i<$c;$i++){
     $sdata = explode(',',$data[$i]);
-    //var_dump($sdata);
     if($sdata[4]=="2"){ // snmp監視対象ホストチェック
       $flag=mrtgcfgck($sdata[0],$vpath_kanshiphp);
       if ($flag=='0'){
@@ -68,7 +64,8 @@ if(!isset($_GET['param'])){
         $act='グラフ未作成';
         $dis='disabled';
       }
-      if($sdata[8]!="" || $sdata[9]!="" || $sdata[10]!="") {
+      ///   cpu              ram             disk
+      if($sdata[8]!="" or $sdata[9]!="" or $sdata[10]!="") {
         $gtype="";
         if($sdata[8]!=""){$gtype="CPU";}
         if($sdata[9]!=""){$gtype=$gtype . ";" . "RAM";}
@@ -88,10 +85,11 @@ if(!isset($_GET['param'])){
     print '<tr><td><br></td></tr>';
     print '<tr><td colspan=2 align=center>&emsp;<input class=button type="submit" name="display" value="グラフ表示/メール添付" ></td></tr>';
   }else{
-    $msg="#error#".$user."#snmp監視対象ホストがありません";
+    $message="snmp監視対象ホストがありません";
+    $msg="#alert#".$user."#".$message;
     $nextpage=$pgm;    
-    branch($nextpage,$msg);
-    print '<h4><span class=buttonyell>グラフ監視対象ホストがありません</span></h4>';    
+    //branch($nextpage,$msg);
+    print "<h3 class=alert>{$message}</h3><hr>";
   }  
   print "</table>";
   print "</form>";

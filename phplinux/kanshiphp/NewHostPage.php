@@ -215,12 +215,12 @@ if (isset($_GET['create'])){
   print '<meta><link rel="stylesheet" href="kanshi1.css">';
   print '</head><body>';
   if ($brcode!=""){
-    print '<h3 class="'.$brcode.'">"'.$brmsg.'"</h3><hr>';
-    //print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
+    print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
   }
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　新規監視対象ホスト作成　▽</h2>';
   hostimagelist(); 
-  print '<h4>&emsp;&emsp;&emsp;☆各項目の文字列間に空白を入れないこと（例：[abc def]はNG, [abcdef]または[abc_def]はOK）</h4>';
+  print '<h4>☆各項目の文字列間に空白を入れないこと（例：[abc def]はNG, [abcdef]または[abc_def]はOK）<br>';
+  print '☆死活動作のNcat監視はTCPポート22を使用します</h4>';
   print '<form name="newhost" method="get" action="NewHostPage.php">';
   print '&emsp;<span class=kom>ホスト名：</span>&ensp;<input type="text" name="hostname" placeholder="ホスト名又はIPアドレス" size="25" maxlength="25" value="" required/>';
   $sql='select * from serverimage';
@@ -245,7 +245,8 @@ if (isset($_GET['create'])){
   print '<option value="1">PING監視</option>';
   print '<option value="2">SNMP監視</option>';
   print '<option value="3">SNMP通知なし</option>';
-  print '<option value="4">Agent監視</option>';  
+  print '<option value="4">Agent監視</option>';
+  print '<option value="5">Ncat監視</option>';  
   print '</select>';
   print '&emsp;<span class=kom>メール：</span>&ensp;<select name="mailopt">';
   print '<option value="0">メール非送信</option>';
