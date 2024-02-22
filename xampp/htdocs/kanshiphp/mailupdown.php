@@ -3,9 +3,9 @@ date_default_timezone_set('Asia/Tokyo');
 require_once 'mysqlkanshi.php';
 require_once 'phpsendmail.php';
 ///
-$pgm="mailsendping.php";
+$pgm="mailupdown.php";
 ///
-function ping($mdata,$mtype){
+function mailupdown($mdata,$mtype){
   /// 管理DB展開 mailアドレスで必要
   global $pgm;
   $sql="select * from admintb";

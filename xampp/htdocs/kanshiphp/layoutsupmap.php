@@ -111,7 +111,7 @@ $garr = array(); /// group array table
 $sarr = array(); 
 
 /// group 配列テーブル作成
-$sql='select * from '.$gtable.' order by gsequece';
+$sql='select * from '.$gtable.' order by gsequence';
 $gdata=getdata($sql);
 
 gcreatearray($gdata,$garr);

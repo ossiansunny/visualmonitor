@@ -214,6 +214,8 @@ if(!isset($_GET['param'])){
           $styp="";
           $snmpval="";
           $triro = "trblk";
+          $kanrisha="";
+          $kanrino="";
           //var_dump($sdata);
         }elseif ($evlcnfcls=='2'){
           $ctyp='障害確認済';

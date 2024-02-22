@@ -2,7 +2,8 @@
 date_default_timezone_set('Asia/Tokyo');
 require_once 'BaseFunction.php';
 require_once 'winhostping.php';
-require_once 'mailsendping.php';
+require_once 'winhostncat.php';
+require_once 'mailupdown.php';  
 require_once 'snmpagent.php';
 
 $agentflag="";
@@ -113,7 +114,16 @@ function mailservercheck(){
     putdata($musql);
   }
 }
-
+function ncatping($host,$action){
+  $rtcd=0;
+  if ($action=="5"){
+    $rtcd=hostncat($host);
+  }else{
+    $rtcd=hostping($host);
+  }
+  //echo $host.' action='.$action.' done rc='.$rtcd.'<br>';
+  return $rtcd;
+}
 //----------------viewscan-------------------------------
 //--------------------------------------------------------
 function viewscan(){
@@ -136,12 +146,12 @@ function viewscan(){
       $c_action=$itemarray[4];
       $c_mailopt=$itemarray[6];
       ///        
-      /// action 1,2,3,4の場合 
+      /// action 1(ping),2(snmp),3(snmp),4(agent)の場合 
       ///
-      if ($c_action=='1' or $c_action=="2" or $c_action=="3" or $c_action=="4"){  // action=1(ping),2(snmp),3(snmp通知なし),4(agent監視)
+      if ($c_action=='1' or $c_action=="2" or $c_action=="3" or $c_action=="4" or $c_action=="5"){  // action=1(ping),2(snmp),3(snmp通知なし),4(agent監視)
         /// 前回結果 正常　result=1
         if ($c_result=='1'){  
-          $rtn = hostping($c_host); // winhostping(windows command)
+          $rtn = ncatping($c_host,$c_action); // winhostping(windows command)
           $msg1="viewscan: ".$c_host. " result=1 new action rc=:".strval($rtn);
           if ($rtn != 0){ /// ping NG
             resultdbupdate($c_host,"2"); ///ホストデータ更新 result=2
@@ -151,7 +161,7 @@ function viewscan(){
             $usql='update statistics set cpuval="",ramval="",diskval="",process="",tcpport="" where host="'.$c_host.'"';
             $rtn=putdata($usql);
             if ($c_mailopt=='1'){  // mailopr=1 mail send
-              ping($grec,'PROBLEM');  ///メール送信
+              mailupdown($grec,'PROBLEM');  ///メール送信
             }
           }else{
             /// statistics gtype=0にする
@@ -167,7 +177,7 @@ function viewscan(){
           }  
         /// 前回結果 異常　result 0,2
         }else if ($c_result=='0' or $c_result=='2'){ /// result=0 or 2
-          $rtn = hostping($c_host);  /// winhostping(winddows command)
+          $rtn = ncatping($c_host,$c_action);  /// winhostping(winddows command)
           $msg1="viewscan: ".$c_host. " result=2 new action rc=".strval($rtn);
           writelogd($pgm,$msg1);
           /// ping ok
@@ -177,7 +187,7 @@ function viewscan(){
             writelogd($pgm,'host='.$c_host.'ping return=0');
             /// mail send check(active,dead and itemarray set)
             if ($c_mailopt=='1'){
-              ping($grec,'RECOVERY'); ///send mail for ping
+              mailupdown($grec,'RECOVERY'); ///send mail for ping
             }
           /// ping ng
           }else{
@@ -195,7 +205,7 @@ function viewscan(){
               if ($gtype!="6"){ /// statistics gtype="6" -> eventlog skip
                 /// gtype='0:未監視 4:無応答'
                 eventlog($itemarray,"2");  ///error event
-                writeloge($pgm,'write eventlog gtype='.$gtype);
+                writelogd($pgm,'write eventlog gtype='.$gtype);
               }
             }
           }
