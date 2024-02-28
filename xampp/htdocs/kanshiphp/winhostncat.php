@@ -27,12 +27,5 @@ function hostncat($host){
       return 1;
    }
 } 
-/*
-$rtn=hostncat('gcp.sunnyblue.mydns.jp');
-if ($rtn==0) {
-  echo 'active';
-}else{
-  echo 'not active';
-}
-*/
+
 ?>

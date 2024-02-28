@@ -42,9 +42,9 @@ $sdata=explode(',',$kdata[0]);
 $toaddr=$sdata[3]; /// mail to addr
 $fromaddr=$sdata[4]; /// mail from addr
 ///
-//echo 'test3';
+///
 $flg=phpsendmailat("", "", $fromaddr, $toaddr, $ttl, $bodystr,$grapharray);
-//echo 'test4';
+///
 ///
 if (strpos($grapharray[0],'.svg') !== false){
   $nextpage='GraphListPlotPage.php';

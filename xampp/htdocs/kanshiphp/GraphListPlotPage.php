@@ -6,7 +6,6 @@ require_once "mailsendany.php";
 
 function mrtgcfgck($host,$path){
   $files = glob($path."\\mrtgcfg\\".$host.".*");
-  //echo $path.'\\mrtgcfg\\'.$host.'.*';
   if (! empty($files)){
     return "0"; //グラフ作成中
   }else{

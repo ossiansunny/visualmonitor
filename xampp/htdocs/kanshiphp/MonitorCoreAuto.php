@@ -121,7 +121,6 @@ function ncatping($host,$action){
   }else{
     $rtcd=hostping($host);
   }
-  //echo $host.' action='.$action.' done rc='.$rtcd.'<br>';
   return $rtcd;
 }
 //----------------viewscan-------------------------------

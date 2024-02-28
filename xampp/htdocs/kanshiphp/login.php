@@ -69,10 +69,10 @@ function checkproc($kanri){
 }
 
 function setsess($value){
-  echo '<script type="text/javascript">';
-  //echo "sessionStorage.setItem('user',{$value});";  NG
-  echo 'sessionStorage.setItem("user","'.$value.'");';
-  echo '</script>';
+  print '<script type="text/javascript">';
+  //print "sessionStorage.setItem('user',{$value});";  NG
+  print 'sessionStorage.setItem("user","'.$value.'");';
+  print '</script>';
 }
 /////////////////////////////////////////////////
 
@@ -102,7 +102,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
     /// 初期化処理（現在使用していない）
     //if (isset($_GET['init'])){ 
     //  if ($_GET['init']=="on"){
-    //    echo "Initialize";
+    //    /// "Initialize";
     //    $upsql='update admintb set kanriname=null';
     //    putdata($upsql);
     //    writeloge($pgm,"----- VisualMonitor has Initialized -----");
@@ -123,20 +123,20 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
     $c=count($udata);
     if ($c==0){ 
       /// userなし
-      $msg="#2002#".$user."#●入力したユーザー".$user."がありません、&lt;br&gt;ログイン出来るユーザーでログインして下さい";
+      $msg="#2002#".$user."#●入力したユーザー".$user."がありません、<br>;ログイン出来るユーザーでログインして下さい";
       writeloge($pgm,$msg);
       branch($pgm,$msg);
-      //echo '</body></html>';
+      
     }else{ 
       /// userあり
       foreach ($udata as $urec){  
         $sdata=explode(',',$urec);
         if ($passwd != $sdata[1]){
           /// password一致せず
-          $msg="#2002#".$user."#●パスワードが不正です、&lt;br&gt;正しいパスワードでログインして下さい";
+          $msg="#2002#".$user."#●パスワードが不正です、<br>正しいパスワードでログインして下さい";
           writeloge($pgm,$msg);
           branch($pgm,$msg);
-          //echo '</body></html>';
+          
         }else{
           /// password一致
           $msg=$user." Login Successfull";
@@ -173,7 +173,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $nextpage="MainIndexphp.html";
               branch($nextpage,"");
             }else{ /// auth=0
-              $msg="#2003#".$user."#●既に管理者監視が実行されています、&lt;br&gt;確認してしばらくしてからログインして下さい";
+              $msg="#2003#".$user."#●既に管理者監視が実行されています、<br>確認してしばらくしてからログインして下さい";
               branch($pgm,$msg);
             } 
           }else{ 
@@ -196,11 +196,11 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $nextpage="MainIndexUphp.html";
               branch($nextpage,"");
             }else{  /// $rtn=="0" or $authority="0"
-              $msg="#2004#".$user."#●管理者監視が実行されていません、&lt;br&gt;しばらくしてからログインするか、管理者監視を確認して下さい";
+              $msg="#2004#".$user."#●管理者監視が実行されていません、<br>しばらくしてからログインするか、管理者監視を確認して下さい";
               branch($pgm,$msg);
             }
           }          
-          echo '</body></html>';
+          print '</body></html>';
         }  
       }
     }
@@ -217,7 +217,7 @@ $mailport=$mdata[1];
 $pingsw=hostping($mailserver);
 $sql='';
 if ($pingsw != 0) {
-  $brmsg=$brmsg."<br>●メールサーバー".$mdata[0]."が見つかりません&ltbr&gtログイン後メニュー「メール設定・送信」で確認して下さい";
+  $brmsg=$brmsg."<br>●メールサーバー".$mdata[0]."が見つかりません<br>ログイン後メニュー「メール設定・送信」で確認して下さい";
   $esw=2;
   $ercde="2";
   delstatus("Mail Server InActive");
@@ -233,38 +233,38 @@ if ($pingsw != 0) {
   putdata($sql);
 }
 ///
-echo '<!DOCTYPE html>';
-echo '<html>';
-echo '<head>';
-echo '<meta charset="utf-8">';
-echo '<title>サンプル</title>';
-echo '<link rel="stylesheet" href="login.css">';
-echo '</head>';
-echo '<body>';
-echo '<div class="login">';
-echo '<div class="login-triangle"></div>';
-echo '<h2 class="login-header"><img src="header/php.jpg" width="70" height="70">&emsp;&emsp;監視ログイン</h2>';
-echo '<form class="login-container" type="get" action="login.php">';
-echo '<p><input type="text" name="user" value="" placeholder="ユーザID" required></p>';
-echo '<p><input type="password" name="passwd" placeholder="パスワード" required></p>';
+print '<!DOCTYPE html>';
+print '<html>';
+print '<head>';
+print '<meta charset="utf-8">';
+print '<title>サンプル</title>';
+print '<link rel="stylesheet" href="login.css">';
+print '</head>';
+print '<body>';
+print '<div class="login">';
+print '<div class="login-triangle"></div>';
+print '<h2 class="login-header"><img src="header/php.jpg" width="70" height="70">&emsp;&emsp;監視ログイン</h2>';
+print '<form class="login-container" type="get" action="login.php">';
+print '<p><input type="text" name="user" value="" placeholder="ユーザID" required></p>';
+print '<p><input type="password" name="passwd" placeholder="パスワード" required></p>';
 /// $resetはadmintbのkanriname、AdminPageで初期化すると'reset'になる 
 if ($reset=='reset'){
-  echo '<table><tr><td>&emsp;&emsp;初期化オプション</td><td><input type="checkbox" name="init"></td></tr></table>';
+  print '<table><tr><td>&emsp;&emsp;初期化オプション</td><td><input type="checkbox" name="init"></td></tr></table>';
 }
-echo "<input type='hidden' name='brcode' value={$ercde}>";
-echo '<p><input type="submit" name="login" value="ログイン"></p>';
-echo '</form>';
-echo '</div>';
-echo '<div class="login">';
+print "<input type='hidden' name='brcode' value={$ercde}>";
+print '<p><input type="submit" name="login" value="ログイン"></p>';
+print '</form>';
+print '</div>';
+print '<div class="login">';
 ///
 if ($esw == 1){ /// loginエラー
-  echo "<div><h4><font color=red>{$brmsg}</font></h4></div>";
+  print "<div><h4><font color=red>{$brmsg}</font></h4></div>";
 }else if ($esw == 2){ /// mailserver エラー
-  echo "<div><h4><font color=yellow>{$brmsg}</font></h4></div>";
+  print "<div><h4><font color=yellow>{$brmsg}</font></h4></div>";
 }else {
-  echo "<div><h4><font color=white>{$brmsg}</font></h4></div>";
+  print "<div><h4><font color=white>{$brmsg}</font></h4></div>";
 }
-echo '</div>';
-echo '</body>';
-echo '</html>';
+print '</div>';
+print '</body>';
+print '</html>';
 ?>

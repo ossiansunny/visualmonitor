@@ -10,7 +10,6 @@ $vpath_kanshiphp="";
 
 function mrtgcfgck($host,$stat){
   global $vpath_kanshiphp;
-  //echo $vpath_kanshiphp."\\mrtgcfg\\".$host.".*";
   $files = glob($vpath_kanshiphp."\\mrtgcfg\\".$host.".*");
   if (empty($files)){
     return "グラフ未作成";

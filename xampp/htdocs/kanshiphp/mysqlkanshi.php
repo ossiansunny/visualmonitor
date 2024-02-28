@@ -21,7 +21,6 @@ function openconnect(){
       return $db_sel; // 異常の場合、falseを戻す
     }
   }else{
-    //echo "error connect";
     return $dbc; // 接続エラーで　falseを返す
   }
   
@@ -178,12 +177,5 @@ function create($sql) {
   }
   return $rtn; // whereの該当なしも 0で帰る
 }
-/*
-$sql="select * from user where userid='aaabc'";
-$rtn=getdata($sql);
-var_dump($rtn);
-if (empty($rtn)){
-  echo 'none';
-}
-*/
+
 ?>
