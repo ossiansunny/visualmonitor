@@ -7,15 +7,14 @@ $varread=$path_kanshiphp."/varread.php";
 require_once $varread;
 $pgm = "init_mysql.php";
 $vpath_kanshiphp="";
-$vpatharr=array("vpath_kanshiphp","vpath_xampp");
+$vpatharr=array("vpath_kanshiphp");
 $rtnv=pathget($vpatharr);
 $dbname="";
 $dbhost="";
 $dbuser="";
 $dbhost="";
-if(count($rtnv)==2){
+if(count($rtnv)==1){
   $vpath_kanshiphp=$rtnv[0];
-  $vpath_xampp=$rtnv[1];
   $cfgpath=$vpath_kanshiphp."/vmsetup/mysqlsetup.cfg";
   $cfp=fopen($cfgpath,'r');
   $cfgarray=array();
