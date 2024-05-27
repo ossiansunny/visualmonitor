@@ -1,0 +1,1 @@
+/usr/bin/gnuplot -e 'path="plot"; ghost="sample.com"' bin/mkplot.plt
