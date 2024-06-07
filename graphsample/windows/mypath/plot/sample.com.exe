@@ -1,3 +1,5 @@
+path = "c:\\mypath\\plot\\"
+ghost = "sample.com"
 set title ghost." Maximum Load per Hour"
 set xlabel "Time Hour"
 set ylabel "Load %"

@@ -1,1 +1,1 @@
-/usr/bin/gnuplot -e 'path="plot"; ghost="sample.com"' bin/mkplot.plt
+/usr/bin/gnuplot -e 'path="/mypath/plot"; ghost="sample.com"' /mypath/bin/mkplot.plt

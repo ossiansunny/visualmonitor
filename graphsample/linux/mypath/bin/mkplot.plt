@@ -1,4 +1,4 @@
-set title ghost." Load Average"
+set title ghost." Maximum load per hour"
 set xlabel "Time Hour"
 set ylabel "Load %"
 set yrange [0:100]

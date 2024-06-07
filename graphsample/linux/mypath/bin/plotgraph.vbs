@@ -1,4 +1,3 @@
-Option Explicit
 '-----------------------------------------------------
 ' --------- Unixtimeから時刻取り出し
 '------------------------------------------------------
@@ -19,11 +18,13 @@ End Function
 '---------- cpu, ram, disk 配列埋め込み
 '-----------------------------------------------------
 Function adWrite(ByVal host, ByVal rType, ByRef rArray)
-Dim fsor, inputFile, lineStr, lineArr, uTime, jstHour, oldjstHour, currVal, maxVal, wData,fSw,bCnt,cnt
+Dim fsor, inputFile
 Set fsor = WScript.CreateObject("Scripting.FileSystemObject")
-Set inputFile = fsor.OpenTextFile(mrtgPath & "\" & host & "." & rType & ".log", 1, False, 0) '***c:\mypath\mrtg
-fSw=0
-bCnt=0
+Set inputFile = fsor.OpenTextFile("mrtg\" & host & "." & rType & ".log", 1, False, 0)
+
+Dim lineStr, lineArr, uTime, jstHour, oldjstHour, currVal, maxVal, wData
+fsw=0
+bcnt=0
 cnt=0
 Do While cnt<320 ' break 28
    lineStr = inputFile.ReadLine
@@ -31,23 +32,24 @@ Do While cnt<320 ' break 28
    uTime=lineArr(0)
    jstHour = unixtime2hour(uTime)
    currVal=lineArr(1)
-   If fSw=0 Then
-     fSw=1
+
+   If fsw=0 Then
+     fsw=1
      maxVal=currVal
      oldjstHour=jstHour
    Else
      If Not (oldjstHour = jstHour) Then
        Select Case rType
          Case "cpu"
-           rArray(0,bCnt)=oldjstHour
-           rArray(1,bCnt)=maxVal
+           rArray(0,bcnt)=oldjstHour
+           rArray(1,bcnt)=maxVal
          Case "ram"
-           rArray(2,bCnt)=maxVal
+           rArray(2,bcnt)=maxVal
          Case "disk"
-           rArray(3,bCnt)=maxVal
+           rArray(3,bcnt)=maxVal
        End Select
        maxVal=0
-       bCnt=bCnt+1
+       bcnt=bcnt+1
        If maxVal < currVal Then
          maxVal=currVal
        End If
@@ -58,24 +60,24 @@ Do While cnt<320 ' break 28
 Loop 
 Select Case rType
   Case "cpu"
-    rArray(0,bCnt)=oldjstHour
-    rArray(1,bCnt)=maxVal
+    rArray(0,bcnt)=oldjstHour
+    rArray(1,bcnt)=maxVal
   Case "ram"
-    rArray(2,bCnt)=maxVal
+    rArray(2,bcnt)=maxVal
   Case "disk"
-    rArray(3,bCnt)=maxVal
+    rArray(3,bcnt)=maxVal
 End Select          
 inputFile.Close
-adWrite=bCnt
+adWrite=bcnt
 End Function
 
 '------------------------------------------------------------
 '-------- リソース配列から逆順に統合ファイル作成
 '------------------------------------------------------------
 Function  svgMake(ByVal host, ByVal lCnt, ByRef rArray)
-  Dim fsok, okOut, ncnt, okPath, okData
+  Dim fsok, okOut, ncnt
   Set fsok = WScript.CreateObject("Scripting.FileSystemObject")
-  okPath = plotPath & "\" & host & ".ok"
+  okPath = "plot\" & host & ".ok"
   Set okOut = fsok.OpenTextFile(okPath, 2, True, 0)  
   ncnt=lCnt-1
   Do While ncnt>-1
@@ -84,67 +86,56 @@ Function  svgMake(ByVal host, ByVal lCnt, ByRef rArray)
     ncnt=ncnt-1
   Loop
   okOut.Close
-  'WScript.Echo "Host: " & host & ".ok Created"
+  WScript.Echo "Host: " & host & ".ok Created"
 End Function
 
 Function exeMake(ByVal host) 
 '------------------------------------------------------------------
 '------mkplot.pltから<host>.exeを作成
 '------------------------------------------------------------------
-  Dim fsoinmk, mpPath, inMk, fsooutMk, outMk, mkPath, sPath, gPath, inmkLine, sGhost
+  Dim fsoinmk, inMk
   Set fsoinmk = WScript.CreateObject("Scripting.FileSystemObject")
-  mpPath = binPath & "\mkplot.plt"
-  Set inMk = fsoinmk.OpenTextFile(mpPath, 1, False, 0)
+  Set inMk = fsoinmk.OpenTextFile("bin\mkplot.plt", 1, False, 0)
+  Dim fsooutMk, outMk, mkPath
   Set fsooutMk = WScript.CreateObject("Scripting.FileSystemObject")
-  mkPath = plotPath & "\" & host & ".exe" 
-  Set outMk = fsooutMk.OpenTextFile(mkPath, 2, True, 0) 
-  sPath = """" & plotPath & "\" & """" 
+  mkPath = "plot\" & host & ".exe"
+  Set outMk = fsooutMk.OpenTextFile(mkPath, 2, True, 0)
+  Dim sPath, gPath
+  sPath = """" & "plot\\" & """"
   sGhost = """" & host & """"
-  ' 両端の""""の先頭と最後はリテラルの囲み
-  sPath = Replace(sPath,"\","\\")
-  ' テンプレート埋め込みのパスは、￥を\\にする
-  outMk.writeLine("path = " & sPath) 
-  outMk.WriteLine("ghost = " & sGhost) 
+  ' 両端の""""の先頭と最後はリテラルの囲み、中の""は１個の"とエスケープの"
+  outMk.writeLine("path = " & sPath)
+  outMk.WriteLine("ghost = " & sGhost)
+  Dim inmkLine
   Do Until inMk.AtEndOfStream
     inmkLine = inMk.ReadLine
     outMk.WriteLine(inmkLine)
   Loop
   outMk.Close
   inMk.Close
-  'WScript.Echo host & ".exe created"
+  WScript.Echo host & ".exe created"
 End Function
 
 Function graphMake(ByVal host)
 '-------------------------------------------------------------------
 '------ svgグラフイメージ作成
 '--------------------------------------------------------------------
-Dim imgPath, cmdLine, outExec, svgWs
-  Set svgWs = CreateObject("Wscript.Shell")
-  imgPath = plotPath & "\" & host & ".exe" 
+Dim imgPath, cmdLine, outExec
+  Set ws = CreateObject("Wscript.Shell")
+  imgPath = "plot\" & host & ".exe"
   cmdLine = "gnuplot " & imgPath 
-  WScript.Echo cmdLine
-  Set outExec = svgWs.Exec("cmd /c " & cmdLine)
-  'WScript.Echo host & ".svg image created"
+  Set outExec = ws.Exec("cmd /c " & cmdLine)
+  WScript.Echo host & ".svg created"
 End Function
 
 '------------------------------------------------------
 '--------- メイン 処理
 '-------------------------------------------------------
-Dim argCount, binPath, mrtgPath, plotPath
-argCount=WScript.Arguments.Count
-If argCount = 3 Then
-  binPath=WScript.Arguments(0)
-  mrtgPath=WScript.Arguments(1)
-  plotPath=WScript.Arguments(2)
-Else
-  binPath="c:\mypath\bin"
-  mrtgPath="c:\mypath\mrtg"
-  plotPath="c:\mypath\plot"
-End If
-Dim gArray(4,50),fsoLog,folder,file,logArr,numArr,delCgar,fileName,hostName,gSw,lRec
-Dim irec,oldHost,gType,delChar
-set fsoLog = createObject("Scripting.FileSystemObject")
-set folder = fsolog.getFolder(mrtgPath) 
+Dim gArray(4,50)
+Dim fsolog, folder
+set fsolog = createObject("Scripting.FileSystemObject")
+set folder = fsolog.getFolder("mrtg")
+Dim file, logArr, numArr, delCgar, fileName, hostName, gSw, lRec
 '-------------------------------------------------------
 '--------- log検索
 oldHost=" "
@@ -156,8 +147,9 @@ for each file in folder.files
       numArr=UBound(logArr)
       gType=logArr(numArr-1)
       delChar = "." & logArr(numArr-1) & ".log"
-      fileName = fsolog.GetFileName(file)  
+      fileName = fsolog.GetFileName(file)
       hostName = Replace(fileName,delChar,"")
+      Dim irec, oldHost
       If gSw = 0 Then
         gSw = 1
         oldHost=hostName
@@ -166,7 +158,7 @@ for each file in folder.files
         If Not(oldHost = hostName) Then            
           '----------------------------------------------------------
           '------- 統合ログ作成
-          'WScript.Echo "host: " & oldHost & " 作成完了"
+          WScript.Echo "host: " & oldHost & " 作成完了"
           svgMake oldHost, lRec, gArray
           exeMake oldHost
           graphMake oldHost
@@ -174,10 +166,10 @@ for each file in folder.files
         End If  
       End If
       lRec=adWrite(hostName,gType, gArray)
-      'WScript.Echo "host: " & hostName & " gtype: " & gType & " 配列埋め込み完了"
+      WScript.Echo "host: " & hostName & " gtype: " & gType & " 配列埋め込み完了"
     End If    
 next 
-'WScript.Echo "host: " & oldHost & " 作成完了"
+WScript.Echo "Last host: " & oldHost & " 作成完了"
 svgMake oldHost, lRec, gArray
 exeMake oldHost
 graphMake oldHost

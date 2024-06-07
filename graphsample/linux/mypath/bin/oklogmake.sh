@@ -1,27 +1,28 @@
 #!/bin/bash
-ghost=$1;gtype=$2;gline=$3
-head -$gline mrtg/${ghost}.${gtype}.log | sort -k 1 -t " " | awk '{print $1,$2}' > plot/temptype
+mpath=$1; ipath=$2; ghost=$3; gtype=$4; gline=$5
+head -$gline ${mpath}/${ghost}.${gtype}.log | sort -k 1 -t " " | awk '{print $1,$2}' > ${ipath}/tmptype
 oldhour=0; hour=0; maxval=0; fsw=0
-rm -f plot/gethour.log
+rm -f ${ipath}/tmpgethour
 while read unixtme load
 do
   hour=`date -d @${unixtme} +"%H"`
-  if [ $fsw -eq 0 ]; then
+  if [ ${fsw} -eq 0 ]; then
    fsw=1
-   if [ $maxval -lt $load ]; then
-     maxval=$load
+   if [ ${maxval} -lt ${load} ]; then
+     maxval=${load}
    fi
-   oldhour=$hour
+   oldhour=${hour}
   else
-   if [ $oldhour -ne $hour ]; then
-     echo "$oldhour $maxval" >> plot/gethour.log
+   if [ ${oldhour} -ne ${hour} ]; then
+     echo "${oldhour} ${maxval}" >> ${ipath}/tmpgethour
      maxval=0
-     if [ $maxval -lt $load ]; then
-       maxval=$load
+     if [ ${maxval} -lt ${load} ]; then
+       maxval=${load}
      fi
-     oldhour=$hour
+     oldhour=${hour}
    fi
   fi
-done < plot/temptype
-echo "$oldhour $maxval" >> plot/gethour.log
-tail -28 plot/gethour.log > plot/${ghost}.${gtype}.plot
+done < ${ipath}/tmptype
+echo "${oldhour} ${maxval}" >> ${ipath}/tmpgethour
+tail -28 ${ipath}/tmpgethour > ${ipath}/${ghost}.${gtype}.plot
+rm -f ${ipath}/tmpgethour ${ipath}/tmptype

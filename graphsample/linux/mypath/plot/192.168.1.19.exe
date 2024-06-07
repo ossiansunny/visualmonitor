@@ -1,1 +1,0 @@
-/usr/bin/gnuplot -e 'path="/mypath/plot"; ghost="192.168.1.19"' /mypath/bin/mkplot.plt
