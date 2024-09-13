@@ -1,47 +1,73 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+Ôªø<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <?php
 require_once "mysqlkanshi.php";
 require_once "varread.php";
 ///
-$sql='select monintval from admintb';
-$rows=getdata($sql);
-$intval=$rows[0];
+$admin_sql='select monintval from admintb';
+$adminRows=getdata($admin_sql);
+$monitorInterval=$adminRows[0];
 $pgm="MrtgAutoRun.php";
 print '<html lang="ja">';
 print '<head>';
-print "<meta http-equiv='refresh' content={$intval}>";
-print '<link rel="stylesheet" href="kanshi1.css">';
+print "<meta http-equiv='refresh' content={$monitorInterval}>";
+print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head>';
 print '<body>';
-print "<h4>MRTG Refresh {$intval}sec</h4>";
-
-date_default_timezone_set('Asia/Tokyo');
-$dat=date('y/m/d H:i:s');
-$vpath_mrtgbase="";
-$vpath_plothome="";
-$vpatharr=array("vpath_mrtgbase","vpath_plothome");
-$rtnv=pathget($vpatharr);
-if(count($rtnv)==2){
-  $vpath_mrtgbase=$rtnv[0];
-  $vpath_plothome=$rtnv[1];  
-  $cmd=$vpath_mrtgbase.'\\ubin\\mrtgrun.vbs '.$vpath_mrtgbase;
-  $out2 = shell_exec($cmd);
-  writelogd($pgm,"call ".$cmd);
-  //$cmd='e:\\VisualMonitor\\mrtg\\gnuplot\\vslogmake.vbs';
-  $cmd=$vpath_mrtgbase.'\\ubin\\gnuplot\\vslogmake.vbs '.$vpath_mrtgbase.' '.$vpath_plothome;
-  //print PHP_EOL."vslogmake:".$cmd.PHP_EOL;
-  $out3 = shell_exec($cmd);
-  writelogd($pgm,"call ".$cmd);
+///
+$core_sql='select mrtg from coretimetb';
+$coreRows=getdata($core_sql);
+$mrtgTimeStamp=$coreRows[0];
+$currentTimeStamp=date('ymdHis');
+$diffTime=intval($currentTimeStamp) - intval($mrtgTimeStamp);
+if ($diffTime > intval($monitorInterval)*3){
+  print "<h4>MRTG Refresh {$monitorInterval}sec</h4>";
+  date_default_timezone_set('Asia/Tokyo');
+  if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+    /// windows xampp
+    $vpath_mrtgbase="";
+    $vpath_plothome="";
+    $vpath_base="";
+    $vpathParam=array("vpath_mrtgbase","vpath_plothome","vpath_base","vpath_perlbin");
+    $rtnPath=pathget($vpathParam);
+    if(count($rtnPath)==4){
+      $vpath_mrtgbase=$rtnPath[0];
+      $vpath_plothome=$rtnPath[1];
+      $vpath_base=$rtnPath[2]; 
+      $vpath_perlbin=$rtnPath[3];
+ 
+      $cmdMrtgRun=$vpath_base.'\\ubin\\mrtgRun.exe 0 '.$vpath_mrtgbase.' '.$vpath_perlbin;
+      $out2 = shell_exec($cmdMrtgRun);
+      writelogd($pgm,"call ".$cmdMrtgRun);
+      $cmdPlotGraph="cscript ".$vpath_base.'\\ubin\\plotgraph.vbs '.$vpath_base; /// "e:\visualmonitor\xampp"
+      $out3 = shell_exec($cmdPlotGraph);
+      writelogd($pgm,"call ".$cmdPlotGraph);
+    }else{
+      $msg="Invalid path , Check kanshiphp.ini";
+      writeloge($pgm,$msg);
+      print "<h4>{$msg}</h4>";
+    }
+  }else{
+    /// Linux
+    $vpathParam=array("vpath_htdocs");
+    $rtnPath=pathget($vpathParam);
+    if(count($rtnPath)==1){
+      $htdocs=$rtnPath[0];
+      $cmd1=$htdocs.'/bin/mrtgrun.sh '.$htdocs;
+      $out1 = shell_exec($cmd1);
+      writelogd($pgm,'shell_exec '.$cmd1);
+      $cmd2=$htdocs.'/bin/plotgraph.sh '.$htdocs;
+      $out2 = shell_exec($cmd2);
+      writelogd($pgm,'shell_exec '.$cmd2);
+    }else{
+      $msg="Invalid path , Check kanshiphp.ini";
+      writeloge($pgm,$msg);
+      print "<h4>{$msg}</h4>";
+    }
+  }
 }else{
-  $msg="ÉpÉXïœêî vpath_mrtgbase vpath_plothomeÇ™ìæÇÁÇÍÇ»Ç¢ kanshiphp.iniÇÉ`ÉFÉbÉN";
-  writeloge($pgm,$msg);
-  print "<h4>{$msg}</h4>";
+  //echo 'less than '.$mrtgTimeStamp.'sec'.PHP_EOL;
+  print "<h4>MRTG Daemon Running</h4>";
 }
 
-print '</body>';
-print '</html>';
-
+print "</body></html>";
 ?>
-
-
-

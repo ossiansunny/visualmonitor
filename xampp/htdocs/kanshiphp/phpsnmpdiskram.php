@@ -1,18 +1,6 @@
 <?php
 error_reporting(E_ALL & ~E_WARNING);
 
-function ping($host){
-  /// OS ping使用
-  exec("ping -w 1 {$host}", $output, $result);
-  if ($result){
-    /// ping Failed
-    return 1;
-    
-  }else{
-    /// ping Success
-    return 0;
-  }  
-}    
 ///------------------------------------------------------------
 ///------- Windows --------------------------
 ///------------------------------------------------------------

@@ -2,40 +2,42 @@
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 
-function arraycheck($data){
-  $dataarr=array();
-  if (is_array($data)){
-    $dataarr=$data;
+function arraycheck($_data){
+  $rtnDataArr=array();
+  if (is_array($_data)){
+    $rtnDataArr=$_data;
   }else{
-    $dataarr[0]=$data;
+    $rtnDataArr[0]=$_data;
   }
-  return $dataarr;
+  return $rtnDataArr;
 }
 $pgm = "vieweventmemo.php";
-$userid=$_GET['user'];
-$auth=$_GET['authcd'];
+$userId=$_GET['user'];
+$alerMsg="";
+//$auth=$_GET['authcd'];
 ///-----------------------------------------------------------
 ///---- fckbox 選択された削除候補データ
 ///-----------------------------------------------------------
 if (isset($_GET['delete'])){
   /// 削除処理
   if (isset($_GET['ckdata'])){
-    $ffckbox=$_GET['ckdata'];
-    $fckbox=arraycheck($ffckbox);
-    foreach ($fckbox as $fckrec){
-      $sdata=explode(',',$fckrec);
-      $delsql='delete from eventmemo where host="'.$sdata[1].'" and eventtime="'.$sdata[0].'"';
-      putdata($delsql);      
+    $memoData=$_GET['ckdata'];
+    $memoRows=arraycheck($memoData);
+    foreach ($memoRows as $memoRowsRec){
+      $memoArr=explode(',',$memoRowsRec);
+      $memoStamp=$memoArr[0];
+      $memoHost=$memoArr[1];
+      $memo_sql='delete from eventmemo where host="'.$memoHost.'" and eventtime="'.$memoStamp.'"';
+      putdata($memo_sql);      
     }
-    $msg='#notic#'.$userid.'#削除が完了';
+    $alerMsg='#notic#'.$userId.'#削除が完了';
     $nextpage='EventMemoPage.php';
-    branch($nextpage,$msg);
-    
+    branch($nextpage,$alerMsg);    
   
   }else{
-    $msg='#error#'.$userid.'#チェックボックスでメモを選択して下さい';
+    $alerMsg='#error#'.$userId.'#チェックボックスでメモを選択して下さい';
     $nextpage='EventMemoPage.php';
-    branch($nextpage,$msg);
+    branch($nextpage,$alerMsg);
     
   }
 }

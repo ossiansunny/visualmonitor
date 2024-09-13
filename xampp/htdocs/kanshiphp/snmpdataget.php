@@ -18,21 +18,44 @@ function snmptrapget($host){
   return $rtndd;
 }
 
-function snmpprocget($host){
-  $getvalue = snmp2_get($host,'remote',".1.3.6.1.4.1.9999.1.3.0",1000000,1);
+function snmptcpget($host){
+  $getvalue = snmp2_get($host,'remote',".1.3.6.1.4.1.999999.1.3.0",1000000,1);
   if (! $getvalue){
-    return "error";
+    $rtnval="error";
   }else{
-    $rtnarr=explode(':',$getvalue);
-    $rtnval=ltrim(rtrim(trim($rtnarr[1]),'"'),'"');
-    return $rtnval;
-  }  
+    if ($getvalue=="\"\""){
+      $rtnval="allok";
+    }else{
+      $rtnarr=explode(':',$getvalue);
+      $rtnvalsp=ltrim(rtrim(trim($rtnarr[1]),'"'),'"');
+      $rtnval=str_replace(' ',';',$rtnvalsp);
+      return $rtnval;
+    }
+  }
+  return $rtnval;  
 }
 
-function snmpdataget($itar){ 
-  /// $itar ホストレコード
-  $host=$itar[0];
-  $ostype=$itar[2];
+function snmpprocget($host){
+  $getvalue = snmp2_get($host,'remote',".1.3.6.1.4.1.999999.1.5.0",1000000,1);
+  if (! $getvalue){
+    $rtnval="error";
+  }else{
+    if ($getvalue=="\"\""){
+      $rtnval="allok";
+    }else{
+      $rtnarr=explode(':',$getvalue);
+      $rtnvalsp=ltrim(rtrim(trim($rtnarr[1]),'"'),'"');
+      $rtnval=str_replace(' ',';',$rtnvalsp);
+      return $rtnval;
+    }
+  }
+  return $rtnval;  
+}
+
+function snmpdataget($hostArr){ 
+  /// $hostArr ホストレコード
+  $host=$hostArr[0];
+  $ostype=$hostArr[2];
   if ($ostype=='0'){
     $osname='windows';
   }else if($ostype=='1'){
@@ -40,15 +63,15 @@ function snmpdataget($itar){
   }else{
     $osname='other';
   }
-  $tcpport=$itar[7];
-  $cpulim=$itar[8];
-  $ramlim=$itar[9];
-  $disklim=$itar[10];
-  $process=$itar[11]; //top & is use trap data
-  if ($itar[13]=='' || is_null($itar[13])){
+  $tcpport=$hostArr[7];
+  $cpulim=$hostArr[8];
+  $ramlim=$hostArr[9];
+  $disklim=$hostArr[10];
+  $process=$hostArr[11]; //top & is use trap data
+  if ($hostArr[13]=='' || is_null($hostArr[13])){
     $community='public';
   }else{
-    $community=$itar[13];
+    $community=$hostArr[13];
   }
   $snmparray = array('','','','','','');
   $snmparray[0]=$host;
@@ -165,14 +188,21 @@ function snmpdataget($itar){
       //----------------------------------------------------
       $ckproc=explode(';',$process);
       $string="";
-      if (substr($ckproc[0],0,1)=='&'){
-        /// 拡張プロセスチェック
+      if ($ostype=='1' && substr($ckproc[0],0,1)=='&'){
+        /// 拡張プロセスチェック unix ostype=1 && processtop=&
         $traprtntb=snmpprocget($host);
-        if ($traprtntb=='error' || $traprtntb=='allok'){
-          $snmparray[4]='';
+        if ($traprtntb=='error'){
+          $string='';
         }else{         
-          $snmparray[4]=$traprtntb;
+          $string=$traprtntb;
         }
+        writelogd($pgm,$host."snmpprocget return extend process ".$string);
+      }else if ($ostype=='1' && substr($ckproc[0],0,1)=='%'){
+        /// tラッププロセスチェック unix ostype=1 && processtop=%
+        $traprtntb=snmptrapget($host);
+        $string=$traprtntb;
+        writelogd($pgm,$host."snmptrapget return trapped process ".$string);
+        
       }else{        
         /// snmpprocess チェック
         $reqlist=array();
@@ -185,6 +215,7 @@ function snmpdataget($itar){
         }else{
           $string=$rtntb;
         }
+        writelogd($pgm,$host."phpsnmpprocess return normal process ".$string);
       }
       $snmparray[4]=$string;
       
@@ -196,17 +227,28 @@ function snmpdataget($itar){
       ///-------------------------------------------------
       $reqlist=explode(';',$tcpport);
       $string="";
-      if ($ostype=='0'){ 
-        $rtntb=phpsnmptcpopenwin($host,$community,$reqlist);
-      } else {
-        $rtntb=phpsnmptcpopen($host,$community,$reqlist);
-      }
+      if ($ostype=='1' && substr($ckproc[0],0,1)=='&'){
+        /// 拡張プロセスチェック
+        $traprtntb=snmptcpget($host);
+        if ($traprtntb=='error'){
+          $string='';
+        }else{         
+          $string=$traprtntb;
+          //writeloge($pgm,"extend tcpport ".$string);
+        }
+      }else{  
+        if ($ostype=='0'){ 
+          $rtntb=phpsnmptcpopenwin($host,$community,$reqlist);
+        } else {
+          $rtntb=phpsnmptcpopen($host,$community,$reqlist);
+        }
       
-      if ($rtntb=='error'){
-      /// snmp no response
-        $string='unknown'; 
-      }else{
-        $string = $rtntb;
+        if ($rtntb=='error'){
+        /// snmp no response
+          $string='unknown'; 
+        }else{
+          $string = $rtntb;
+        }
       }
       $snmparray[5] = $string;
     }

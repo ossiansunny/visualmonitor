@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 error_reporting(E_ALL & ~E_NOTICE);
 
 print '<html>';
 print '<body><head>';
-print '<link rel="stylesheet" href="kanshi1.css">';
+print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head><body>';
 print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　ホストレイアウト作成　その３　▽</h2>';
 print '<h4>ホスト配置情報入力</h4>';
@@ -16,49 +16,49 @@ $radio="";
 $grp = array();
 $seg = array();
 $hst = array();
-$gh = array($grp,$seg,$hst);
+//$gh = array($grp,$seg,$hst);
 $user=$_GET['user'];
 //$glayout=$_GET['glayout'];
-$laynick=$_GET['laynick'];
-//$laynick=explode('_',$glayout);
+$layoutNick=$_GET['laynick'];
+//$layoutNick=explode('_',$glayout);
 if (isset($_GET['radio'])) {
   $radio = $_GET['radio'];
 }else{
-  $msg="#error#".$user."#".$laynick."/グループを選択して下さい";
+  $msg="#error#".$user."#".$layoutNick."/グループを選択して下さい";
   $nextpage="layouts.php";
   branch($nextpage,$msg);
 }
-$rarr=explode(',',$radio);
-$gname=$rarr[0];
-$gseq=$rarr[1]; ///group sequence number
-$ghost=$rarr[2];
-$gseg=$rarr[3];
-$sumi=$rarr[4]; 
-if($sumi=='1'){
-  $gid='g'.$gseq.'%';
-  $selsql="select * from layout_".$laynick." where gshid like '".$gid."'";
-  $hdata=getdata($selsql);
-  $hdatac=count($hdata);
+$grpLayoutArr=explode(',',$radio);
+$grpName=$grpLayoutArr[0];
+$grpSeq=$grpLayoutArr[1]; ///group sequence number
+$grpHostNum=$grpLayoutArr[2];
+$grpSegNum=$grpLayoutArr[3];
+$finishFlag=$grpLayoutArr[4]; 
+if($finishFlag=='1'){
+  $gid='g'.$grpSeq.'%';
+  $layout_sql="select * from layout_".$layoutNick." where gshid like '".$gid."'";
+  $hostLayoutRows=getdata($layout_sql);
+  $hostLayoutCount=count($hostLayoutRows);
   print '<form name=myname action=layoutsdb.php method=get>';
-  print "<input type=hidden name=laynick value={$laynick}>";
+  print "<input type=hidden name=laynick value={$layoutNick}>";
   //print "<input type=hidden name=layoutname value={$glayout}>";
-  print "<h4>グループ名：{$gname}<input type=hidden name=gseq value={$gseq}></h4>";
+  print "<h4>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h4>";
   print '<table border=1>';
   print '<tr>';
-  $dn=intval($gseg);
-  $hs=intval($ghost);
+  $dn=intval($grpSegNum);
+  $hs=intval($grpHostNum);
   for($hsc=0;$hsc<$hs;$hsc++){
     print '<th>ホスト名</th>';
   }
   print '</tr>';
   
   $hcc=0;
-  while($hcc<$hdatac){    
+  while($hcc<$hostLayoutCount){    
     for($dnc=0;$dnc<$dn;$dnc++){ 
       print '<tr>';
       for($hsc=0;$hsc<$hs;$hsc++){
-        $hdarr=explode(',',$hdata[$hcc]);
-        print "<td><input type=text name=host[{$dnc}][{$hsc}] size=20 value={$hdarr[1]}></td>";
+        $hostLayoutArr=explode(',',$hostLayoutRows[$hcc]);
+        print "<td><input type=text name=host[{$dnc}][{$hsc}] size=20 value={$hostLayoutArr[1]}></td>";
         $hcc++;
       }	
       print '</tr>';  
@@ -69,12 +69,12 @@ if($sumi=='1'){
   print '<br><input class=button type=submit name=go value="実行">';
   print '</form>';
 }else{
-  $dn=intval($gseg);
-  $hs=intval($ghost);
+  $dn=intval($grpSegNum);
+  $hs=intval($grpHostNum);
   print '<form name=myname action=layoutsdb.php method=get>';
-  print "<input type=hidden name=laynick value={$laynick}>";
+  print "<input type=hidden name=laynick value={$layoutNick}>";
   //print "<input type=hidden name=layoutname value={$glayout}>";
-  print "<h4>グループ名：{$gname}<input type=hidden name=gseq value={$gseq}></h4>";
+  print "<h4>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h4>";
   print '<table border=1>';
   print '<tr>';
   for($hsc=0;$hsc<$hs;$hsc++){

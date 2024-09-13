@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 
@@ -24,7 +24,7 @@ $pgm="serverimageinsdeldb.php";
 $user="";
 ///
 print '<html><head><meta>';
-print '<link rel="stylesheet" href="kanshi1.css">';
+print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head><body>';
 
 $user=$_GET['user'];
@@ -33,13 +33,13 @@ $user=$_GET['user'];
 ///
 if (isset($_GET['del'])){ 
   if (isset($_GET['fckbox'])){
-    $ffckbox=$_GET['fckbox'];
-    $fckbox=arraycheck($ffckbox);
-    foreach ($fckbox  as  $data) {
-      $delsql='delete from serverimage where image="'.$data.'"';
-      putdata($delsql); 
-      writelogd($pgm,$delsql);
-      $msg="#notic#".$user."#正常にイメージ".$data."が削除されました";
+    $imageCheckBox=$_GET['fckbox'];
+    $imageArr=arraycheck($imageCheckBox);
+    foreach ($imageArr  as  $imageName) {
+      $image_sql='delete from serverimage where image="'.$imageName.'"';
+      putdata($image_sql); 
+      writelogd($pgm,$image_sql);
+      $msg="#notic#".$user."#正常にイメージ".$imageName."が削除されました";
       $nextpage="ServerImage.php";
       branch($nextpage,$msg);
     }
@@ -48,12 +48,12 @@ if (isset($_GET['del'])){
 /// INSERT
 /// 
 }else{ 
-  $name=nullcheck($_GET['name']); 
-  $image=nullcheck($_GET['image']); 
-  $inssql='insert into serverimage (image, name, comment) values("'.$image.'","'.$name.'"," ")';
-  putdata($inssql);
-  writelogd($pgm,$inssql); 
-  $msg="#notic#".$user."#正常にイメージ".$data."が登録されました";
+  $imageView=nullcheck($_GET['name']); 
+  $imageName=nullcheck($_GET['image']); 
+  $image_sql='insert into serverimage (image, name, comment) values("'.$image.'","'.$name.'"," ")';
+  putdata($image_sql);
+  writelogd($pgm,$image_sql); 
+  $msg="#notic#".$user."#正常にイメージ".$imageName."が登録されました";
   $nextpage="ServerImage.php";
   branch($nextpage,$msg);
 }

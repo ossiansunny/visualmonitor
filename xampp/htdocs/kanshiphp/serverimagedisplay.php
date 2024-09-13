@@ -3,28 +3,28 @@ require_once 'mysqlkanshi.php';
 
 function hostimagelist(){  
   print '<h3>▽　ホスト画像　▽</h3>';
-  $svi=array();
-  $svn=array();
-  $sql='select * from serverimage order by image';
-  $rows=getdata($sql);
-  $cnt=0;
-  foreach ($rows as $iitem){
-    $iitemlist=explode(',',$iitem);
-    $svi[$cnt]=$iitemlist[0];
-    $svn[$cnt]=$iitemlist[1];
-    $cnt++;
+  $svrImage=array();
+  $svrViewName=array();
+  $image_sql='select * from serverimage order by image';
+  $imageRows=getdata($image_sql);
+  $index=0;
+  foreach ($imageRows as $imageRowsRec){
+    $imageArr=explode(',',$imageRowsRec);
+    $svrImage[$index]=$imageArr[0];
+    $svrViewName[$index]=$imageArr[1];
+    $index++;
   }
   print '<table border=1><tr>';
-  $svin=count($svi);
-  for ($cnt=0;$cnt<$svin;$cnt++){
-    print "<th>{$svn[$cnt]}</th>";
+  $svrImageCount=count($svrImage);
+  for ($index=0;$index<$svrImageCount;$index++){
+    print "<th>{$svrViewName[$index]}</th>";
   }
   print '</tr><tr>';
-  $svin=count($svi);
-  for ($cnt=0;$cnt<$svin;$cnt++){
-    $hlist=explode('.',$svi[$cnt]);
-    $himg=$hlist[0].'1.png';
-    print "<td align=center><img src='hostimage/{$himg}' class=size></td>";
+  $svrImageCount=count($svrImage);
+  for ($index=0;$index<$svrImageCount;$index++){
+    $targetImage=explode('.',$svrImage[$index]);
+    $image1Png=$targetImage[0].'1.png';
+    print "<td align=center><img src='hostimage/{$image1Png}' class=size></td>";
     
   }
   print '</tr></table>';  

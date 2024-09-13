@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 
 date_default_timezone_set('Asia/Tokyo');
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 require_once 'phpsendmail.php';
 require_once 'alarmwindow.php';
-require_once "winhostping.php";
+require_once "hostping.php";
 
 function ckset($data){
   $rtdata='';
@@ -41,7 +41,7 @@ $user="";
 $brcode="";
 $brmsg="";
 print '<html><head>';
-print '<meta><link rel="stylesheet" href="kanshi1.css">';
+print '<meta><link rel="stylesheet" href="css/kanshi1.css">';
 print '</head><body>';
 ///-------------------------------------------------
 ///--------セッションデータのユーザ取得-------------

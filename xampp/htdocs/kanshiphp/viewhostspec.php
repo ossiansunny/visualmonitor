@@ -1,72 +1,81 @@
-<?php
+﻿<?php
 print '<html><head>';
-print '<link rel="stylesheet" href="kanshi1_py.css">';
+print '<link rel="stylesheet" href="css/kanshi1_py.css">';
 print '<title>ホストデータの表示</title>';
 print '</head><body>';
 
+require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
+require_once "phpsnmpprocessset.php";
+//require_once "phpsnmptrapset.php";
+require_once "phpsnmptcpportset.php";
 
-function reform($reformval){
-  $reformarr = explode(':',$reformval);
-  switch ($reformarr[0]) {
+function reform($_reformVal){
+  $reformArr = explode(':',$_reformVal);
+  switch ($reformArr[0]) {
     case 'n': 
-      $rtnval = $reformarr[1] . "% 正常";
+      $rtnVal = $reformArr[1] . "% 正常";
       break;
     case 'w':
-      $rtnval = $reformarr[1] . "% 警戒";
+      $rtnVal = $reformArr[1] . "% 警戒";
       break;
     case 'c':  
-      $rtnval = $reformarr[1] . "% 危険";
+      $rtnVal = $reformArr[1] . "% 危険";
       break;
     default:
-      $rtnval = "なし";
+      $rtnVal = "なし";
   }
-  return $rtnval;
+  return $rtnVal;
 }
 
-function ccolor($iroval){
-  $iroarr = explode(':',$iroval);
-  switch ($iroarr[0]) {
+function bgColor($_cssVal){
+  $cssArr = explode(':',$_cssVal);
+  switch ($cssArr[0]) {
     case 'n': 
-      $rtnval = "snorm";
+      $rtnVal = "snorm";
       break;
     case 'w':
-      $rtnval = "swarn";	
+      $rtnVal = "swarn";	
       break;
     case 'c':  
-      $rtnval = "scrit";
+      $rtnVal = "scrit";
       break;
     default:
-      $rtnval = "sunko";
+      $rtnVal = "sunko";
   }
-  return $rtnval;
+  return $rtnVal;
 }
-
+///
 $pgm="viewhostspec.php";
-$host = $_GET['host'];
-$user = $_GET['user'];
-$sql="select * from host where host='".$host."'";
-$data = getdata($sql);
-if(empty($data)){
+$host="";
+$user="";
+///------------ main --------------
+$get_host = $_GET['host'];
+$host = $get_host;
+$get_user = $_GET['user'];
+$user = $get_user;
+$host_sql="select * from host where host='".$host."'";
+$hostRows = getdata($host_sql);
+if(empty($hostRows)){
   print "ホストデータがありません<br>";
 }else{
-  $sdata = explode(',',$data[0]);
-  $groupname = $sdata[1];
-  switch ($sdata[2]){  // ostype
-    case '0': $ostype='Windows';break;
-    case '1': $ostype="Unix/Linux";break;
-    case '2': $ostype="Gateway";break;
-    case '3': $ostype="Others";break;
-    default: $ostype="データ異常";break;
+  $hostArr = explode(',',$hostRows[0]);
+  $groupName = $hostArr[1];
+  switch ($hostArr[2]){  // ostype
+    case '0': $osType='Windows';break;
+    case '1': $osType="Unix/Linux";break;
+    case '2': $osType="Gateway";break;
+    case '3': $osType="Others";break;
+    default: $osType="データ異常";break;
   }
-  $resultsw="0";
-  switch ($sdata[3]){ // result
-    case '0': $result="非監視";$resultsw="0";break;
-    case '1': $result="正常";$resultsw="0";break;
-    case '2': $result="異常";$resultsw="1";break;
-    default: $result="異常";$resultsw="1";break;
+  $resultSw="0";
+  switch ($hostArr[3]){ // result
+    case '0': $result="非監視";$resultSw="0";break;
+    case '1': $result="正常";$resultSw="0";break;
+    case '2': $result="異常";$resultSw="1";break;
+    default: $result="異常";$resultSw="1";break;
   }
-  switch ($sdata[4]){
+  switch ($hostArr[4]){
     case '0': $action='監視なし';$result="非監視";break; 
     case '1': $action="PING監視";break;
     case '2': $action='SNMP監視';break;
@@ -74,95 +83,96 @@ if(empty($data)){
     case '4': $action='Agent監視';break;
     default: $action="データ異常";break;
   }
-  $viewname = $sdata[5];
-    switch ($sdata[6]){
-    case '0': $mailopt="非送信";break;
-    case '1': $mailopt="自動送信";break;
-    default: $mailopt="データ異常";break;
+  $viewName = $hostArr[5];
+    switch ($hostArr[6]){
+    case '0': $mailOpt="非送信";break;
+    case '1': $mailOpt="自動送信";break;
+    default: $mailOpt="データ異常";break;
   }
-  $tcpport = $sdata[7];
-  if($sdata[8]==""){$cpulim="";}else{$cpulim=$sdata[8]."%";}
-  if($sdata[9]==""){$ramlim="";}else{$ramlim=$sdata[9]."%";}
-  if($sdata[10]==""){$disklim="";}else{$disklim=$sdata[10]."%";}
-  $process = $sdata[11];
-  $image = $sdata[12];
+  $tcpPort = $hostArr[7];
+  if($hostArr[8]==""){$cpuLim="";}else{$cpuLim=$hostArr[8]."%";}
+  if($hostArr[9]==""){$ramLim="";}else{$ramLim=$hostArr[9]."%";}
+  if($hostArr[10]==""){$diskLim="";}else{$diskLim=$hostArr[10]."%";}
+  $process = $hostArr[11];
+  $image = $hostArr[12];
 
-  if($resultsw == "0") {
-    print "<h2><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;▽　監視対象ホスト：{$viewname}　▽</h2>";
+  if($resultSw == "0") {
+    print "<h2><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;▽　監視対象ホスト：{$viewName}　▽</h2>";
   }else{
-    print "<h2><font color='red'><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;▽　監視対象ホスト：{$viewname}　▽</font></h2>";
+    print "<h2><font color='red'><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;▽　監視対象ホスト：{$viewName}　▽</font></h2>";
   }
   print '<table border=1>';
   print '<tr><th>ホスト名</th><th>グループ名</th><th>OS種類</th><th>結果</th><th>死活</th><th>表示名</th><th>メール</th></tr>';
   print '<tr>';
   print "<td>{$host}</td>";
-  print "<td>{$groupname}</td>";
-  print "<td>{$ostype}</td>";
+  print "<td>{$groupName}</td>";
+  print "<td>{$osType}</td>";
   print "<td>{$result}</td>";
   print "<td>{$action}</td>";
-  print "<td>{$viewname}</td>";
-  print "<td>{$mailopt}</td>";
+  print "<td>{$viewName}</td>";
+  print "<td>{$mailOpt}</td>";
   print '</tr>';
   print '<tr><th>TCPポート</th><th>CPU警告</th><th>メモリ警告</th><th>ディスク警告</th><th colspan="2">監視プロセス</th><th>画像</th></tr>';
   print '<tr>';
-  print "<td>{$tcpport}</td>";
-  print "<td>{$cpulim}</td>";
-  print "<td>{$ramlim}</td>";
-  print "<td>{$disklim}</td>";
+  print "<td>{$tcpPort}</td>";
+  print "<td>{$cpuLim}</td>";
+  print "<td>{$ramLim}</td>";
+  print "<td>{$diskLim}</td>";
   print "<td colspan='2'>{$process}</td>";
   print "<td>{$image}</td>";
   print '</tr>';
   print '</table>';
-
   print '<br><br>';
 
-  if($sdata[4]=="2"){
-    $sql="select * from statistics where host='".$host."'";
-    $tdata=getdata($sql);
-    if($tdata[0]=="error"){
+  if($hostArr[4]=="2"){
+    $statis_sql="select * from statistics where host='".$host."'";
+    $statisRows=getdata($statis_sql);
+    if($statisRows[0]=="error"){
       $msg=$host . " getstatushost error return";
       writeloge($pgm,$msg);
     } else {  
-      $udata = explode(',',$tdata[0]);
+      $statisArr = explode(',',$statisRows[0]);
       /// format tstamp[1] cpuval[3] ramval[4] diskval[6] process[7] tcpport[8]
-      $ucpu = reform($udata[3]);
-      $uram = reform($udata[4]);
-      $udisk = reform($udata[6]);
-      $iroc = ccolor($udata[3]);
-      $iror = ccolor($udata[4]);
-      $irod = ccolor($udata[6]);
-      $upro=$udata[7];
-      $irop="snorm"; 
-      if($upro=="" || $upro=="empty"){
-        $upro="なし";
-      }elseif($upro!="allok"){
-        $irop="scrit";
+      $editCpu = reform($statisArr[3]);
+      $editRam = reform($statisArr[4]);
+      $editDisk = reform($statisArr[6]);
+      $cssCpu = bgColor($statisArr[3]);
+      $cssRam = bgColor($statisArr[4]);
+      $cssDisk = bgColor($statisArr[6]);
+      $process=$statisArr[7];
+      $cssProc="snorm"; 
+      if($process=="" || $process=="empty"){
+        $process="なし";
+      }elseif($process!="allok"){
+        $cssProc="scrit";
       }
-      $utcp=$udata[8];
-      $irot="snorm"; 
-      if($utcp=="" || $utcp=="empty"){ 
-        $utcp="なし";
-      }elseif($utcp!="allok"){
-        $irot="scrit";
+      $tcpPort=$statisArr[8];
+      $cssTcp="snorm"; 
+      if($tcpPort=="" || $tcpport=="empty"){ 
+        $tcpPort="なし";
+      }elseif($tcpPort!="allok"){
+        $cssTcp="scrit";
       }
-      $tsh = substr($udata[1],6,2);
-      $tsm = substr($udata[1],8,2);
-      $tss = substr($udata[1],10,2);
-      $tstamp = $tsh . "時" . $tsm . "分" . $tss . "秒　現在";
-      if($resultsw=="1"){
-        $iroc="sunko";
-        $iror="sunko";
-        $irod="sunko";
-        $irop="sunko";
-        $irot="sunko";
+      $timeH = substr($statisArr[1],6,2);
+      $timeM = substr($statisArr[1],8,2);
+      $timeS = substr($statisArr[1],10,2);
+      $timeStamp = $timeH . "時" . $timeM . "分" . $timeS . "秒　現在";
+      if($resultSw=="1"){
+        $cssCpu="sunko";
+        $cssRam="sunko";
+        $cssDisk="sunko";
+        $cssProc="sunko";
+        $cssTcp="sunko";
       }
-      print "<h3>SNMP取得情報 {$tstamp} </h3>";
+      print "<h3>SNMP取得情報 {$timeStamp} </h3>";
       print '<table border=1><tr><th>CPU使用率</th><th>メモリ使用率</th><th>ディスク使用率</th><th>停止監視プロセス</th><th>閉鎖TCPポート</th><tr>';
-      print "<tr><td class={$iroc}>{$ucpu}</td><td class={$iror}>{$uram}</td><td class={$irod}>{$udisk}</td><td class={$irop}>{$upro}</td><td class={$irot}>{$utcp}</td></tr></table>";
+      print "<tr><td class={$cssCpu}>{$editCpu}</td><td class={$cssRam}>{$editRam}</td><td class={$cssDisk}>{$editDisk}</td><td class={$cssProc}>{$process}</td><td class={$cssTcp}>{$tcpPort}</td></tr></table>";
     }
   }
   print '<br><br>';
 }
+
+//}
 print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</button></a>";
 print '</body></html>';
 ?>

@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 print '<html>';
 print '<head>';
 print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
-print '<link rel="stylesheet" href="kanshi1.css">';
+print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head>';
 print '<body>';
 print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　グループレイアウト作成　その２　▽</h2>';
@@ -16,21 +16,21 @@ $gname = array();
 $hostno = array();
 $segno = array();
 $gseq = array();
-$gn = $_GET['grpno'];
-$ln=$_GET['laynick'];
+$groupNum = $_GET['grpno'];
+$layoutNick=$_GET['laynick'];
 $user=$_GET['user'];
-$gnc=intval($gn);
+$groupNumberCount=intval($groupNum);
 
 print "<h4>レイアウト名称: {$ln}　グループ数： {$gn}</h4>";
 print '<form method=get action=layoutgdb.php>';
 print '<table border=1>';
 print '<tr><th>グループ名</th><th>配置順序</th><th>1段のホスト数</th><th>段数</th></tr>';
-print "<input type=hidden name=layout value={$ln}>";
-for($cc=0;$cc<$gnc;$cc++){
+print "<input type=hidden name=layout value={$layoutNick}>";
+for($cc=0;$cc<$groupNumberCount;$cc++){
   print '<tr>';
-  $strcc=strval($cc+1);
+  $strCurrentCount=strval($cc+1);
   print "<td><input type=text name=gname[{$cc}] size=20 value='' required></td>";
-  print "<td><input type=text name=gseq[{$cc}] size=10 value={$strcc} readonly></td>";
+  print "<td><input type=text name=gseq[{$cc}] size=10 value={$strCurrentCount} readonly></td>";
   print "<td><input type=text name=hostno[{$cc}] size=10 value='' required></td>";
   print "<td><input type=text name=segno[{$cc}] size=10 value='' required></td>";
   print '</tr>';

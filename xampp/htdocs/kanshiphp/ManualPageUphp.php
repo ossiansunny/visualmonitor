@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once "BaseFunction.php";
 ///
 $pgm="ManualPageUphp.php";
@@ -11,10 +11,11 @@ if (!isset($_GET['param'])){
 }else{
   paramSet();
 }
+///
 print '<html lang="ja">';
 print '<head>';
 print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
-print '<link rel="stylesheet" href="kanshi1.css">';
+print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head><body>';
 print '<h2><img src="header/php.jpg" width="30" height="30">&ensp;&ensp;▽　マニュアル一覧　▽</h2>';
 print '<h4>参照したいマニュアルを選択してください</h4>';

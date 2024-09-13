@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 error_reporting(E_ERROR | E_PARSE);
@@ -15,7 +15,7 @@ if (!isset($_GET['param'])){
   paramSet();
   ///
   print '<html><head>';
-  print '<link rel="stylesheet" href="kanshi1_py.css">';
+  print '<link rel="stylesheet" href="css/kanshi1_py.css">';
   print '</head><body>';
   ///
   if ($brcode=="alert" or $brcode=="error" or $brcode=="notic"){
@@ -29,22 +29,22 @@ if (!isset($_GET['param'])){
   print '☆保存レイアウトを現用で使用する場合は、「選択」の上、「レイアウトを現用へ読込」を実行します<br>';
   print '☆保存レイアウトを削除する場合は、「選択」の上、「レイアウトを削除」を実行します</h4>';
   ///
-  $showsql='show tables like "layout%"';
-  $showdata=getdata($showsql);
+  $show_sql='show tables like "layout%"';
+  $showRows=getdata($show_sql);
   print '<br>';
   print '<table border=0 class="tablelayout"><form type=GET action="svldlayout.php">';
   $cc=0;
   print '<tr><th align=center>レイアウト名</th><th align=center width=10px>保存・読込先</th><th colspan=2 align=center>実行ボタン</th></tr>';
-  foreach($showdata as $item){
-    $itemarr=explode('_',$item);
+  foreach($showRows as $showRowsRec){
+    $showArr=explode('_',$showRowsRec);
     print "<input type=hidden name=user value={$user}>";
     print '<tr>';
-    if($item=='layout'){
-      print "<td class=trylw><span class=trblk><input type='radio' name='terms' value={$item}></span>現用</td>";
+    if($showRowsRec=='layout'){
+      print "<td class=trylw><span class=trblk><input type='radio' name='terms' value={$showRowsRec}></span>現用</td>";
       print '<td class=trylw><span class=trblk><input type=text name=tosave value="" size=10 ></span></td>';
       print '<td><input class=button type="submit" name="save" value="現用を保存先へ保存"></td>';
     }else{
-      print "<td class=trylw><span class=trblk><input type='radio' name='terms' value={$item}></span>{$itemarr[1]}</td>";
+      print "<td class=trylw><span class=trblk><input type='radio' name='terms' value={$showRowsRec}></span>{$showArr[1]}</td>";
       print '<td>現用</td>';
       print '<td><input class=button type="submit" name="load" value="レイアウトを現用へ読込"></td>';
       print '<td><input class=buttondel type="submit" name="dele" value="レイアウトを削除"></td>';

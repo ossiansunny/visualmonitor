@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "varread.php";
@@ -7,34 +7,42 @@ $user=""; // ユーザID
 $brmsg=""; //メッセージ $user = "";
 $pgm="GraphListPage.php";
 $vpath_kanshiphp="";
-
-function mrtgcfgck($host,$stat){
-  global $vpath_kanshiphp;
-  $files = glob($vpath_kanshiphp."\\mrtgcfg\\".$host.".*");
+$osDirSep='';
+///
+if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+  $osDirSep='\\';
+}else{
+  $osDirSep='/';
+}
+///
+function mrtgcfgck($_host){
+  global $vpath_kanshiphp, $osDirSep;
+  $files = glob($vpath_kanshiphp.$osDirSep."mrtgcfg".$osDirSep.$_host.".*");
   if (empty($files)){
-    return "グラフ未作成";
+    return 1;
   }else{
-    return $stat;
+    return 0;
   }
 }
-
+///
 if(!isset($_GET['param'])){
   paramGet($pgm);
   ///
 }else{
   paramSet();
   ///
-  $vpatharr=array("vpath_kanshiphp");
-  $rtnv=pathget($vpatharr);
-  $vpath_kanshiphp=$rtnv[0];
+  $vpathParam=array("vpath_kanshiphp");
+  $rtnPath=pathget($vpathParam);
+  $vpath_kanshiphp=$rtnPath[0];
+  
 ///
-  $ttl1='<img src="header/php.jpg" width="30" height="30">';
-  $ttl2='　▽　グラフホスト一覧　▽　';
-  $ttl=$ttl1.$ttl2;
+  $title1='<img src="header/php.jpg" width="30" height="30">';
+  $title2='　▽　グラフホスト一覧　▽　';
+  $title=$title1.$title2;
   print '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
   print '<html lang="ja">';
   print '<head>';
-  print '<link rel="stylesheet" href="kanshi1_py.css">';
+  print '<link rel="stylesheet" href="css/kanshi1_py.css">';
   print '<title>Host List</title>';
   print '</head>';
   print '<body>';
@@ -43,60 +51,69 @@ if(!isset($_GET['param'])){
     print "<h3 class={$brcde}>{$brmsg}</h3><hr>";
   }
   ///
-  print "<h2>{$ttl}</h2>";
+  print "<h2>{$title}</h2>";
   ///
   ///---SNMP監視対象一覧を表示---
   ///
-  print "<h4>☆ホストを１つ選択して「グラフ表示/メール添付」「グラフ作成」「グラフ削除」のいずれかをクリックする<br>";
+  print "<h4>☆ホストを１つ選択して「グラフ表示/メール添付」「グラフ登録」「グラフ削除」のいずれかをクリックする<br>";
   print "☆グラフのメール添付には、ホストのメール「自動送信」が必要です</h4>";
-  $sql="select * from host order by groupname";
-  $data = getdata($sql);
-  $c = count($data);
+  $host_sql="select * from host order by groupname";
+  $hostRows = getdata($host_sql);
+  $recCount = count($hostRows);
   print '<form name="rform" method="get" action="viewgraph.php">';
   print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
-  $nsw=0;
-  $act="";
-  for($i=0;$i<$c;$i++){
-    $sdata = explode(',',$data[$i]);
-    if($sdata[4]=="2"){ // snmp監視
-      if($sdata[3]=="1"){$act="稼働中";}
-      if($sdata[3]!="1"){$act="非稼働";}
-      $act=mrtgcfgck($sdata[0],$act);
-      if($sdata[8]!="" || $sdata[9]!="" || $sdata[10]!="") {
-        $gtype="";
-        if($sdata[8]!=""){$gtype="CPU";}
-        if($sdata[9]!=""){$gtype=$gtype . ";" . "RAM";}
-        if($sdata[10]!=""){$gtype=$gtype . ";" . "Disk";}
-        $gtype=trim($gtype,';');
-        print "<tr><td><input type=radio name=fradio value={$data[$i]}></td>";
-        print "<td><input type=text name=host value={$sdata[0]}></td>";
-        print "<td><input type=text name=graphtype value={$gtype}></td>";
-        print "<td><input type=text name=viewname value={$sdata[5]}></td>";
-        print "<td><input type=text name=active value={$act}></td></tr>";
+  $exeSw=0;
+  $active="";
+  $disable="";  
+  for($i=0;$i<$recCount;$i++){
+    $hostArr = explode(',',$hostRows[$i]);
+    if($hostArr[4]=="2"){ // snmp監視
+      $color="colorred"; 
+      if($hostArr[3]=="1"){$active="グラフ登録済";$disable="";$color="colorgreen";}
+      if($hostArr[3]!="1"){$active="非稼働";$disable="";}
+      $cfgrtn=mrtgcfgck($hostArr[0]);
+      if($cfgrtn==1){$active="グラフ未登録";$disable="";$color="colorred";}
+      if($hostArr[8]!="" || $hostArr[9]!="" || $hostArr[10]!="") {
+        $graphType="";
+        if($hostArr[8]!=""){$graphType="CPU";}
+        if($hostArr[9]!=""){$graphType=$graphType . ";" . "RAM";}
+        if($hostArr[10]!=""){$graphType=$graphType . ";" . "Disk";}
+        $graphType=trim($graphType,';');
+        print "<tr><td><input type=radio name=fradio value={$hostRows[$i]} {$disable}></td>";
+        print "<td><input type=text name=host value={$hostArr[0]}></td>";
+        print "<td><input type=text name=graphtype value={$graphType}></td>";
+        print "<td><input type=text name=viewname value={$hostArr[5]}></td>";
+        print "<td><input class={$color} type=text name=active value={$active}></font></td></tr>";
         print "<input type=hidden name=user value={$user}>";
-        $nsw=1;
+        $exeSw=1;
       }
     }
   }
-  if ($nsw==1){    
-    $usql='select authority from user where userid="'.$user.'"';
-    $rows=getdata($usql);
-    $udata=explode(',',$rows[0]);
-    $auth=$udata[0];
+  if ($exeSw==1){    
+    $user_sql='select authority from user where userid="'.$user.'"';
+    $userRows=getdata($user_sql);
+    if(empty($userRows)){
+      $msg="#error#"."NonUser"."#ユーザがありません、再ログインして下さい";
+      $nextpage=$pgm;    
+      branch($nextpage,$msg);
+    }
+    $userArr=explode(',',$userRows[0]);
+    $authority=$userArr[0];
     print '<tr><td><br></td></tr>';
     ///
     print '<input type="submit" style="display:none">';
-    print '<tr><td colspan=2 align=center>&emsp;<input class=button type="button" name="display" onclick="func1(\'viewgraph\')" value="グラフ表示/メール添付"></td></tr>';
-    if ($auth=='1'){
+    print '<tr><td colspan=2 align=center>&emsp;<input class=button type="button" name="display" onclick="func1(\'viewgraph\')" value="グラフ表示/メール添付"></td>';
+    
+    if ($authority=='1'){
       print '<input type="submit" style="display:none">';
-      print '<tr><td colspan=2 align=center>&emsp;<input class=buttonyell type="button" name="create" onclick="func1(\'graphcreate\')" value="グラフ作成"></td></tr>';
+      print '<td colspan=2 align=center>&emsp;<input class=buttonyell type="button" name="create" onclick="func1(\'graphcreate\')" value="グラフ登録"></td>';
       print '<input type="submit" style="display:none">';
-      print '<tr><td colspan=2 align=center>&emsp;<input class=buttondel type="button" name="delete" onclick="func1(\'graphdelete\')" value="グラフ削除"></td></tr>';
-    }    
+      print '<td colspan=2 align=center>&emsp;<input class=buttondel type="button" name="delete" onclick="func1(\'graphdelete\')" value="グラフ削除"></td>';
+    }
+    print '</tr>';    
   }else{
     $msg="#error#".$user."#snmp監視対象ホストがありません";
     $nextpage=$pgm;    
-    //branch($nextpage,$msg);
     print '<h4><span class=buttonyell>グラフ監視対象ホストがありません</span></h4>';
   }
   print "</table>";

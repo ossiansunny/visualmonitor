@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once "BaseFunction.php";
 ///
 $pgm='LayoutSphp.php';
@@ -16,7 +16,7 @@ if (!isset($_GET['param'])){
   print '<html lang="ja">';
   print '<head>';
   print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
-  print '<link rel="stylesheet" href="kanshi1.css">';
+  print '<link rel="stylesheet" href="css/kanshi1.css">';
   print '</head><body>';
   ///
   if ($brcode=='error' or $brcode=='notic' or $brcode=='alert'){
@@ -31,11 +31,11 @@ if (!isset($_GET['param'])){
   print '<table border=1>';
   print '<tr><th>レイアウト名称</th></tr>';
    
-  $showsql='show tables like "glayout%"';
-  $showdata=getdata($showsql);
+  $show_sql='show tables like "glayout%"';
+  $showRows=getdata($show_sql);
   print '<tr><td><select name=laynick>';
-  foreach ($showdata as $showrec){
-    $layout=explode('_',$showrec);
+  foreach ($showRows as $showRowsRec){
+    $layout=explode('_',$showRowsRec);
     if(! is_null($layout[1])){
       print "<option value={$layout[1]}>{$layout[1]}</option>";
     }

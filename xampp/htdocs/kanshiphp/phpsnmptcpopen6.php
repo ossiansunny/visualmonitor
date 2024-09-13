@@ -24,8 +24,7 @@ function phpsnmptcpopenwin($host,$community,&$data) {
         $v4item[$cnt]=$v4port;
         $cnt++;
       }       
-    }    
-    
+    }
   }
   /// snmp ipv6????
   $v6array = array();

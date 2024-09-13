@@ -50,6 +50,6 @@ for($i=0;$i<$c;$i++) {
 $data = strval($load);
 return 0;
 }
-
+///
 ?>
 

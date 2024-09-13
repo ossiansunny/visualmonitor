@@ -5,7 +5,7 @@ $kanshi_host="localhost";
 $kanshi_user="kanshiadmin";
 $kanshi_pass="kanshipass";
 $kanshi_db="kanshi";
-
+$kanshiDir=__DIR__;
 //-------------------------------------------------
 //---------- データベースへ接続 -------------------
 //-------------------------------------------------
@@ -14,7 +14,7 @@ function openconnect(){
   $dbc = mysqli_connect($kanshi_host,$kanshi_user,$kanshi_pass);
   if ($dbc) {
     $db_sel = mysqli_select_db($dbc,$kanshi_db);
-    // $db_selは、bool(true) または bool(false)
+    /// $db_selは、bool(true) または bool(false)
     if($db_sel){
       return $dbc; // 正常の場合、オブジェクトを戻す
     }else{
@@ -36,9 +36,10 @@ function default_str(String $raw_str = null, String $default = "") : String{
 // readlog関数
 //-----------------------------------------------------
 function readlog(){
+  global $kanshiDir;
   $tstamp = date("ymdHis");
   $ymd=substr($tstamp,0,6);
-  $fp = fopen("logs\kanshi_".$ymd.".log","r");
+  $fp = fopen($kanshiDir."\logs\kanshi_".$ymd.".log","r");
   $rtable = array();
   $c=0;
   if($fp){
@@ -48,56 +49,46 @@ function readlog(){
     }
     fclose($fp);
   }
-  //fclose($fp);
   return $rtable;
 }
 
 //-----------------------------------------------------
 // writeloge関数（無条件にログを出力）
 //-----------------------------------------------------
-function writeloge($pgm,$msg) {
-  $tstamp = date("ymdHis");
-  $ymd=substr($tstamp,0,6);
-  $fp = fopen("logs\kanshi_".$ymd.".log","a");
-  $tstamp = date("ymdHis");
-  $data = $tstamp . ": " . $pgm . ": " . $msg . "\n";
+function writeloge($_pgm,$_msg) {
+  global $kanshiDir;
+  $timeStamp = date("ymdHis");
+  $ymd=substr($timeStamp,0,6);
+  $fp = fopen($kanshiDir."\logs\kanshi_".$ymd.".log","a");
+  //$tstamp = date("ymdHis");
+  $data = $timeStamp . ": " . $_pgm . ": " . $_msg . "\n";
   fwrite($fp,$data);
   fclose($fp);
 }
 //-----------------------------------------------------
 // writelogd関数（管理情報のデバッグ有りの場合ログを出力）
 //-----------------------------------------------------
-function writelogd($pgm,$msg) {
-  $rows=getdata("select debug from admintb");
-  $debug=$rows[0];
+function writelogd($_pgm,$_msg) {
+  $adminRows=getdata("select debug from admintb");
+  $debug=$adminRows[0];
   if ($debug=="1" || $debug=="2") {
-    writeloge($pgm,$msg);
-//    $fp = fopen("logs\kanshi.log","a");
-//    $tstamp = date("ymdHis");
-//    $data = $tstamp . ": " . $pgm . ": " . $msg . "\n";
-//    fwrite($fp,$data);
-//    fclose($fp);
+    writeloge($_pgm,$_msg);
   }  
 }
 //-----------------------------------------------------
 // writelog関数（管理情報のデバッグDBの場合ログ出力）
 //-----------------------------------------------------
-function writelog($pgm,$msg) {
-  $rows=getdata("select debug from admintb");
-  $debug=$rows[0];
+function writelog($_pgm,$_msg) {
+  $adminRows=getdata("select debug from admintb");
+  $debug=$adminRows[0];
   if ($debug=="2") {
-    writeloge($pgm,$msg);
-//    $fp = fopen("logs\kanshi.log","a");
-//    $tstamp = date("ymdHis");
-//    $data = $tstamp . ": " . $pgm . ": " . $msg . "\n";
-//    fwrite($fp,$data);
-//    fclose($fp);
+    writeloge($_pgm,$_msg);
   }
 }
 //---------------------------------------
 //----- sql selectでデータを読む---------
 //---------------------------------------
-function getdata($sql) {
+function getdata($_sql) {
   $dbg = debug_backtrace();
   $pgm = $dbg[0]["file"];
   $rtable = array();
@@ -108,7 +99,7 @@ function getdata($sql) {
     $rtable[0]="error";
     return $rtable;
   }
-  $res = mysqli_query($dbc,$sql);
+  $res = mysqli_query($dbc,$_sql);
   if (mysqli_error($dbc)) {
     $msg="mysql query error: ".$sql;
     writeloge($pgm,$msg);
@@ -135,7 +126,7 @@ function getdata($sql) {
 // ----------------------------------------
 // -----SQL insert, update, deleteを実行---
 //-----------------------------------------
-function putdata($sql) {
+function putdata($_sql) {  
   $dbg = debug_backtrace();
   $pgm = $dbg[0]["file"];
   $rtn = 0;
@@ -145,13 +136,13 @@ function putdata($sql) {
     writeloge($pgm,$msg);
     $rtn=-1;
   }else{
-    $res = mysqli_query($dbc,$sql);
+    $res = mysqli_query($dbc,$_sql);
     if (mysqli_error($dbc)) {
       $msg="mysql query parse error: ".$sql; //文法の間違い rtn=-1
       writeloge($pgm,$msg);
       $rtn = -1;
     } else {
-      $msg="mysql debug: ".$sql;
+      $msg="mysql debug: ".$_sql;
       writelogd($pgm,$msg);
       mysqli_close($dbc);
     }
@@ -161,14 +152,14 @@ function putdata($sql) {
 //-------------------------------------------------------------------
 //---  Writelogなしのcreate table,insert, update, delete を実行---
 //--------------------------------------------------------------------
-function create($sql) {
+function create($_sql) {
   $dbc=openconnect();
   $rtn=0;
   if(!$dbc){
     $msg="mysql db connection error"; // rtn=-1
     $rtn=-1;
   }else{
-    $res = mysqli_query($dbc,$sql);
+    $res = mysqli_query($dbc,$_sql);
     if (mysqli_error($dbc)) {
       $rtn = -1;
     } else {
@@ -178,4 +169,14 @@ function create($sql) {
   return $rtn; // whereの該当なしも 0で帰る
 }
 
+/*
+$pgm='mysqlkanshi.php';
+$sql="select * from user where userid='aadmin'";
+$rtn=getdata($sql);
+//writeloge($pgm,"mysql pgm test ".$sql);
+var_dump($rtn);
+if (empty($rtn)){
+  echo 'none';
+}
+*/
 ?>

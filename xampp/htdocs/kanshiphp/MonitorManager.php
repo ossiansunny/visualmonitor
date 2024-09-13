@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 require_once 'layoutsform.php';
-require_once 'winhostping.php';
+//require_once 'hostping.php';
 date_default_timezone_set('Asia/Tokyo');
 
-function gcreatearray($gdata,&$ghai){
+function groupCreateArray($gdata,&$ghai){
   $gsc=count($gdata);
   for($gcc=0;$gcc<$gsc;$gcc++){
     $garr=explode(',',$gdata[$gcc]);
@@ -17,7 +17,7 @@ function gcreatearray($gdata,&$ghai){
   }
 }
 
-function screatearray($hdata,$garr,&$hhai){ ///$hdata is host layout record
+function hostCreateArray($hdata,$garr,&$hhai){ ///$hdata is host layout record
   $hdatac=count($hdata);
   $hdataidx=0;
   $gc=count($garr); /// グループ数取得
@@ -48,86 +48,88 @@ if(!isset($_GET['param'])){
 }else{
   paramSet();
   ///
-  $sql="select * from admintb";
-  $rows=getdata($sql);
-  $adata=explode(',',$rows[0]);
+  $admin_sql="select * from admintb";
+  $adminRows=getdata($admin_sql);
+  $adminStr=explode(',',$adminRows[0]);
   //----------
-  $countdown = strval($adata[12]); 
-  $interval = strval($adata[7]);
-  $blk="";
-  $blkmsg="";
-  $blcolor="";
-  $runmsg="";
-  $coreold=strval($adata[11]);
-  $corenew=strval($adata[12]);
-  if($coreold==$corenew){
-    $bkcolor="okcolor";
-    $runmsg="   Core Running";
-    $blk="blink";
-    $blkmsg="同期中・・・";
+  $countdown = strval($adminStr[12]); 
+  $interval = strval($adminStr[7]);
+  $blink="";
+  $blinkMsg="";
+  $blinkColor="";
+  $runMsg="";
+  $coreOld=strval($adminStr[11]);
+  $coreNew=strval($adminStr[12]);
+  if($coreOld==$coreNew){
+    $blinkColor="okcolor";
+    $runMsg="   Core Running";
+    $blink="blink";
+    $blinkMsg="同期中・・・";
   }else{
-    $bkcolor="okcolor";
-    $runmsg="   Core Running";
-    $blk="";
-    $blkmsg="";
+    $blinkColor="okcolor";
+    $runMsg="   Core Running";
+    $blink="";
+    $blinkMmsg="";
   }
   //------------------------------------
-  $sql="select * from header";
-  $rows=getdata($sql);
-  $sdata=explode(',',$rows[0]);
-  $title="&ensp;&ensp;&ensp;&ensp;".$sdata[0]."(".$interval."秒間隔更新)";
-  $subtitle="&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;".$sdata[1];
-  $sql="select haikei from admintb";
-  $rows=getdata($sql);
-  $ttlimg=$rows[0];
-  $mainttl='haikeiimg/'.$ttlimg;
-
+  $header_sql="select * from header";
+  $headerArr=getdata($header_sql);
+  $headerStr=explode(',',$headerArr[0]);
+  $title="&ensp;&ensp;&ensp;".$headerStr[0]."(".$interval."秒間隔更新)";
+  $subTitle="&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;".$headerStr[1];
+  $admin_sql="select haikei from admintb";
+  $adminRows=getdata($admin_sql);
+  $nameImage=$adminRows[0];
+  $titleImage='haikeiimg/'.$nameImage;
   print '<html><head>';
   print "<meta http-equiv='Refresh' content={$interval}>";
-  print '<link rel="stylesheet" href="manager.css">';
+  print '<link rel="stylesheet" href="css/manager.css">';
   print '</head><body>';
   print '<p style="position: relative;">';
-  print "<img src={$mainttl} width='600' height='50' alt='Title' /><br />";
-  print "<span style='position: absolute; top: 5px; left: 5px; width: 500px; color: white; font-size: 25px; font-weight: bold'>{$title}</span>";
+  print "<img src={$titleImage} width='600' height='50' alt='Title' /><br />";
+  print "<span style='position: absolute; top: 5px; left: 5px; width: 600px; color: white; font-size: 25px; font-weight: bold'>{$title}</span>";
   print '</p>';
-  print "<h2>{$subtitle}</h2>";
-  $gis=date('G:i:s');
+  print "<h2>{$subTitle}</h2>";
+  $currTime=date('G:i:s');
+  $viewUser="";
+  $viewColor="";
   if ($user=='unknown'){
-    $vuser='Lost User';
-    $vcolor='ngcolor';
+    $viewUser='Lost User';
+    $viewColor='ngcolor';
   }else{
-    $vuser=$user;
-    $vcolor='okcolor';
+    $viewUser=$user;
+    $viewColor='okcolor';
   }
-  print "<table><tr class=big><td>&ensp;&ensp;ユーザー&ensp;</td><td class={$vcolor}>{$vuser}</td>";
-  print "<td>&ensp;&ensp;モニターコア&ensp;&ensp;</td><td class={$bkcolor}><span class={$blk}>{$runmsg}</span></td><td>&ensp;{$blkmsg}</td></tr></table>";
+  print "<table><tr class=big><td>&ensp;&ensp;ユーザー&ensp;</td><td class={$viewColor}>{$viewUser}</td>";
+  print "<td>&ensp;&ensp;モニターコア&ensp;&ensp;</td><td class={$blinkColor}><span class={$blink}>{$runMsg}</span></td><td>&ensp;{$blinkMsg}</td></tr></table>";
   if ($user=='unknown'){
     print "<table><tr><td class={$vcolor}>&ensp;&ensp;ユーザが失われました、ログアウトし、新たなログインを実行して下さい</td></tr></table>";
   }
-  //print "<td>&ensp;&ensp;モニターコア&ensp;&ensp;</td><td class={$bkcolor}><span class={$blk}>{$runmsg}</span></td><td>&ensp;{$blkmsg}</td></tr></table>";
-  print "<br><table><tr class=big><td>&ensp;&ensp;監視時刻&ensp;</td><td class=okcolor>{$gis}</td>";
+  print "<br><table><tr class=big><td>&ensp;&ensp;監視時刻&ensp;</td><td class=okcolor>{$currTime}</td>";
   print "<td>&ensp;&ensp;SNMPカウントダウン　</td><td class=okcolor>{$countdown}</td></tr></table>";
   print '</form><br>';
-  $garr = array(); // group 配列テーブル
-  $grponedata=array();
-  /// group 配列テーブル作成
-  $sql='select * from glayout order by gsequence';
-  $rows=getdata($sql);
-  gcreatearray($rows,$garr);
-  /// ホストテーブル作成
-  $sarr = array();
-  $sql='select * from layout order by gshid';
-  $rows=getdata($sql);
-  screatearray($rows,$garr,$sarr);
-  layoutsform($user,$garr,$sarr);
-  $dtm=date('ymdHis');
-  $usql='select authority from user where userid="'.$user.'"';
-  $rows=getdata($usql);
-  $udata=explode(',',$rows[0]);
-  $auth=$udata[0];
-  if ($auth=='1'){
-    $upsql='update processtb set monstamp='.$dtm;
-    putdata($upsql);
+  $groupArr = array(); // group 配列テーブル
+  
+  /// グループ配列テーブル作成
+  $glayout_sql='select * from glayout order by gsequence';
+  $glayoutRows=getdata($glayout_sql);
+  groupCreateArray($glayoutRows,$groupArr);
+  /// ホスト配列テーブル作成
+  $hostArr = array();
+  $layout_sql='select * from layout order by gshid';
+  $layoutRows=getdata($layout_sql);
+  hostCreateArray($layoutRows,$groupArr,$hostArr);
+  ///　　
+  layoutsform($user,$groupArr,$hostArr);
+  ///
+  $timeStamp=date('ymdHis');
+  $user_sql='select authority from user where userid="'.$user.'"';
+  $userRows=getdata($user_sql);
+  $userArr=explode(',',$userRows[0]);
+  $userAuth=$userArr[0];
+  if ($userAuth=='1'){
+    $proc_sql='update processtb set monstamp='.$timeStamp;
+    putdata($proc_sql);
   }
 }
 print '</body></html>';

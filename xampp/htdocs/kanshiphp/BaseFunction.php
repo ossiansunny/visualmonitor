@@ -1,17 +1,16 @@
 <?php
 require_once "alarmwindow.php";
-
+///
 function branch($_page,$_param){
   print '<html>';
   print '<body onLoad="document.F.submit();">';
   print "<form name='F' action={$_page} method='get'>";
   print '<input type=hidden name=param value="'.$_param.'">';
-  //print "<input type=hidden name=param value={$_param}>";
   print '<input type="submit" name="next" value="Waiting...">';
   print '</form>';
   exit();
 }
-
+///
 function paramGet($_pgm){
   print '<html>';
   print '<body onLoad="document.F.submit();">';
@@ -27,14 +26,15 @@ function paramGet($_pgm){
   print 'document.forms["F"].elements["param"].value = keyvalue;';
   print '</script>';
 }
+///
 function paramSet(){
   global $brcode, $user, $brmsg;
   $inform=$_GET['param'];
   if (substr($inform,0,1)=="#"){
-    $brarr=explode("#",ltrim($inform,"#"),4);
-    $brcode=$brarr[0];
-    $user=$brarr[1];
-    $brmsg=$brarr[2];
+    $branchArr=explode("#",ltrim($inform,"#"),4);
+    $brcode=$branchArr[0];
+    $user=$branchArr[1];
+    $brmsg=$branchArr[2];
   }else{
     $user=$inform;
   }
@@ -45,7 +45,7 @@ function paramSet(){
     delstatus("Lost User");
   }
 }
-
+///
 function alert($_msg){
   $alert = "<script type='text/javascript'>alert('".$_msg."');</script>";
   echo $alert;
