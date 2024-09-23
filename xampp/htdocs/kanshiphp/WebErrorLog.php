@@ -25,15 +25,14 @@ if(!isset($_GET['param'])){
   print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　Webエラーログ　▽</h2>';
   $lineNum = 20;   /// 表示する行数
   print "<h3>最新 {$lineNum} 行</h3>";
-  $vpathParam=array("vpath_htdocs","vpath_apache");
+  $vpathParam=array("vpath_weblog");
   $vpathArr=pathget($vpathParam);
-  $vpath_htdocs=$vpathArr[0];
-  $vpath_apache=$vpathArr[1];
-  if(count($vpathArr)==2){
+  $vpath_weblog=$vpathArr[0];
+  if(count($vpathArr)==1){
     if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
       /// xampp apache      
       $currErrLog="error.log";
-      $currPath = $vpath_apache."/logs/".$currErrLog;      
+      $currPath = $vpath_weblog."\\".$currErrLog;      
       if (file_exists($currPath)){
         $contents = file($currPath , FILE_IGNORE_NEW_LINES);
         $start_index = count($contents) - $lineNum;
@@ -63,7 +62,7 @@ if(!isset($_GET['param'])){
       $now=new DateTime();
       $ymd=$now->format("Ymd");
       $currErrLog="error_".$ymd.".log";
-      $currPath = $vpath_htdocs."/httplogs/".$currErrLog;
+      $currPath = $vpath_weblog."/".$currErrLog;
       //var_dump($currPath); 
       if (file_exists($currPath)){
         $contents = file($currPath , FILE_IGNORE_NEW_LINES);
@@ -88,7 +87,7 @@ if(!isset($_GET['param'])){
       }
     }
   }else{
-    print "<h3>kanshiphp.iniにvpath_apacheまたはvpath_htdocsがありません</h3>";
+    print "<h3>kanshiphp.iniにvpath_weblogがありません</h3>";
     print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
     print '</body></html>';
   }

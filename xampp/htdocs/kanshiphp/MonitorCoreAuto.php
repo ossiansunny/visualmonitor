@@ -85,9 +85,9 @@ function eventlog($_hostArr,$_cde){
     $snmpType="0";
   }
   $timeStamp=date('ymdHis'); 
-  $event_sql = "insert into eventlog(host,eventtime,eventtype,snmptype,kanrisha,kanrino,confclose) values('".$hostName."','".$timeStamp."','".$_cde."','".$snmpType."','".$user."','".$adminNum."','".$cnfClose."')";
+  $event_sql = "insert into eventlog(host,eventtime,eventtype,snmptype,snmpvalue,kanrisha,kanrino,confclose,message) values('".$hostName."','".$timeStamp."','".$_cde."','".$snmpType."',' ','".$user."','".$adminNum."','".$cnfClose."',' ')";
   $msg = $hostName . " Eventlog Insert sql: " . $event_sql;  
-  writeloge($pgm,$msg);
+  writelogd($pgm,$msg);
   putdata($event_sql);  
 }
 
@@ -373,8 +373,8 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   $coreStamp=time(); 
   $proc_sql='update processtb set corestamp="'.strval($coreStamp).'"';
   putdata($proc_sql);
-  /// mailserver active check
-  mailservercheck();
+  /// mailserver active check , move to Discover.php
+  //mailservercheck();
   //print '</body></html>';
 }
 ?>

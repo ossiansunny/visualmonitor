@@ -4,13 +4,25 @@ require_once "mysqlkanshi.php";
 require_once "varread.php";
 require_once "mailsendany.php";
 
-function mrtgcfgck($_host,$_path){
-  $files = glob($_path."\\mrtgcfg\\".$_host.".*");
+$dirSep='';
+$vpath_kanshiphp="";
+///
+function mrtgcfgck($_host){
+  global $dirSep, $vpath_kanshiphp;
+  $files = glob($vpath_kanshiphp.$dirSep."mrtgcfg".$dirSep.$_host.".*");
   if (empty($files)){
     return 1; //グラフ未作成
   }else{
     return 0; //グラフ作成中
   }
+}
+///
+if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+  /// windows xampp
+  $dirSep='\\';
+}else{
+  /// linux
+  $dirSep='/';
 }
 
 $user = "";
@@ -50,7 +62,7 @@ if(!isset($_GET['param'])){
   print "☆グラフのメール添付には、ホストのメール「自動送信」が必要</h4>";
 
   
-  ///
+  /// host[0] groupname[1] ostype[2] result[3] action[4] viewname[5] mailopt[6] ...
   $host_sql="select * from host order by groupname";
   $hostRows = getdata($host_sql);
   $recCount = count($hostRows);
@@ -60,13 +72,13 @@ if(!isset($_GET['param'])){
   print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
   for($i=0;$i<$recCount;$i++){
     $hostArr = explode(',',$hostRows[$i]);
-    if($hostArr[4]=="2"){ // snmp監視対象ホストチェック
+    if($hostArr[4]=="2"){ // snmp監視対象ホストチェック action="2" snmp
       $color="colorred"; 
-      if($hostArr[3]=="1"){$active="グラフ作成中";$dis="";$color="colorgreen";}
-      if($hostArr[3]!="1"){$active="非稼働";$dis="disabled";}
-      $graphStatus=mrtgcfgck($hostArr[0],$vpath_kanshiphp);
-      if ($graphStatus==1){$active='グラフ未登録';$dis='disabled';}
-      if($hostArr[8]!="" || $hostArr[9]!="" || $hostArr[10]!="") {
+      if($hostArr[3]=="1"){$active="グラフ作成中";$dis="";$color="colorgreen";} /// result == 1 active 
+      if($hostArr[3]!="1"){$active="非稼働";$dis="disabled";}                   /// result != 1 not active
+      $graphStatus=mrtgcfgck($hostArr[0]);                     /// mrtg登録あり=0 なし=1
+      if ($graphStatus==1){$active='グラフ未登録';$dis='disabled';}             /// 
+      if($hostArr[8]!="" || $hostArr[9]!="" || $hostArr[10]!="") {              /// cpu ram disk あり
         $graphType="";
         if($hostArr[8]!=""){$graphType="CPU";}
         if($hostArr[9]!=""){$graphType=$graphType . ";" . "RAM";}
@@ -87,9 +99,9 @@ if(!isset($_GET['param'])){
     print '<tr><td colspan=2 align=center>&emsp;<input class=button type="submit" name="display" value="グラフ表示/メール添付" ></td></tr>';
   }else{
     $message="snmp監視対象ホストがありません";
-    $msg="#alert#".$user."#".$message;
+    $msg="#error#".$user."#".$message;
     $nextpage=$pgm;    
-    print "<h3 class=alert>{$message}</h3><hr>";
+    print "<h4><span class=buttonyell>{$message}</h4><hr>";
   }  
   print "</table>";
   print "</form>";

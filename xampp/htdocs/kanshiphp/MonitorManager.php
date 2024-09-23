@@ -26,6 +26,9 @@ function hostCreateArray($hdata,$garr,&$hhai){ ///$hdata is host layout record
     for($dcc=0;$dcc<$dc;$dcc++){ /// 段数のループ
       $hc=intval($garr[$gcc][2]); /// ホスト数取得
       for($hcc=0;$hcc<$hc;$hcc++){ // ホストのループ
+        if(is_null($hdata[$hdataidx])){
+          break;
+        }
         $hdarr=explode(',',$hdata[$hdataidx]); ///layout ホストデータを配列
         $hhai[$gcc][$dcc][$hcc][0]=$hdarr[1]; ///ホスト名をコピー
         $hhai[$gcc][$dcc][$hcc][1]='view';  ///場所を確保

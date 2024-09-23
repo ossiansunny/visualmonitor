@@ -8,12 +8,12 @@ require_once $path_varread;
 require_once $path_mysqlkanshi;
 $pgm = "init_instcheck.php";
 $vpath_kanshiphp="";
-$vpath_xampp="";
-$vpatharr=array("vpath_kanshiphp","vpath_xampp");
+$vpath_base="";
+$vpatharr=array("vpath_kanshiphp","vpath_base");
 $rtnv=pathget($vpatharr);
 if(count($rtnv)==2){
   $vpath_kanshiphp=$rtnv[0];
-  $vpath_xampp=$rtnv[1];
+  $vpath_base=$rtnv[1];
   /// バックアップを削除、現行をバックアップ、新規を現行へ
   $file_old=$vpath_kanshiphp."\\mysqlkanshi.php.old";
   $file_tmp=$vpath_kanshiphp."\\mysqlkanshitmp.php";

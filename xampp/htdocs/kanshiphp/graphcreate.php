@@ -10,23 +10,22 @@ $vpath_kanshiphp="";
 $vpath_base="";
 $user="";
 $osDirSep='';
+$getExt='';
 
 if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
   $osDirSep='\\';
+  $getExt='get.exe';
 }else{
   $osDirSep='/';
+  $getExt='get.sh';
 }
 ///
 
 function cfgtemplate($_ip,$_comm,$_gtype,$_os,$_title){
-    global $pgm, $vpath_base, $vpath_kanshiphp, $osDirSep;
+    global $pgm, $vpath_base, $vpath_kanshiphp, $osDirSep, $getExt;
     $fname=$vpath_kanshiphp.$osDirSep.'mrtgcfg'.$osDirSep.$_ip.'.'.$_gtype.'.cfg';  //\\が必要
     //echo $fname."<br>";
-    if($osDirSep=='\\'){
-      $snmpget=$vpath_base.$osDirSep.'ubin'.$osDirSep.'snmp'.$_gtype.'get.exe '.$_ip.' '.$_os.' '.$_comm;
-    }else{
-      $snmpget=$vpath_base.$osDirSep.'bin'.$osDirSep.'snmp'.$_gtype.'get.exe '.$_ip.' '.$_os.' '.$_comm;
-    }
+    $snmpget=$vpath_base.$osDirSep.'ubin'.$osDirSep.'snmp'.$_gtype.$getExt.' '.$_ip.' '.$_os.' '.$_comm;
     writelogd($pgm,$snmpget);
     $fp = fopen($fname,'w');
     $data = array();

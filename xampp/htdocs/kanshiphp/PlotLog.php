@@ -34,8 +34,8 @@ if(!isset($_GET['param'])){
     }else{
       /// Linux
       $currLogPath = $vpath_plothome."/logs/".$plotLogName;
-   }
-   if (file_exists($currLogPath)){
+    }
+    if (file_exists($currLogPath)){
       $logRecArr = file($currLogPath , FILE_IGNORE_NEW_LINES);
       $start_index = count($logRecArr) - $lineNum;
       if ( $start_index < 0) {
@@ -64,7 +64,7 @@ if(!isset($_GET['param'])){
     $mailToAddr=$adminArr[3];
     $mailFromAddr=$adminArr[4];
     $subject="Path変数不正";
-    $body=$pgm."パス変数 vpath_plothome 取得不可";
+    $body=$pgm."パス変数 vpath_mrgbase 取得不可";
     mailsendany('other',$mailFromAddr,$mailToAddr,$subject,$body);
     print "&emsp;<h3><font color=red>変数vpath_php取得不可、管理者に通知</font></h3><br>";
     print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";

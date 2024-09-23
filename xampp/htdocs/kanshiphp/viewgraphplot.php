@@ -44,8 +44,10 @@ if ($mailOpt=='1'){
 print "<h3>▽　{$title}　▽</h3>";
 $existSw=0;
 if(!($cpuLim=="" or $ramLim=="" or $diskLim=="")){
-  $svgName=$host . ".svg";
-  $fileName=$plotHome.$osDirSep.'plotimage'.$osDirSep.$svgName;
+  $noCache=date("ymdHis");
+  $svgName=$host . ".svg?date=".$noCache;
+  $svgFile=$host . ".svg";
+  $fileName=$plotHome.$osDirSep.'plotimage'.$osDirSep.$svgFile;
   if (file_exists($fileName)){
     $existSw=1;
   }
@@ -59,7 +61,7 @@ if ($mailOpt=='1' and $existSw==1){
   print '<form action="graphmailsend.php" method="get">';
   print "<input type='hidden' name='host' value={$host}>";
   print "<input type='hidden' name='user' value={$user}>";
-  print "<input type='hidden' name='graph' value={$svgName}>";
+  print "<input type='hidden' name='graph' value={$svgFile}>";
   print '<input class="button" type="submit" name="attach" value="メール添付" />';
   print '</form>';
 }

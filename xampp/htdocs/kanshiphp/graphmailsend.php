@@ -21,7 +21,7 @@ function bodyformat($_from,$_status,$_msg,&$bodyStr){
 }
 ///
 $graphStr=$_GET['graph'];
-$graphArr=explode(',',$graphStr);
+$graphArr=explode(',',$graphStr); // xxxxx.png,yyyyy.svg
 $host=$_GET['host'];
 $user=$_GET['user'];
 

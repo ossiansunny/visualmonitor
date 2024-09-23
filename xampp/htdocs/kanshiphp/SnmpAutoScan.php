@@ -154,7 +154,7 @@ for ($i=0;$i<$c;$i++){
       $stat_sql="insert into statistics (host,tstamp,gtype) values('".$host."','".$currentTimeStamp."','9')";
       putdata($stat_sql); 
       $logMsg = 'No statistics record then create new record: ' . $insql;
-      writeloge('SnmpAutoScan.php',$logMsg);
+      writelogd('SnmpAutoScan.php',$logMsg);
       $statArr = array("","000000000000","0","","","","","","");
       $statArr[0] = $host;
       $statArr[1] = $currentTimeStamp;
@@ -180,7 +180,7 @@ for ($i=0;$i<$c;$i++){
       $event_sql = "insert into eventlog (host,eventtime,eventtype,snmptype,snmpvalue,kanrisha,confclose) values('".$host."','".$eventtime."','3','7','7','".$kanriuser."','2')";
       putdata($event_sql);
       $msg = $hostmei . " Eventlog Insert sql: " .$insql;
-      writeloge($pgm,$msg); 
+      writelogd($pgm,$msg); 
       $confsub="ホスト：".$host." 障害確認済";
       $confbody="障害管理番号でクローズ処理待ち"; 
       mailsendany("adminsubject","","",$confsub,$confbody);

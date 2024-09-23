@@ -1,6 +1,9 @@
 ﻿<?php
 require_once "varread.php";
 require_once 'alarmwindow.php';
+require_once 'phpsnmptcpopen6.php';
+require_once 'hostping.php';
+
 $interval=120;
 $pgm='Discover.php';
 print '<html lang="ja">';
@@ -65,6 +68,54 @@ if(count($rtnPath)==2){
   }
 }else{
   setstatus('2',"Can't get Path");
-} 
+}
+ 
+/// mailserver active check
+//function mailservercheck(){
+echo 'enter mail server check';
+  $mailSvr_sql='select server from mailserver';
+  $mailRows=getdata($mailSvr_sql);
+  if ($mailRows[0] != '127.0.0.1'){
+    $server=$mailRows[0];
+    $rtnCde = hostping($server);
+    //echo 'server:'.$server.' rtn:'.$rtnCde;
+    $mailSql="";
+    if ($rtnCde == 0){
+      $mailPort=array(25,587);  /// mail port is array
+      $host_sql="select snmpcomm from host where host='{$server}'";
+      $hostRows=getdata($host_sql);
+      if($hostRows[0]=='' or empty($hostRows[0])){
+        $community='public';
+      }else{
+        $community=$hostRows[0];
+      }
+      echo 'comm:'.$community;
+      $rtnPort=phpsnmptcpopen($server,$community,$mailPort);
+      echo 'return:'.$rtnPort;
+      if ($rtnPort=='allok'){
+        delstatus('Mail Server InActive');
+        delstatus('Mail Server Active');
+        setstatus('0','Mail Server Active');
+        $mailSql="update mailserver set status='0'";
+      }else{
+        delstatus('Mail Server Active');
+        delstatus('Mail Server InActive');
+        setstatus('1','Mail Server InActive');
+        $mailSql="update mailserver set status='1'";
+      }
+    }else{
+      delstatus('Mail Server Active');
+      delstatus('Mail Server InActive');
+      setstatus('1','Mail Server InActive');
+      $mailSql="update mailserver set status='1'";
+    }
+  }else{
+    delstatus('Mail Server Active');
+    delstatus('Mail Server InActive');
+    setstatus('1','Mail Server InActive');
+    $mailSql="update mailserver set status='1'";
+  }
+  putdata($mailSql);
+
 print '</body></html>';
-  
+?>  

@@ -57,11 +57,13 @@ if ($mailOpt=='1'){
 print "<h3>▽　{$title}　▽</h3>";
 $gSw=0;
 $graphArr=array("","","");
+$noCache=date("ymdHis");
 if($cpuLim!=""){
-  $pngCpu=$host . ".cpu-day.png";
-  $fileName=$mrtgHome.$osDirSep.'mrtgimage'.$osDirSep.$pngCpu;
+  $pngCpu=$host . ".cpu-day.png?date=".$noCache;
+  $fileCpu=$host . ".cpu-day.png";
+  $fileName=$mrtgHome.$osDirSep.'mrtgimage'.$osDirSep.$fileCpu;
   if (file_exists($fileName)){
-    $graphArr[0]=$pngCpu;
+    $graphArr[0]=$fileCpu;
     $gSw=1;
   }
   print "<h4>CPU Load Average</h4>";
@@ -70,10 +72,11 @@ if($cpuLim!=""){
   print "<h4>CPU グラフ指定なし</h4>";
 }
 if($ramLim!=""){
-  $pngRam=$host . ".ram-day.png";
-  $fileName=$mrtgHome.$osDirSep.'mrtgimage'.$osDirSep.$pngRam;
+  $pngRam=$host . ".ram-day.png?date=".$noCache;
+  $fileRam=$host . ".ram-day.png";
+  $fileName=$mrtgHome.$osDirSep.'mrtgimage'.$osDirSep.$fileRam;
   if (file_exists($fileName)){
-    $graphArr[1]=$pngRam;
+    $graphArr[1]=$fileRam;
     $gSw=1;
   }
   print "<h4>Memory Usage</h4>";
@@ -82,10 +85,11 @@ if($ramLim!=""){
   print "<h4>Memory グラフ指定なし</h4>";
 }
 if($diskLim!=""){
-  $pngDisk=$host . ".disk-day.png";
-  $fileName=$mrtgHome.$osDirSep.'mrtgimage'.$osDirSep.$pngDisk;
+  $pngDisk=$host . ".disk-day.png?date=".$noCache;
+  $fileDisk=$host . ".disk-day.png";
+  $fileName=$mrtgHome.$osDirSep.'mrtgimage'.$osDirSep.$fileDisk;
   if (file_exists($fileName)){
-    $graphArr[2]=$pngDisk;
+    $graphArr[2]=$fileDisk;
     $gSw=1; /// graphあり
   }
   print "<h4>Disk Usage</h4>";

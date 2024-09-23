@@ -23,7 +23,7 @@ if(!isset($_GET['param'])){
   $admin_Fromaddr=$adminArr[4];
   $logName='LOGOUT_'.$user;
   /// Write Event Log
-  $event_sql = "insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$logName."','".$timeStamp."','9','".$user."')";
+  $event_sql = "insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino,message) values('".$logName."','".$timeStamp."','9',' ','".$user."','0',' ')";
   putdata($event_sql); 
   $msg = $logName . " Eventlog Insert sql: " . $event_sql;
   writeloge($pgm,$msg); 

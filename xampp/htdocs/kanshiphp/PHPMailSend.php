@@ -81,23 +81,28 @@ if (!isset($_GET['param']) and !isset($_GET['set']) and !isset($_GET['send'])){
     /// メール送信テスト
   } elseif( isset($_GET['send']) ){
     /// 送信
-    $type='send'; 
-    $sql="update mailserver set status='0'";  /// mailserverをActiveにする
-    putdata($sql);
-    $flg=phpsendmail($server,$port,$from,$to,$subj,$body);
-    if($flg==0){
-      delstatus('Mail Server InActive');
-      delstatus('Mail Server Active');
-      setstatus('0','Mail Server Active');
-      $msg='#notic#'.$user.'#送信完了、受信を確認して下さい';
-      branch($pgm,$msg);
-    }else{
-      $sql="update mailserver set status='1'";
+    if ($server != '127.0.0.1'){
+      $type='send'; 
+      $sql="update mailserver set status='0'";  /// mailserverをActiveにする
       putdata($sql);
-      delstatus('Mail Server InActive');
-      delstatus('Mail Server Active');
-      setstatus('1','Mail Server InActive');
-      $msg='#error#'.$user.'#送信失敗';
+      $flg=phpsendmail($server,$port,$from,$to,$subj,$body);
+      if($flg==0){
+        delstatus('Mail Server InActive');
+        delstatus('Mail Server Active');
+        setstatus('0','Mail Server Active');
+        $msg='#notic#'.$user.'#送信完了、受信を確認して下さい';
+        branch($pgm,$msg);
+      }else{
+        $sql="update mailserver set status='1'";
+        putdata($sql);
+        delstatus('Mail Server InActive');
+        delstatus('Mail Server Active');
+        setstatus('1','Mail Server InActive');
+        $msg='#error#'.$user.'#送信失敗';
+        branch($pgm,$msg);
+      }
+    }else{
+      $msg='#alert#'.$user.'#127.0.0.1はメールサーバではありません';
       branch($pgm,$msg);
     }
   }

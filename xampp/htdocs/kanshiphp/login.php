@@ -14,28 +14,6 @@ $brcode="";
 $brmsg="";
 
 ///
-function mailStatSet($_server){
-  $pingSw=hostping($_server);
-  if ($pingSw==0){
-    $mailSvr_sql="update mailserver set status='0'";
-    putdata($mailSvr_sql);
-    delstatus('Mail Server InActive');
-    delstatus('Mail Server Active');
-    setstatus('0','Mail Server Active');
-    $msg="メールサーバ応答あり、メッセージ欄に「Mail Server Active」設定";
-    writelogd($pgm,$msg); 
-    return '';   
-  }else{
-    delstatus('Mail Server InActive');
-    delstatus('Mail Server Active');
-    setstatus("1","Mail Server InActive");
-    $mailSvr_sql='update mailserver set status="1"';
-    putdata($mailSvr_sql);
-    $msg="メールサーバ応答なし、メッセージ欄に「Mail Server InActive」設定";
-    writelogd($pgm,$msg);
-    return  "<br>●メールサーバー".$_server."が見つかりません<br>ログイン後メニュー「メール設定・送信」で確認して下さい"; 
-  }
-}
 
 function checkProcess($_admin){
   $proc_sql='select * from processtb';
@@ -97,8 +75,7 @@ $admin_Toaddr=$adminArr[3];
 $admin_Fromaddr=$adminArr[4];
 $admin_Subject=$adminArr[5];
 $admin_Body=$adminArr[6];
-/// メールサーバ死活チェック
-//mailStatSet($admin_Fromaddr,$admin_Toaddr,$admin_Subject,$admin_Body);
+/// 
 if (isset($_GET['param'])){   /// branchで戻った時の処理
   paramSet();
   $firstSw=1;
@@ -150,7 +127,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               putdata($proc_sql);
               /// 開始イベントログ作成
               $logName = "LOGIN_" . $user; 
-              $evtLog_sql = "insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('".$logName."','".$timeStamp."','0','".$user."','')";
+              $evtLog_sql = "insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino) values('".$logName."','".$timeStamp."','0',' ','".$user."','0')";
               putdata($evtLog_sql); 
               $msg = $logName . " Eventlog Insert sql: " . $insql;
               writelogd($pgm,$msg);  
@@ -204,14 +181,6 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
   $firstSw=1;
 }
 /// 最初の処理
-$mailSvr_sql='select * from mailserver';
-$mailSvrRows=getdata($mailSvr_sql);
-$mailSvrArr=explode(',',$mailSvrRows[0]);
-$mailServer=$mailSvrArr[0];
-///
-$mailErr = mailStatSet($mailServer);
-$brmsg = $brmsg . $mailErr;
-
 ///
 print '<!DOCTYPE html>';
 print '<html>';

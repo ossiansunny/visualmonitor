@@ -35,10 +35,10 @@ if ($diffTime > intval($monitorInterval)*3){
       $vpath_base=$rtnPath[2]; 
       $vpath_perlbin=$rtnPath[3];
  
-      $cmdMrtgRun=$vpath_base.'\\ubin\\mrtgRun.exe 0 '.$vpath_mrtgbase.' '.$vpath_perlbin;
+      $cmdMrtgRun=$vpath_perlbin."\\perl ".$vpath_mrtgbase."\\bin\\mrtg ".$vpath_mrtgbase."\\newmrtg.cfg";
       $out2 = shell_exec($cmdMrtgRun);
       writelogd($pgm,"call ".$cmdMrtgRun);
-      $cmdPlotGraph="cscript ".$vpath_base.'\\ubin\\plotgraph.vbs '.$vpath_base; /// "e:\visualmonitor\xampp"
+      $cmdPlotGraph="cscript ".$vpath_base.'\\ubin\\plotgraph.vbs '.$vpath_base; /// 
       $out3 = shell_exec($cmdPlotGraph);
       writelogd($pgm,"call ".$cmdPlotGraph);
     }else{
@@ -48,16 +48,17 @@ if ($diffTime > intval($monitorInterval)*3){
     }
   }else{
     /// Linux
-    $vpathParam=array("vpath_htdocs");
+    $vpathParam=array("vpath_htdocs","vpath_kanshibin");
     $rtnPath=pathget($vpathParam);
-    if(count($rtnPath)==1){
+    if(count($rtnPath)==2){
       $htdocs=$rtnPath[0];
-      $cmd1=$htdocs.'/bin/mrtgrun.sh '.$htdocs;
+      $kanshibin=$rtnPath[1];
+      $cmd1=$kanshibin.'/mrtgrun.sh '.$htdocs;
       $out1 = shell_exec($cmd1);
       writelogd($pgm,'shell_exec '.$cmd1);
-      $cmd2=$htdocs.'/bin/plotgraph.sh '.$htdocs;
+      $cmd2=$kanshibin.'/plotgraph.sh '.$htdocs;
       $out2 = shell_exec($cmd2);
-      writelogd($pgm,'shell_exec '.$cmd2);
+      writeloge($pgm,'shell_exec '.$cmd2);
     }else{
       $msg="Invalid path , Check kanshiphp.ini";
       writeloge($pgm,$msg);
