@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 date_default_timezone_set('Asia/Tokyo');
 require_once 'BaseFunction.php';
@@ -41,7 +41,7 @@ $user="";
 $brcode="";
 $brmsg="";
 print '<html><head>';
-print '<meta><link rel="stylesheet" href="kanshi1.css">';
+print '<meta><link rel="stylesheet" href="css/kanshi1.css">';
 print '</head><body>';
 ///-------------------------------------------------
 ///--------セッションデータのユーザ取得-------------
@@ -81,35 +81,35 @@ if (!isset($_GET['param']) and !isset($_GET['set']) and !isset($_GET['send'])){
     /// メール送信テスト
   } elseif( isset($_GET['send']) ){
     /// 送信
-    $type='send'; 
-    $sql="update mailserver set status='0'";  /// mailserverをActiveにする
-    putdata($sql);
-    $sparam=$server.' '.$port.' '.$from.' '.$to.' '.$subj.' '.$body;
-   
-    writeloge($pgm,$sparam);
-    $flg=phpsendmail($server,$port,$from,$to,$subj,$body);
-    writeloge($pgm,$sparam.' '.$flg);
-    if($flg==0){
-      delstatus('Mail Server InActive');
-      delstatus('Mail Server Active');
-      setstatus('0','Mail Server Active');
-      $msg='#notic#'.$user.'#送信完了、受信を確認して下さい';
-      branch($pgm,$msg);
-    }else{
-      $sql="update mailserver set status='1'";
+    if ($server != '127.0.0.1'){
+      $type='send'; 
+      $sql="update mailserver set status='0'";  /// mailserverをActiveにする
       putdata($sql);
-      delstatus('Mail Server InActive');
-      delstatus('Mail Server Active');
-      setstatus('1','Mail Server InActive');
-      $msg='#error#'.$user.'#送信失敗';
+      $flg=phpsendmail($server,$port,$from,$to,$subj,$body);
+      if($flg==0){
+        delstatus('Mail Server InActive');
+        delstatus('Mail Server Active');
+        setstatus('0','Mail Server Active');
+        $msg='#notic#'.$user.'#送信完了、受信を確認して下さい';
+        branch($pgm,$msg);
+      }else{
+        $sql="update mailserver set status='1'";
+        putdata($sql);
+        delstatus('Mail Server InActive');
+        delstatus('Mail Server Active');
+        setstatus('1','Mail Server InActive');
+        $msg='#error#'.$user.'#送信失敗';
+        branch($pgm,$msg);
+      }
+    }else{
+      $msg='#alert#'.$user.'#127.0.0.1はメールサーバではありません';
       branch($pgm,$msg);
     }
   }
 }
 /// 結果表示
 if ($brcode=='error' or $brcode=='alert' or $brcode=='notic'){
-  print '<h3 class="'.$brcode.'">"'.$brmsg.'"</h3><hr>';
-  //print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
+  print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
 }
 /// 管理者かチェック
 $rdsql="select * from user where userid='".$user."'";
@@ -158,8 +158,8 @@ $body=$row[6];
 print '<table>';
 print "<tr><td>From Address:</td><td><input type=text name=from size=40 value={$fr_email}></td></tr>";
 print "<tr><td>To Address:</td><td><input type=text name=to size=40 value={$to_email}></td></tr>";
-print '<tr><td>Subject:</td><td><input type=text name=subj size=40 value="'.$ttl.'"></td></tr>';
-print '<tr><td>Body:</td><td><input type=text name=body size=80 value="'.$body.'"></td></tr></table><br>';
+print "<tr><td>Subject:</td><td><input type=text name=subj size=40 value='".$ttl."'></td></tr>";
+print "<tr><td>Body:</td><td><input type=text name=body size=80 value='".$body."'></td></tr></table><br>";
 print "<input type=hidden name=user value={$user}>";
 if ($auth=='1'){
   print '<tr><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class=button type=submit name=set value="設定"></td>';

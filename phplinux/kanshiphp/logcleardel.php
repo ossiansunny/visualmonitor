@@ -1,22 +1,35 @@
-<?php
+﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "varread.php";
 ///
-$vpatharr=array("vpath_weblog","vpath_plothome","vpath_kanshiphp");
-$rtnv=pathget($vpatharr);
-$weblogdir=$rtnv[0]."/logs";
-$plotlogdir=$rtnv[1]."/logs";
-$kanshilogdir=$rtnv[2]."/logs";
-//writeloge($pgm,'webdir:'.$weblogdir);
-
+$htdocsLogDir='';
+$plotLogDir='';
+$kanshiLogDir='';
+$osDirSep='';
+$vpathParam=array("vpath_htdocs","vpath_plothome","vpath_kanshiphp");
+$rtnPath=pathget($vpathParam);
+if(count($rtnPath)==3){
+  if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+    //$htdocsLogDir=$rtnPath[0]."\\logs";
+    $plotLogDir=$rtnPath[1]."\\logs";
+    $kanshiLogDir=$rtnPath[2]."\\logs";
+    $osDirSep="\\";
+  }else{
+    $htdocsLogDir=$rtnPath[0]."/httplogs";
+    $plotLogDir=$rtnPath[1]."/logs";
+    $kanshiLogDir=$rtnPath[2]."/logs";
+    $osDirSep="/";
+  }
+}else{
+  $msg="#error#".$user."#vpath_htdocs,vpath_base,vpath_kanshiphpが不正です";
+  $nextpage='LogClear.php';
+  branch($nextpage,$msg);
+}
 ///
 $now=new DateTime();
 $ymd=$now->format("ymd");
 ///
-print '<html><head><meta>';
-print '<link rel="stylesheet" href="kanshi1.css">';
-print '</head><body>';
 $pgm = "logcleardel.php";
 $user = $_GET['user'];
 ///
@@ -26,42 +39,38 @@ if (!isset($_GET['log'])){
   branch($nextpage,$msg);
 }
 
-$logtype = $_GET['log'];  /// 選択されたlog種類
-//writeloge($pgm,'logtype:'.$logtype);
+$logType = $_GET['log'];  /// 選択されたlog種類
 ///--- log削除処理 -----------
-if($logtype=='Web'){ //できない
-  $result=glob($weblogdir.'/*_*.log');
-  //var_dump($result);
-  foreach($result as $rec){
-    $filename=basename($rec);
-    //writeloge($pgm,'web:'.$filename);
+if($logType=='Web' && $osDirSep=="/"){
+  $fileRows=glob($htdocsLogDir.$osDirSep.'*_*.log');
+  foreach($fileRows as $fileRowsRec){
+    $filename=basename($fileRowsRec);
+    //echo $filename.'<br>';
     if (false === strpos($filename,$ymd)){
-      unlink($weblogdir."/".$filename);
+      unlink($htdocsLogDir.$osDirSep.$filename);
     } // end of if    
   }  // end of for
-}elseif($logtype=='監視'){
-  $result=glob($kanshilogdir.'/kanshi_*.log');
-  foreach($result as $rec){        
-    $filename=basename($rec);
-    //writeloge($pgm,'kanshi:'.$filename);
+}elseif($logType=='監視'){
+  $fileRows=glob($kanshiLogDir.$osDirSep.'kanshi_*.log');
+  foreach($fileRows as $fileRowsRec){        
+    $filename=basename($fileRowsRec);
     if(false === strpos($filename,$ymd)){
-      unlink($kanshilogdir.'/'.$filename);
+      unlink($kanshiLogDir.$osDirSep.$filename);
     } // end of if
   } // end of for
 }else{
-  $result=glob($plotlogdir.'/plot_*.log');
-  foreach($result as $rec){        
-    $filename=basename($rec);
-    //writeloge($pgm,'plot:'.$filename);
+  $fileRows=glob($plotLogDir.$osDirSep.'plot_*.log');
+  foreach($fileRows as $fileRowsRec){        
+    $filename=basename($fileRowsRec);
     if (false === strpos($filename,$ymd)){
-      unlink($plotlogdir.'/'.$filename);
+      unlink($plotLogDir.$osDirSep.$filename);
     }  // end of if
   }  // end for
 }
 
-$msg="#notic#".$user."#".$logtype."ログの削除が完了しました";
+$msg="#notic#".$user."#".$logType."ログの削除が完了しました";
 $nextpage="LogClear.php";
 branch($nextpage,$msg);
 
-echo '</body></html>';
+//echo '</body></html>';
 ?>

@@ -1,63 +1,73 @@
 <?php
 ///エラー表示
-ini_set('display_errors', 'Off');
-require_once 'varread.php';
-$vpatharr=array("vpath_phpmailer");
-$rtnv=pathget($vpatharr);
-$srcdir=$rtnv[0]."/vendor/phpmailer/phpmailer";
-
-$except=$srcdir . "/src/Exception.php";
-$mailer=$srcdir . "/src/PHPMailer.php";
-$smtp=$srcdir . "/src/SMTP.php";
-$lang=$srcdir . "/language/phpmailer.lang-ja.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+///
+ini_set('display_errors', 'Off');
 mb_internal_encoding("UTF-8");
-//
-//require_once $autodir;
-require_once $except;
-require_once $mailer;
-require_once $smtp;
-require_once $lang;
+if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+  ///
+  /// Windows xampp
+  ///
+  $kanshiDir=__DIR__;
+  $baseDir=explode('htdocs',$kanshiDir);
+  $autoDir=$baseDir[0] . "vendor\autoload.php";
+  $langDir=$baseDir[0] . "vendor\phpmailer\phpmailer\language\phpmailer.lang-ja.php";
+  require_once $autoDir;
+  require_once $langDir;
+
+}else{
+  ///
+  /// Unix/Linux
+  ///
+  require_once 'varread.php';
+  $vpatharr=array("vpath_phpmailer");
+  $rtnv=pathget($vpatharr);
+  $srcdir=$rtnv[0]."/vendor/phpmailer/phpmailer";
+  $except=$srcdir . "/src/Exception.php";
+  $mailer=$srcdir . "/src/PHPMailer.php";
+  $smtp=$srcdir . "/src/SMTP.php";
+  $lang=$srcdir . "/language/phpmailer.lang-ja.php";
+  require_once $except;
+  require_once $mailer;
+  require_once $smtp;
+  require_once $lang;
+}
+///
+/// common
+///
 require_once 'mysqlkanshi.php';
 require_once 'alarmwindow.php';
 ///
 mb_language('uni');
 mb_internal_encoding('UTF-8');
+
 function phpsendmail($hst, $prt, $from, $to, $subj, $body){
  $pgm="phpsendmail.php";
  $flg=getmailstatus();
- //writeloge('phpsendmail.php','flag:'.$flg);
- ///$flg=0; ///-----------------------------------debug  
  if ($flg==0){
-  $sql="select * from mailserver";
-  $rows=getdata($sql);
-  $row=explode(',',$rows[0]);
+  $mail_sql="select * from mailserver";
+  $mailRows=getdata($mail_sql);
+  $mailArr=explode(',',$mailRows[0]);
   if (empty($hst) || $hst==""){
-    $host=$row[0]; /// mailserレコードからhostをセット
+    $host=$mailArr[0]; /// mailserレコードからhostをセット
   } else {
     $host=$hst;
   }
   if (empty($prt) || $prt==""){
-    $port=intval($row[1]); /// mailserverレコードからportセット
+    $port=intval($mailArr[1]); /// mailserverレコードからportセット
   } else {
     $port=intval($prt);
   }
-  $authuser=$row[2];  ///認証ユーザー
-  $passwd=$row[3];    ///認証パスワード
-  $status=$row[4]; // mailserverのstatus 0:ok 1:ng
-  ///$status="0"; //---------------------------------debug
-  ///echo $host.' '.strval($port).PHP_EOL; //--------debug
-  $mparam=$host.' '.strval($port).' '.$authuser.' '.$passwd.' '.$status; 
-  writelogd('phpsendmail.php',$mparam);
-  if ($status == '0' or is_null($status)) { /// 
-    //writeloge('phpsendmail.php','if ok');
+  $authuser=$mailArr[2];  ///認証ユーザー
+  $passwd=$mailArr[3];    ///認証パスワード
+  $status=$mailArr[4]; // mailserverのstatus 0:ok 1:ng
+  if ($status == "0" || is_null($status)) {
     /// post : integer
     /// body : array
     /// インスタンスを生成（true指定で例外を有効化）
     $mail = new PHPMailer(true);
-    //writeloge('phpsendmail.php','new PHPMailer');
     $rcode=0;
     try {
       ///メールサーバー設定
@@ -66,9 +76,8 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
       $mail->Debugoutput = function($str, $level) { syslog(LOG_ERR, "PHP Mailer:" . $str); };                      
       /// SMTPの使用
       $mail->isSMTP();
-      // smtpサーバー設定
+      /// smtpサーバー設定
       $mail->Host       = $host;
-      //writeloge('phpsendmail.php','host set');
       /// SMTP認証     
       if ($port==587){             
         $mail->SMTPAuth   = true;
@@ -91,9 +100,9 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
       ///宛先
       $mail->addAddress($to, 'receiver');
       ///cc    
-      ///    $mail->addCC('vmadmin@domain');
+      ///    $mail->addCC('vmadmin@host.domain');
       ///bcc
-      ///    $mail->addBCC('vmadmin@domain');
+      ///    $mail->addBCC('vmadmin@host.domain');
 
       /// htmlメール指定
       ///    $mail->isHTML(true)a
@@ -114,37 +123,22 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
       $mail->CharSet = 'UTF-8';
       $mail->isHTML(false);
       $mail->Body    = $bodystr;
-      //writeloge('phpsendmail.php','body set');
       
-      /// ファイル添付
-      /*
-      $attachfile1='e:/visualmonitor/xampp/htdocs/mrtg/mrtgimage/192.168.1.139.cpu-day.png';
-      $attachfile2='e:/visualmonitor/xampp/htdocs/mrtg/mrtgimage/192.168.1.139.ram-day.png';
-      $attachfile3='e:/visualmonitor/xampp/htdocs/mrtg/mrtgimage/192.168.1.139.disk-day.png';
-      $mail->addAttachment($attachfile1);
-      $mail->addAttachment($attachfile2);
-      $mail->addAttachment($attachfile3);
-      */    
       ///メール送信
-      writeloge('phpsendmail.php','send');
       $mail->send();
-      writeloge('phpsendmail.php','sended');
       $rcode=0;
       delstatus('Mail Server InActive');
       delstatus('Mail Server Active');
       setstatus('0','Mail Server Active');
       
       ///添付ファイルクリア      
-      $mail->clearAttachments();
+      //$mail->clearAttachments();
       
       ///送信先情報クリア
       ///$mail->clearAllRecipients();
     } catch (Exception $e) {
-      //delstatus('Mail Server Active');
-      //setstatus('1','Mail Server InActive');
       $msg="Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-      writeloge($pgm,$msg);
-      //echo $msg; 
+      writelogd($pgm,$msg);
       $rcode=1;
     }
   } else {
@@ -152,7 +146,6 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
     setstatus('1','Mail Server InActive');         /// InActiveにしている
     $msg="Mail Server not registered in database";
     writelogd($pgm,$msg);
-    //echo $msg;
     $rcode=1;
   }
   return $rcode;
@@ -162,13 +155,11 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
   return 1;
  }
 }
-
-// test
 /*
-$fm='';
-$too='';
-$rtncd=phpsendmail('192.168.1.139',587, $fm, $too, '添付テスト', '添付参照');
-var_dump($rtncd);
+$subj="subject 155-21";
+$body="body 155-21";
+$rtcd=phpsendmail("192.168.1.21",587,"vmadmin@sunnyblue.mydns.jp","oshima@sunnyblue.mydns.jp", $subj, $body);
+var_dump($rtcd);
 */
 ?>
 

@@ -2,40 +2,59 @@
 error_reporting(0);
 require_once "alarmwindow.php";
 
-function mailactive($mailhost){
-  $sql="select server from mailserver";
-  $rows=getdata($sql);
-  $row=explode(',',$rows[0]);
-  if ($row[0]==$mailhost){
+function mailactive($_mailhost){
+  $mail_sql="select server from mailserver";
+  $mailRows=getdata($mail_sql);
+  $mailArr=explode(',',$mailRows[0]);
+  if ($mailArr[0]==$_mailhost){
     delstatus('Mail Server InActive');
     delstatus('Mail Server Active');
     setstatus('0','Mail Server Active');;
   }
 }
 
-function hostping($host){
-   /// WindowsとUNIXのpingパラメータが違う
-   $cmd = "ping -c 1 " . $host;
-   $r = exec($cmd, $output, $res);
-   $sw = 0;
-   $c = count($output);
-   for ($i=0;$i<$c;$i++) {
-      $reg = preg_match('/icmp_seq=1 ttl/',$output[$i]);
-      if ($reg == 1)  {
-         $sw = 1;         
-         break;
+function hostping($_host){  
+   /// Windowsのpingパラメータ
+   if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+      $rtnCde = exec("ping -n 1 $_host" , $output, $result);
+      $breakSw = 0;
+      $lineCount = count($output);
+      for ($i=0;$i<$lineCount;$i++) {
+         $matchLine = preg_match('/ms TTL=/',$output[$i]);
+         if ($matchLine == 1)  {
+            $breakSw = 1;         
+            break;
+         }
       }
-   }
-   if($sw == 1){
-      mailactive($host);
-      return 0;
+      if($breakSw == 1){
+         //mailactive($_host);
+         return 0;
+      } else {
+         return 1;
+      }
+   /// UNIXのpingパラメータ
+   } elseif(PHP_OS == 'Linux') {
+      $cmd = "ping -c 2 " . $_host;
+      $rtnCde = exec($cmd, $output, $res);
+      $breakSw = 0;
+      $lineCount = count($output);
+      for ($i=0;$i<$lineCount;$i++) {
+         $matchLine = preg_match("/icmp_seq=1 ttl/",$output[$i]);
+         if ($matchLine == 1)  {
+            $breakSw = 1;
+            break;
+         }
+      }
+      if($breakSw == 1){
+         //mailactive($_host);
+         return 0;
+      } else {
+         return 1;
+      }
    } else {
       return 1;
    }
 } 
-/*
-$rtn=hostping('192.168.1.139');
-var_dump($rtn);
-*/
-?>
 
+
+?>

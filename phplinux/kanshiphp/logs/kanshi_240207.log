@@ -1,7 +1,0 @@
-240207074224: phpsendmail.php: send
-240207074225: phpsendmail.php: sended
-240207102004: phpsendmail.php: send
-240207102004: phpsendmail.php: sended
-240207211945: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT_admin','240207211945','9','admin')
-240207211945: phpsendmail.php: send
-240207211945: phpsendmail.php: sended

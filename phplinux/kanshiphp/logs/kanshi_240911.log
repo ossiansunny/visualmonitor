@@ -1,0 +1,7 @@
+240911202955: /var/www/html/kanshiphp/login.php: mysql query parse error: 
+240911202956: SnmpAutoScan.php: No statistics record then create new record: 
+240911202956: SnmpAutoScan.php: No statistics record then create new record: 
+240911202956: SnmpAutoScan.php: No statistics record then create new record: 
+240911202957: SnmpAutoScan.php: No statistics record then create new record: 
+240911203000: MonitorCoreAuto.php: 192.168.1.19 Eventlog Insert sql: insert into eventlog(host,eventtime,eventtype,snmptype,kanrisha,kanrino,confclose) values('192.168.1.19','240911203000','2','1','admin','','0')
+240911203000: /var/www/html/kanshiphp/MonitorCoreAuto.php: mysql query parse error: 

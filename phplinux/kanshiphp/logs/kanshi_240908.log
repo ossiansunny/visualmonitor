@@ -1,0 +1,12 @@
+240908115238: /var/www/html/kanshiphp/login.php: mysql query parse error: 
+240908115239: SnmpAutoScan.php: No statistics record then create new record: 
+240908115239: SnmpAutoScan.php: No statistics record then create new record: 
+240908115239: SnmpAutoScan.php: No statistics record then create new record: 
+240908115243: SnmpAutoScan.php: No statistics record then create new record: 
+240908122950: MonitorCoreAuto.php: 192.168.1.19 Eventlog Insert sql: insert into eventlog(host,eventtime,eventtype,snmptype,kanrisha,kanrino,confclose) values('192.168.1.19','240908122950','2','1','admin','','0')
+240908122950: /var/www/html/kanshiphp/MonitorCoreAuto.php: mysql query parse error: 
+240908123055: MonitorCoreAuto.php: 192.168.1.19 Eventlog Insert sql: insert into eventlog(host,eventtime,eventtype,snmptype,kanrisha,kanrino,confclose) values('192.168.1.19','240908123055','1','1','admin','','0')
+240908123055: /var/www/html/kanshiphp/MonitorCoreAuto.php: mysql query parse error: 
+240908135041: /var/www/html/kanshiphp/AdminPage.php: mysql query parse error: 
+240908172339: /var/www/html/kanshiphp/logout.php: mysql query parse error: 
+240908172339: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT_admin','240908172339','9','admin')

@@ -1,21 +1,22 @@
-<?php
+﻿<?php
 require_once "BaseFunction.php";
 
 $pgm = "logoutu.php";
 $user="";
 $brcode="";
 $brmsg="";
-//
+///
 if(!isset($_GET['param'])){
   paramGet($pgm);
 }else{
   paramSet();
+
   print '<!DOCTYPE html>';
   print '<html>';
   print '<head>';
   print '<meta charset="utf-8">';
   print '<title>サンプル</title>';
-  print '<link rel="stylesheet" href="login.css">';
+  print '<link rel="stylesheet" href="css/login.css">';
   print '</head>';
   print '<body>';
   print '<div class="login">';

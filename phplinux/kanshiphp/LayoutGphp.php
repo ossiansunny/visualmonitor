@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once "BaseFunction.php";
 ///
 $pgm="LayoutGphp.php";
@@ -15,7 +15,7 @@ if (!isset($_GET['param'])){
   print '<html lang="ja">';
   print '<head>';
   print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
-  print '<link rel="stylesheet" href="kanshi1.css">';
+  print '<link rel="stylesheet" href="css/kanshi1.css">';
   print '</head>';
   print '<body>';
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　グループレイアウト作成　その１　▽</h2>';
@@ -37,5 +37,6 @@ if (!isset($_GET['param'])){
   print '</body>';
   print '</html>';
 }
+///
 ?>
 

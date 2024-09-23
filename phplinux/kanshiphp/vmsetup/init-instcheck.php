@@ -1,21 +1,33 @@
 <?php
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+///
+$dirSep='';
 $path_vmsetup=__DIR__;
-$path_kanshiphp=str_replace('/vmsetup','',$path_vmsetup);
-$path_varread=$path_kanshiphp."/varread.php";
-$path_mysqlkanshi=$path_kanshiphp."/mysqlkanshitmp.php";
+if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+  /// xampp apache
+  $dirSep='\\';
+}else{
+  /// Linux
+  $dirSep='/';
+}
+$vmsetupSep=$dirSep.'vmsetup';
+$path_kanshiphp=str_replace($vmsetupSep,'',$path_vmsetup);
+$path_varread=$path_kanshiphp.$dirSep."varread.php";
+$path_mysqlkanshi=$path_kanshiphp.$dirSep."mysqlkanshitmp.php";
 require_once $path_varread;
 require_once $path_mysqlkanshi;
 $pgm = "init_instcheck.php";
 $vpath_kanshiphp="";
-$vpatharr=array("vpath_kanshiphp");
+$vpath_base="";
+$vpatharr=array("vpath_kanshiphp","vpath_base");
 $rtnv=pathget($vpatharr);
-if(count($rtnv)==1){
+if(count($rtnv)==2){
   $vpath_kanshiphp=$rtnv[0];
+  $vpath_base=$rtnv[1];
   /// バックアップを削除、現行をバックアップ、新規を現行へ
-  $file_old=$vpath_kanshiphp."/mysqlkanshi.php.old";
-  $file_tmp=$vpath_kanshiphp."/mysqlkanshitmp.php";
-  $file=$vpath_kanshiphp."/mysqlkanshi.php";
+  $file_old=$vpath_kanshiphp.$dirSep."mysqlkanshi.php.old";
+  $file_tmp=$vpath_kanshiphp.$dirSep."mysqlkanshitmp.php";
+  $file=$vpath_kanshiphp.$dirSep."mysqlkanshi.php";
   $createdTime = filectime($file);
   $cdate=date("Ymd", $createdTime);
   /// 実行確認

@@ -24,8 +24,7 @@ function phpsnmptcpopenwin($host,$community,&$data) {
         $v4item[$cnt]=$v4port;
         $cnt++;
       }       
-    }    
-    
+    }
   }
   /// snmp ipv6????
   $v6array = array();
@@ -194,8 +193,11 @@ function phpsnmptcpopen($host,$community,&$data) {
   }
   return $strings;
 }
-
-
+/*
+$data=array(25,587);
+$rtn=phpsnmptcpopen('192.168.1.139','public',$data);
+var_dump($rtn);
+*/
 ?>
 
 

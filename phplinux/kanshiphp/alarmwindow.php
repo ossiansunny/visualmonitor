@@ -4,25 +4,25 @@ error_reporting(E_ALL & ~E_NOTICE);
 require_once "mysqlkanshi.php";
 
 //-----------------------------------
-//---- å„ç¨®ä¿å­˜æƒ…å ±å–å¾—
+//---- Šeí•Û‘¶î•ñæ“¾
 //------------------------------------
 function getmailstatus(){
-  $sql="select * from status";
-  $rows=getdata($sql);
-  $row=explode(',',$rows[0]);
-  $seq=intval($row[0]);
+  $stat_sql="select * from status";
+  $statRows=getdata($stat_sql);
+  $statArr=explode(',',$statRows[0]);
+  $pointer=intval($statArr[0]);
   $key="";
   $val="";
   $rtncd=1;
   $result=array(" "," ");
   $cnt=1;
   while ($cnt<=5){
-    $seq++; // 2
-    if ($seq>5){
-      $seq=1;
+    $pointer++; // 2
+    if ($pointer>5){
+      $pointer=1;
     }
-    $key=$row[$seq+($seq-1)];
-    $val=$row[$seq+($seq-1)+1];
+    $key=$statArr[$pointer+($pointer-1)];
+    $val=$statArr[$pointer+($pointer-1)+1];
     if (empty($val) || $val==" " || is_null($val)){
       continue;
     }else{
@@ -39,40 +39,34 @@ function getmailstatus(){
 //-----------------------------------
 //---- get next status message
 //------------------------------------
-function getstatus($ptr = 6){
-  /// $ptr: mark1 mark2 mark3 ã®ã€€1 2 3ã‚’æŒ‡å®šã€0 < $ptr > 6
+function getstatus($_poniter = 6){
+  /// $_poniter: mark1 mark2 mark3 ‚Ì@1 2 3‚ğw’èA0 < $_poniter > 6
   $result=array();  
-  $ssw=0;
-  if ($ptr==6){
-    $ssw=1;    
-  }else{
-    if($ptr<1 or $ptr>5){
-      array_puch($result,'2','Pointer Invalid');
-      return $result;
-    }
-  } 
-  $cptr=1;
-  $sql="select * from status";
-  $rows=getdata($sql);
-  $row=explode(',',$rows[0]);
+  if($_poniter<1 or $_poniter>6){
+    array_puch($result,'2','Pointer Invalid');
+    return $result;
+  }
+  $currentPtr=1;
+  $stat_sql="select * from status";
+  $statRows=getdata($stat_sql);
+  $statArr=explode(',',$statRows[0]);
   $key="";
   $val="";
-  if ($ssw==0){
-    $cptr=$ptr;
-    $markp=($ptr*2)-1;  /// æŒ‡å®šãƒã‚¤ãƒ³ã‚¿ãƒ¼
+  if ($_poniter==6) {
+    $currentPtr=$statArr[0];
+    $markPtr=($statArr[0]*2)-1;     /// ƒŒƒR[ƒh“àƒ|ƒCƒ“ƒ^[
   }else{
-    $cptr=$row[0];
-    $markp=($row[0]*2)-1;     /// ãƒ¬ã‚³ãƒ¼ãƒ‰å†…ãƒã‚¤ãƒ³ã‚¿ãƒ¼
-    //print 'markp:'.$markp;
+    $currentPtr=$_poniter;
+    $markPtr=($_poniter*2)-1;  /// w’èƒ|ƒCƒ“ƒ^[
   }
   $cnt=1;
   while ($cnt<=5){
-    $keyp=($cnt*2)-1;
-    $valp=$cnt*2; 
-    $key=$row[$keyp];
-    $val=$row[$valp];
+    $keyPtr=($cnt*2)-1;
+    $valPtr=$cnt*2; 
+    $key=$statArr[$keyPtr];
+    $val=$statArr[$valPtr];
     //print 'mark:'.$key.' msg:'.$val."\r\n";
-    if ($keyp==$markp){ 
+    if ($keyPtr==$markPtr){ 
       if (empty($val) || $val==" " || is_null($val)){
         array_push($result,"","");
         break;
@@ -83,73 +77,71 @@ function getstatus($ptr = 6){
     }
     $cnt++;
   } 
-  ptrstatus($cptr+1);
+  ptrstatus($currentPtr+1);
   return $result;
 }
 
-Function ptrstatus($ptr){
-  /// $ptr: mark1 mark2 mark3 ã®ã€€1 2 3ã‚’æŒ‡å®šã€0 < $ptr > 
-  if($ptr<1 or $ptr>5){
-    $ptr=1;
+Function ptrstatus($_poniter){
+  /// $_poniter: mark1 mark2 mark3 ‚Ì@1 2 3‚ğw’èA0 < $_poniter > 
+  if($_poniter<1 or $_poniter>5){
+    $_poniter=1;
   } 
-  $sql="update status set pointer=".$ptr;
-  putdata($sql);
+  $stat_sql="update status set pointer=".$_poniter;
+  putdata($stat_sql);
   return 0;
 }
   /*
-  // 0   1    2    3    4    5    6    7    8    9    10 
-  // seq key1 val1 key2 val2 key3 val3 key4 val4 key5 val5
+  // 0       1    2    3    4    5    6    7    8    9    10 
+  // pointer key1 val1 key2 val2 key3 val3 key4 val4 key5 val5
  
   */
-/// å„ç¨®æƒ…å ±ä¿å­˜
-function setstatus($key,$val){
-  /// key ..è¡¨ç¤ºè‰² 
+/// Šeíî•ñ•Û‘¶
+function setstatus($_key,$_val){
+  /// key ..•\¦F 
   /// 0: Green  1:Yellow  2:Red
   /// 
-  $nosw=1;
-  $sql="select * from status";
-  $rows=getdata($sql);
-  $row=explode(',',$rows[0]);
-  //$ptr=$row[0];
+  $rtnCde=1;
+  $stat_sql="select * from status";
+  $statRows=getdata($stat_sql);
+  $statArr=explode(',',$statRows[0]);
   $cnt=1;
   while($cnt<=5){
-    $keyp=($cnt*2)-1; // key position
-    $valp=$cnt*2;     // msg position
-    $mark=$row[$keyp];
-    $msg=$row[$valp];
-    //print 'cnt:'.strval($cnt).' keyp:'.strval($keyp).' valp:'.strval($valp)."\r\n";
+    $_keyPtr=($cnt*2)-1; // key position
+    $_valPtr=$cnt*2;     // msg position
+    $mark=$statArr[$_keyPtr];
+    $msg=$statArr[$_valPtr];
+    //print 'cnt:'.strval($cnt).' keyPtr:'.strval($_keyPtr).' valPtr:'.strval($_valPtr)."\r\n";
     //print 'mark:'.$mark.' msg:'.$msg."\r\n"; 
-    if ($msg==$val){
-      $nosw=2;
+    if ($msg==$_val){
+      $rtnCde=2;
       break;
     }elseif(empty($msg) or is_null($msg) or $msg==" "){
-      /// mark#,msg# ã¯ cntã¨åŒã˜
-      $sql="update status set mark".strval($cnt)."='".$key."',msg".strval($cnt)."='".$val."'";
-      putdata($sql);      
-      $nosw=0;
+      /// mark#,msg# ‚Í cnt‚Æ“¯‚¶
+      $stat_sql="update status set mark".strval($cnt)."='".$_key."',msg".strval($cnt)."='".$_val."'";
+      putdata($stat_sql);      
+      $rtnCde=0;
       break;
     }
     $cnt++;    
   }
-  return $nosw; // ä¿å­˜å®Œäº†=0 , ä¿å­˜ä¸å¯=1, æ—¢ä¿å­˜=2
+  return $rtnCde; // •Û‘¶Š®—¹=0 , •Û‘¶•s‰Â=1, Šù•Û‘¶=2
 }
 
-/// å„ç¨®æƒ…å ±å‰Šé™¤
-function delstatus($val){
-  $nosw=1;
-  $sql="select * from status";
-  $rows=getdata($sql);
-  $row=explode(',',$rows[0]);
+/// Šeíî•ñíœ
+function delstatus($_val){
+  $rtnCde=1;
+  $stat_sql="select * from status";
+  $statRows=getdata($stat_sql);
+  $statArr=explode(',',$statRows[0]);
   for($cnt=1;$cnt<6;$cnt++){
-    $msg=$row[$cnt+($cnt-1)+1];
-    if($msg==$val){
-      $sql="update status set mark".strval($cnt)."='',msg".strval($cnt)."=''";
-      putdata($sql);      
-      $nosw=0;
+    $msg=$statArr[$cnt+($cnt-1)+1];
+    if($msg==$_val){
+      $stat_sql="update status set mark".strval($cnt)."='',msg".strval($cnt)."=''";
+      putdata($stat_sql);      
+      $rtnCde=0;
       break;
     }
   }
-  return $nosw; // deleted=0 , not found=1
+  return $rtnCde; // deleted=0 , not found=1
 }
-
 ?>

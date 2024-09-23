@@ -10,5 +10,6 @@ function snmpactive($host,$community) {
     return 0;
   }
 }
+///
 ?>
 

@@ -1,0 +1,8 @@
+240915191956: /var/www/html/kanshiphp/logout.php: mysql query parse error: 
+240915191956: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT_admin','240915191956','9','admin')
+240915192831: /var/www/html/kanshiphp/login.php: mysql query parse error: 
+240915193851: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino,message) values('LOGOUT_admin','240915193851','9',' ','admin','0',' ')
+240915194017: /var/www/html/kanshiphp/login.php: mysql query parse error: 
+240915200606: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino,message) values('LOGOUT_admin','240915200606','9',' ','admin','0',' ')
+240915201008: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino,message) values('LOGOUT_admin','240915201008','9',' ','admin','0',' ')
+240915201520: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino,message) values('LOGOUT_admin','240915201520','9',' ','admin','0',' ')

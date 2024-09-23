@@ -4,6 +4,7 @@ date_default_timezone_set('Asia/Tokyo');
 require_once 'mysqlkanshi.php';
 require_once 'phpsendmail.php';
 $pgm="mailsendany.php";
+///
 function bodyformat($_from,$_status,$_msg,&$bodystr){
   $_body = array();
   $dte=date('Y-m-d H:i:s');
@@ -13,64 +14,79 @@ function bodyformat($_from,$_status,$_msg,&$bodystr){
   $_body[3]='State: ' .$_status; // 
   $_body[4]='Messages:';
   $_body[5]=$_msg; /// message
-  $bodystr='';
+  $bodyStr='';
   foreach ($_body as $_bodyrec){
-    $bodystr=$bodystr.$_bodyrec."\r\n";
+    $bodyStr=$bodyStr.$_bodyrec."\r\n";
   }
 }
 
-function mailsendany($type,$from,$to,$subject,$msg){
-  $bodystr = "";
-  $sql='select * from header';
-  $hdata=getdata($sql);
-  $hdarr=explode(',',$hdata[0]);
-  $csubject=$subject;
-  if($type=='adminsubject'){
-    $header=$hdarr[0];
+function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
+  $bodyStr = "";
+  $header_sql='select * from header';
+  $headerRows=getdata($header_sql);
+  $headerArr=explode(',',$headerRows[0]);
+  $adjSubject=$_subject;
+  ///  adminsubject
+  if($_mailType=='adminsubject'){
+    $header=$headerArr[0];
     $check='';
-    $csubject=str_replace('<host>','any',$csubject);
-    $csubject=str_replace('<status>',$type,$csubject);
-    $csubject=str_replace('<title>',$hdarr[0],$csubject);
-    $ttl=$csubject;
-    bodyformat($header,$ttl,$msg,$bodystr);
-  }elseif($type=='mysql'){
-    $hsarr=explode(' ',$msg);
+    $adjSubject=str_replace('<host>','any',$adjSubject);
+    $adjSubject=str_replace('<status>',$_mailType,$adjSubject);
+    $adjSubject=str_replace('<title>',$headerArr[0],$adjSubject);
+    $title=$adjSubject;
+    bodyformat($header,$title,$_body,$bodyStr);
+  ///  mysql
+  }elseif($_mailType=='mysql'){
+    $hsarr=explode(' ',$_body);
     $header=$hsarr[2];
     $check=' mysql起動遅延';
-    $sub1=$header; 
-    $sub2='デーモン';
-    $sub3=$subject;
-    $ttl='**'.$sub1.' '.$sub2. ' ' .$sub3. '**';
-    bodyformat($header,$ttl,$msg,$bodystr);
+    $subj1=$header; 
+    $subj2='デーモン';
+    $subj3=$_subject;
+    $title='**'.$subj1.' '.$subj2. ' ' .$subj3. '**';
+    bodyformat($header,$title,$_body,$bodyStr);
+  ///  loginlogout
   }else{
-    $header=$hdarr[0];
+    $header=$headerArr[0];
     $check='';
-    $sub1=$hdarr[0]; 
-    ///$sub2='デーモン';
-    $sub3=$subject;
-    $ttl='**'.$sub1. ' '.$sub3.'**';
-    bodyformat($header,$ttl,$msg,$bodystr); 
+    $subj1=$headerArr[0]; 
+    ///$subj2='デーモン';
+    $subj3=$_subject;
+    $title='**'.$subj1. ' '.$subj3.'**';
+    bodyformat($header,$title,$_body,$bodyStr); 
   }
-  /// get mail from, to address
-  $sql="select * from admintb";
-  $kdata=getdata($sql);
-  $sdata=explode(',',$kdata[0]);
-  $toaddr=$sdata[3]; /// mail to addr
-  $fromaddr=$sdata[4]; /// mail from addr
-  $flg=phpsendmail("", "", $fromaddr, $toaddr, $ttl, $bodystr);
+  /// common
+  if ($_to=="" or $_from==""){
+    /// get mail from, to address
+    $admin_sql="select * from admintb";
+    $adminRows=getdata($admin_sql);
+    $adminArr=explode(',',$adminRows[0]);
+  }
+  if ($_to==""){
+    $toAddr=$adminArr[3]; /// mail to addr
+  }else{
+    $toAddr=$_to;
+  }
+  if ($_from==""){
+    $fromAddr=$adminArr[4]; /// mail from addr
+  }else{
+    $fromAddr=$_from;
+  }
+  $rtnFlag=1;
+  $rtnFlag=phpsendmail("", "", $fromAddr, $toAddr, $title, $bodyStr);
+  //print("phpsendmail done\n");
   $mmsg='';
-  if($flg==0){
-    $mmsg='success '.$bodystr.' '.$toaddr.' '.$fromaddr."\r\n";
+  if($rtnFlag==0){
+    $mmsg='success '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
     writelogd('mailsendany debug',$mmsg);
   }else{
-    $mmsg='failed '.$bodystr.' '.$toaddr.' '.$fromaddr."\r\n";
+    $mmsg='failed '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
     writelogd('mailsendany debug',$mmsg);
+    //print("mailsendany failed\n");
   }
-  return $flg;
+  return $rtnFlag;
 
 }
-/*
-mailsendany('loginlogout','sender','reciver','sub','body');
-*/
+//mailsendany("loginlogout","vmadmin@mydomain.jp","mailuser@mydomain","subject","body")
 ?>
 

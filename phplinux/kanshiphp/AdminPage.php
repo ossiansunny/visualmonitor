@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "mailsendany.php";
 
-function nullcheck($data){
-  if (isset($data)){
-    return $data;
+function nullcheck($_data){
+  if (isset($_data)){
+    return $_data;
   }else{
     return ' ';
   }
@@ -20,46 +20,44 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
 }else{
   /// admintbの更新
   $now=date('ymdHis');
-  $tstamp = $now;
+  $timeStamp = $now;
   if (isset($_GET['update'])){
     $user=$_GET['user'];
-    $auth=$_GET['auth'];
-    $recv=$_GET['recv'];
-    $sender=$_GET['sender'];
-    $subj=$_GET['subj'];
+    $authority=$_GET['auth'];
+    $mailToAddr=$_GET['recv'];
+    $mailFromAddr=$_GET['sender'];
+    $subject=$_GET['subj'];
     $body=$_GET['body'];
-    $monintval=$_GET['monintval'];
-    $snmpintval=$_GET['snmpintval'];
+    $monIntVal=$_GET['monintval'];
+    $snmpIntVal=$_GET['snmpintval'];
     $debug=$_GET['debug'];
-    $kno=$_GET['kanrino'];
-    $hosthyouji=$_GET['hosthyouji'];
-    $haikei=$_GET['haikei'];
-    $upsql="update admintb set 
-         authority='".$auth."',
-         receiver='".$recv."',
-         sender='".$sender."',
-         subject='".$subj."',
+    $adminNum=$_GET['kanrino'];
+    $hostViewEnable=$_GET['hosthyouji'];
+    $bgPicture=$_GET['haikei'];
+    $admin_sql="update admintb set 
+         authority='".$authority."',
+         receiver='".$mailToAddr."',
+         sender='".$mailFromAddr."',
+         subject='".$subject."',
          body='".$body."',
-         monintval='".$monintval."',
-         snmpintval='".$snmpintval."',
+         monintval='".$monIntVal."',
+         snmpintval='".$snmpIntVal."',
          debug='".$debug."',
-         kanrino='" .$kno. "',
-         hosthyouji='".$hosthyouji."',
-         haikei='".$haikei."'";
+         kanrino='" .$adminNum. "',
+         hosthyouji='".$hostViewEnable."',
+         haikei='".$bgPicture."'";
     ///
-    $uprc = putdata($upsql); 
-    $upsqlmsg=str_replace('<','&lt;',$upsql);
-    $upsqlmsg=str_replace('>','&gt;',$upsqlmsg);
+    putdata($admin_sql); 
+    $okSqlMsg=str_replace('<','&lt;',$admin_ql);
+    $okSqlMsg=str_replace('>','&gt;',$okSqlMsg);
     /// 
     if($uprc == 0){    
-      $msg='AdminTB Updated sql: '.$upsqlmsg;
+      $msg='AdminTB Updated sql: '.$okSqlMsg;
       writelogd($pgm,$msg);
-      $logname=$user;
-      //$logname='GLOBAL_'.$user;
-      $insql = "insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$logname."','".$tstamp."','3','".$user."')";
-      putdata($insql);
+      $event_sql = "insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$user."','".$timeStamp."','3','".$user."')";
+      putdata($event_sql);
       $message='Update admintb';
-      mailsendany('adminsubject',$sender,$recv,$subj,$message);
+      mailsendany('adminsubject',$mailFromAddr,$mailToAddr,$subject,$message);
     }else{
       $msg='AdminTB Not updated sql: '.$upsqlmsg; 
       writeloge($pgm,$msg);   
@@ -70,42 +68,42 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
   ///　画面表示処理
   }else{
     $user=$_GET['param'];
-    $rdsql="select * from admintb";
-    $rows=getdata($rdsql);
-    $sdata=explode(',',$rows[0]);
-    $auth=$sdata[2];
-    $recv=$sdata[3];
-    $sender=$sdata[4];
-    $subj=nullcheck($sdata[5]);
-    $body=nullcheck($sdata[6]);
-    $monintval=strval($sdata[7]);
-    $snmpintval=strval($sdata[8]);
-    $debug=$sdata[9];
-    $kno=$sdata[10];
-    $selh0='';
-    $selh1='';
-    if ($sdata[13]=='0'){
-      $selh0='selected';
-      $selh1='';
+    $admin_sql="select * from admintb";
+    $adminRows=getdata($admin_sql);
+    $adminArr=explode(',',$adminRows[0]);
+    $authority=$adminArr[2];
+    $mailToAddr=$adminArr[3];
+    $mailFromAddr=$adminArr[4];
+    $subject=nullcheck($adminArr[5]);
+    $body=nullcheck($adminArr[6]);
+    $monIntVal=strval($adminArr[7]);
+    $snmpIntVal=strval($adminArr[8]);
+    $debug=$adminArr[9];
+    $adminNum=$adminArr[10];
+    $selHostView0='';
+    $selHostView1='';
+    if ($adminArr[13]=='0'){
+      $selHostView0='selected';
+      $selHostView1='';
     }else{
-      $selh0='';
-      $selh1='selected';
+      $selHostView0='';
+      $selHostView1='selected';
     }
-    $haikei=$sdata[14];
-    $seld=array('','','','');
-    if ($haikei == 'ki.png'){
-      $seld[0]='selected';
-    }elseif ($haikei == 'umi.png'){
-      $seld[1]='selected';
-    }elseif ($haikei == 'aka.png'){
-      $seld[2]='selected';
-    }elseif ($haikei == 'ha.png'){
-      $seld[3]='selected';
+    $bgPicture=$adminArr[14];
+    $selBgPictureArr=array('','','','');
+    if ($bgPicture == 'ki.png'){
+      $selBgPictureArr[0]='selected';
+    }elseif ($bgPicture == 'umi.png'){
+      $selBgPictureArr[1]='selected';
+    }elseif ($bgPicture == 'aka.png'){
+      $selBgPictureArr[2]='selected';
+    }elseif ($bgPicture == 'ha.png'){
+      $selBgPictureArr[3]='selected';
     }else{
-      $seld[0]='selected';
+      $selBgPictureArr[0]='selected';
     }
     print '<html><head><meta>';
-    print '<link rel="stylesheet" href="kanshi1.css">';
+    print '<link rel="stylesheet" href="css/kanshi1.css">';
     print '</head><body>';
     print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　管理情報　▽</h2>';
     ///
@@ -126,43 +124,41 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
     print '<table border=1>';
     print '<tr><th>監視間隔</th><th>SNMP間隔</th><th>権限</th><th>管理番号</th><th>ホスト表示</th><th>背景図</th><th>追跡ログ</th><th>管理者ID</th></tr>';
     print '<tr>';
-    print "<td><input type=text name=monintval size=4 value={$monintval}></td>";
-    print "<td><input type=text name=snmpintval size=4 value={$snmpintval}></td>";
-    print "<td><input type=text name=auth size=1 value={$auth} readonly></td>";
-    print "<td><input type=text name=kanrino size=4 value={$kno} readonly></td>";
+    print "<td><input type=text name=monintval size=4 value={$monIntVal}></td>";
+    print "<td><input type=text name=snmpintval size=4 value={$snmpIntVal}></td>";
+    print "<td><input type=text name=auth size=1 value={$authority} readonly></td>";
+    print "<td><input type=text name=kanrino size=4 value={$adminNum} readonly></td>";
     print '<td><select name="hosthyouji">';
-    print "<option value='0'{$selh0}>なし</option>";
-    print "<option value='1'{$selh1}>あり</option>";
+    print "<option value='0'{$selHostView0}>なし</option>";
+    print "<option value='1'{$selHostView1}>あり</option>";
     print '</select></td>';
     print '<td><select name="haikei">';
-    print "<option value='ki.png'{$seld[0]}>img1</option>";
-    print "<option value='umi.png'{$seld[1]}>img2</option>";
-    print "<option value='aka.png'{$seld[2]}>img3</option>";
-    print "<option value='ha.png'{$seld[3]}>img4</option>";
+    print "<option value='ki.png'{$selBgPictureArr[0]}>img1</option>";
+    print "<option value='umi.png'{$selBgPictureArr[1]}>img2</option>";
+    print "<option value='aka.png'{$selBgPictureArr[2]}>img3</option>";
+    print "<option value='ha.png'{$selBgPictureArr[3]}>img4</option>";
     print '</select></td>';
-    $ot=array('','','','','','');
-    $ot[intval($debug)]="selected";
+    $selOptArr=array('','','','','','');
+    $selOptArr[intval($debug)]="selected";
     print '<td><select name=debug>';
-    print "<option value='0'{$ot[0]}>なし</option>";
-    print "<option value='1'{$ot[1]}>全ﾄﾚｰｽ</option>";
-    //print "<option value='2'{$ot[2]}>DBﾄﾚｰｽ</option>";
-    //print "<option value='3'{$ot[3]}>ﾓﾆﾀｰ</option>";
-    //print "<option value='4'{$ot[4]}>SNMP</option>";
-    print "<option value='5'{$ot[5]}>PLOT</option>";
+    print "<option value='0'{$selOptArr[0]}>なし</option>";
+    print "<option value='1'{$selOptArr[1]}>全ﾄﾚｰｽ</option>";
+    //print "<option value='2'{$selOptArr[2]}>DBﾄﾚｰｽ</option>";
+    //print "<option value='3'{$selOptArr[3]}>ﾓﾆﾀｰ</option>";
+    //print "<option value='4'{$selOptArr[4]}>SNMP</option>";
+    print "<option value='5'{$selOptArr[5]}>PLOT</option>";
     print '</select></td>'; 
     print "<td><input type=text name=kanriname value={$user} readonly></td>";
     print '</tr>';
     print '<tr><th colspan=2>送信先</th><th colspan=2>送信元</th><th colspan=5>件名</th></tr>';
     print '<tr>';
-    print "<td colspan=2><input type=text name=recv size=22 value={$recv}></td>";
-    print "<td colspan=2><input type=text name=sender size=22 value={$sender}></td>";
-    print '<td colspan=6><input type=text name=subj size=39 value="'.$subj.'"></td>';
-    //print "<td colspan=6><input type=text name=subj size=39 value={$subj}></td>";
+    print "<td colspan=2><input type=text name=recv size=22 value={$mailToAddr}></td>";
+    print "<td colspan=2><input type=text name=sender size=22 value={$mailFromAddr}></td>";
+    print '<td colspan=6><input type=text name=subj size=39 value="'.$subject.'"></td>';
     print '</tr>';
     print '<tr><th colspan=9>本文</th></tr>';
     print '<tr>';
     print '<td colspan=9><input type=text name=body size=95 value="'.$body.'"></td>';
-    //print "<td colspan=9><input type=text name=body size=95 value={$body}></td>";
     print '</tr>';
     print '</table>';
     print "<input type=hidden name=user value={$user}>";

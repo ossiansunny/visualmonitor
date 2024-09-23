@@ -1,0 +1,13 @@
+240906152813: /var/www/html/kanshiphp/SnmpAutoScan.php: mysql query parse error: 
+240906153814: /var/www/html/kanshiphp/SnmpAutoScan.php: mysql query parse error: 
+240906155314: /var/www/html/kanshiphp/SnmpAutoScan.php: mysql query parse error: 
+240906160315: /var/www/html/kanshiphp/SnmpAutoScan.php: mysql query parse error: 
+240906160815: /var/www/html/kanshiphp/SnmpAutoScan.php: mysql query parse error: 
+240906161602: SnmpAutoScan.php: snmpeventlog entry
+240906161602: /var/www/html/kanshiphp/SnmpAutoScan.php: mysql query parse error: 
+240906161602: SnmpAutoScan.php: 192.168.1.155 Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,snmptype,snmpvalue,kanrisha,kanrino,confclose) values('192.168.1.155','240906161602','2','6','1234','admin','','0')
+240906163102: SnmpAutoScan.php: snmpeventlog entry
+240906163102: /var/www/html/kanshiphp/SnmpAutoScan.php: mysql query parse error: 
+240906163102: SnmpAutoScan.php: 192.168.1.155 Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,snmptype,snmpvalue,kanrisha,kanrino,confclose) values('192.168.1.155','240906163102','2','6','1234','admin','','0')
+240906163113: /var/www/html/kanshiphp/logout.php: mysql query parse error: 
+240906163113: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT_admin','240906163113','9','admin')

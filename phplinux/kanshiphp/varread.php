@@ -1,5 +1,5 @@
 <?php
-$path_kanshiphp='/var/www/html/kanshiphp';
+$path_kanshiphp=__DIR__;
 $path_kanshiphpini=$path_kanshiphp."/vmsetup/kanshiphp.ini";
 function pathget($path){
   global $path_kanshiphpini;

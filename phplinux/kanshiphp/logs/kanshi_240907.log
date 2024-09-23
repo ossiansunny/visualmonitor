@@ -1,0 +1,3 @@
+240907111441: /var/www/html/kanshiphp/AdminPage.php: mysql query parse error: 
+240907195449: /var/www/html/kanshiphp/logout.php: mysql query parse error: 
+240907195449: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,kanrisha) values('LOGOUT_admin','240907195449','9','admin')

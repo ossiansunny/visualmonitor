@@ -1,31 +1,31 @@
 <?php
 require_once "mysqlkanshi.php";
 /// レイアウトのデータ作成済フラグをリセット
-function dataflagreset($layout){
- $sql="select * from g".$layout." order by gsequence";
- $gname="";
- $gseq="";
- $dataflg="";
- $rows=getdata($sql);
- foreach ($rows as $grow){
-  $grec=explode(',',$grow);
-  $gname=$grec[0];
-  $gseq=$grec[1];
-  $dataflg=$grec[4];
-  if ($gname==""){
-    $pat="g".$gseq."%";
-    $sql="select * from ".$layout." where gshid like '".$pat."'";
-    $hrows=getdata($sql);
-    $issw=0;
-    foreach ($hrows as $hrow){
-      $hrec=explode(',',$hrow);
-      if ($hrec[1]!=""){
-        $issw=1;
+function dataflagreset($_layout){
+ $layout_sql="select * from g".$_layout." order by gsequence";
+ $grpName="";
+ $grpSeq="";
+ //$dataFlag="";
+ $layoutRows=getdata($layout_sql);
+ foreach ($layoutRows as $layoutRowsRec){
+  $layoutArr=explode(',',$layoutRowsRec);
+  $grpName=$layoutArr[0];
+  $grpSeq=$layoutArr[1];
+  //$dataFlag=$layoutArr[4];
+  if ($grpName==""){
+    $pattern="g".$grpSeq."%";
+    $layout_sql="select * from ".$_layout." where gshid like '".$pattern."'";
+    $layoutRows=getdata($layout_sql);
+    $isSw=0;
+    foreach ($layoutRows as $layoutRowsec){
+      $layoutArr=explode(',',$layoutRowsRec);
+      if ($layoutArr[1]!=""){
+        $isSw=1;
       }   
     }
-    if ($issw==0){
-      $sql="update g".$layout." set dataflag='0' where gsequence=".$gseq;
-      putdata($sql);
+    if ($isSw==0){
+      $layout_sql="update g".$_layout." set dataflag='0' where gsequence=".$grpSeq;
+      putdata($layout_sql);
     }
   }
  }

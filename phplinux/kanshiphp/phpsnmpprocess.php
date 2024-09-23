@@ -44,6 +44,7 @@ function phpsnmpprocess($host,$ostype,$community,&$data) {
   }
   return $dstr;
 }
+///
 ?>
 
 
