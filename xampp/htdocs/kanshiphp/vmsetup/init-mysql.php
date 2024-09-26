@@ -134,9 +134,15 @@ exec($cmd,$out,$rtn);
 if($rtn==1){
   echo '-------------------------------------------------------------------------'.PHP_EOL;
   echo ' mysql アクセスに失敗しました、ユーザ、データベースを手動で作成して下さい'.PHP_EOL;
-  echo ' $ mysql -h <既存ホスト> -u <既存ユーザ> -p < ./createkanshidb.sql       '.PHP_EOL; 
+  echo ' $ mysql -h <既存ホスト> -u <既存ユーザ> -p < ./createkanshidb.sql       '.PHP_EOL;
   echo ' Enter password: <既存パスワード>                                        '.PHP_EOL;
   echo ' ...                                                                     '.PHP_EOL;
+  echo ' 又、Mysql 5.7.5以前では、DROP USER IF EXISTS が使えないためエラーになる '.PHP_EOL;
+  echo ' ので、手動で対応して下さい (例)                                         '.PHP_EOL;
+  echo " mysql> grant usage on *.* to 'kanshiadmin'@'localhost' identified by 'kanshipass'".PHP_EOL;
+  echo " mysql> drop user 'kanshiadmin'@'localhost'".PH`_EOL;
+  echo " mysql> select user,host from user".PHP_EOL;
+';$                                              '.PHP_EOL;
   echo '-------------------------------------------------------------------------'.PHP_EOL;
 }else{
   echo "mysqlにuser='{$dbuser}'@'{$dbhost}'、passwd='{$dbpass}'、db='{$dbname}'を設定しました".PHP_EOL;
