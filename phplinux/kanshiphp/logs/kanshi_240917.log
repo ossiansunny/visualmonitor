@@ -1,1 +1,0 @@
-240917101317: logout.php: LOGOUT_admin Eventlog Insert sql: insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino,message) values('LOGOUT_admin','240917101317','9',' ','admin','0',' ')
