@@ -227,8 +227,8 @@ function snmpdataget($hostArr){
       ///-------------------------------------------------
       $reqlist=explode(';',$tcpport);
       $string="";
-      if ($ostype=='1' && substr($ckproc[0],0,1)=='&'){
-        /// 拡張プロセスチェック
+      if ($ostype=='1' && substr($reqlist[0],0,1)=='&'){
+        /// 拡張TCPポートチェック
         $traprtntb=snmptcpget($host);
         if ($traprtntb=='error'){
           $string='';
