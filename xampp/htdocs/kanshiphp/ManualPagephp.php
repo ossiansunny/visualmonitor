@@ -28,6 +28,7 @@ print '<tr><td class=trblk><a href="manual/layout.pdf"><span class=trblk>〇</sp
 print '<tr><td class=trblk><a href="manual/hostaddcorr.pdf"><span class=trblk>〇</span></a></td><td class=trylw>監視ホスト追加・修正</td></tr>';
 print '<tr><td class=trblk><a href="manual/weberrorlog.pdf"><span class=trblk>〇</span></a></td><td class=trylw>Webエラーログ管理</td></tr>';
 print '<tr><td class=trblk><a href="manual/initialize.pdf"><span class=trblk>〇</span></a></td><td class=trylw>監視アプリ初期化</td></tr>';
+print '<tr><td class=trblk><a href="manual/tcpportprocessextention.pdf"><span class=trblk>〇</span></a></td><td class=trylw>TCPポート・プロセス監視拡張機能</td></tr>';
 print '<tr><td class=trblk><a href="manual/VMMIBinstset.pdf"><span class=trblk>〇</a></td><td class=trylw>VMMIBインストール設定</td></tr>';
 print '<tr><td class=trblk><a href="manual/apltracelog.pdf"><span class=trblk>〇</span></a></td><td class=trylw>アプリトレースとログ管理</td></tr>';
 print '<tr><td class=trblk><a href="manual/eventlogmngt.pdf"><span class=trblk>〇</span></a></td><td class=trylw>障害管理</td></tr>';

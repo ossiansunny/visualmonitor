@@ -64,7 +64,7 @@ white-space: nowrap;
     margin: 0.5em 0;
 }
 .error { color: red; font-weight:bold}
-.alert { color: yellow; font-weight:bold}
+.alert { color: maroon; font-weight:bold}
 .notic { color: blue; font-weight:bold}
 .iro1 {font-weight:bold ; color:black; background-color:yellow; }
 .iro0 {font-weight:bold ; color:white; background-color:green; }

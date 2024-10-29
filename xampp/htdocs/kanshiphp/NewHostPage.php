@@ -66,6 +66,9 @@ function ckcnotype($_data){
   }
   return $rdata;
 }
+///
+/// 新規ホスト作成関数
+///
 function hostcreate(){
   global $pgm; 
   $user=$_GET['user'];
@@ -90,9 +93,25 @@ function hostcreate(){
   $tcpportb=cknotype($_GET['tcpport']);
   $tcpport=cksemicolon($tcpportb,$hostmei);
   $trapswt='0';
+  /// TCP拡張機能チェック 
   if (substr($tcpport,0,1) == '&'){
+    if ($ostype!='1'){
+      $msg = "#error#".$user."#ホスト".$hostmei."のWindowsでは使えません";
+      $nextpage = "NewHostPage.php";
+      branch($nextpage,$msg);
+    }
     $trapswt = '1';
-  }  
+  }
+  //if (substr($tcpport,0,1) == '%'){
+    //if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+    //  $msg = "#error#".$user."#監視マネージャがWindowsでは使えません";
+    //  $nextpage = "NewHostPage.php";
+    //  branch($nextpage,$msg);
+    //}
+    //$trapswt = '2';
+  //}
+
+  /// コミュニティチェック
   if ($action=="2" || $action=="3"){
     if ($comm==""){
       $msg = "#error#".$user."#ホスト".$hostmei."のSNMPコミュニティがありません";
@@ -110,12 +129,22 @@ function hostcreate(){
   $processb=cknotype($_GET['process']);
   $process=cksemicolon($processb,$hostmei);
   $trapswp='0';
+  /// プロセス拡張機能チェック
   if (substr($process,0,1) == '&'){
+    if ($ostype!='1'){
+      $msg = "#error#".$user."#ホスト".$hostmei."のWindowsでは使えません";
+      $nextpage = "NewHostPage.php";
+      branch($nextpage,$msg);
+    }
     $trapswp = '1';
   }
   if (substr($process,0,1) == '%'){
-    $trapswp = '2';
+    $msg = "#error#".$user."#この機能は使えません";
+    $nextpage = "NewHostPage.php";
+    branch($nextpage,$msg);
   }
+  
+  
 ///
   if ($image == ''){
     if ($ostype=='0'){
@@ -133,7 +162,7 @@ function hostcreate(){
   if ($trapswt=='1'){ // &tcpport
     $tcpportx=mb_substr($tcpport,1); //top char strip
     //writeloge($pgm,$tcpportx);
-    $status=snmptcpportset($hostmei,"remote",$tcpportx);
+    $status=snmptcpportset($hostmei,$comm,$tcpportx);
     if ($status==1){
       $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでTCPport登録失敗しました";
       $nextpage = "NewHostPage.php";
@@ -142,23 +171,24 @@ function hostcreate(){
   }
   if ($trapswp=='1'){ // $process
     $processx=mb_substr($process,1); //top char strip
-    $status=snmpprocessset($hostmei,"remote",$processx);
+    $status=snmpprocessset($hostmei,$comm,$processx);
     if ($status==1){
       $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでProcess登録失敗しました";
       $nextpage = "NewHostPage.php";
       branch($nextpage,$msg);
     } 
   }
+  /*
   if ($trapswp=='2'){ // %process
     $processx=mb_substr($process,1); //top char strip
-    $status=snmptrapset($hostmei,"remote",$processx);
+    $status=snmptrapset($hostmei,$comm,$processx);
     if ($status==1){
       $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでProcess登録失敗しました";
       $nextpage = "NewHostPage.php";
       branch($nextpage,$msg);
     } 
   }
-
+  */
   $delsql="delete from host where host='".$hostmei."'";
   putdata($delsql);  //ok
   $insql="insert into host values('".$hostmei."','".$groupname."','".$ostype."','".$result."','".$action."','".$viewname."','".$mailopt."','".$tcpport."','".$cpuLim."','".$ramLim."','".$diskLim."','".$process."','".$image."','".$comm."','".$agenthost."')";
@@ -229,9 +259,9 @@ if (isset($_GET['create'])){
   }
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　新規監視対象ホスト作成　▽</h2>';
   hostimagelist(); 
-  print '<h4>☆各項目の文字列間に空白を入れないこと（例：[abc def]はNG, [abcdef]または[abc_def]はOK）<br>';
-  print '☆監視他サイトホスト名は他サイトのAgent監視先実ホスト名を指定します<br>';
-  print '☆死活動作のNcat監視はTCPポート22を使用します</h4>';
+  print '<h4>☆各項目の入力文字列間に空白を入れないこと（例：[abc def]はNG, [abcdef]または[abc_def]はOK）<br>';
+  print '☆[監視他サイトホスト名]は他サイトのAgent監視先実ホスト名を指定します<br>';
+  print '☆死活動作の[snmp通知なし]はイベントログなし、メールなし</h4>';
   print '<form name="newhost" method="get" action="NewHostPage.php">';
   print '&emsp;<span class=kom>ホスト名：</span>&ensp;<input type="text" name="hostname" placeholder="ホスト名又はIPアドレス" size="25" maxlength="25" value="" required/>';
   $image_sql='select * from serverimage';
@@ -265,13 +295,18 @@ if (isset($_GET['create'])){
   print '</select><br>';
   print '&emsp;<span class=kom>監視他サイトホスト名：</span>&ensp;<input type="text" name="agenthost" placeholder="他監視サイトのホスト名" size="20" maxlength="20" value="" />';
   print '&emsp;&emsp;&emsp;<h4>以下、入力オプション<br>';
-  print '☆閾値の前半は警告値、後半は危険値、これを：（コロン）で区切ります<br>';
-  print '☆グラフが表示出来ますので入力して下さい。デフォルトは 80:90です</h4>';
-  print '&emsp;<span class=kom>CPU閾値：</span>&ensp;<input type="text" name="cpulimit" size="2" maxlength="5" value="80:90" />';
-  print '&emsp;<span class=kom>メモリ閾値：</span>&ensp;<input type="text" name="ramlimit" size="2" maxlength="5" value="80:90" />';
-  print '&emsp;<span class=kom>ディスク閾値：</span>&ensp;<input type="text" name="disklimit" size="2" maxlength="17" value="80:90"/><br>';
-  print '<h4>☆UNIX系監視対象サーバーのTCPポートとプロセスには、先頭に「&」を付けられます（例：&apache;sendmail）<br>';
-  print '&emsp;&emsp;ただし、監視対象サーバには、プライベートMIBのインストール、設定が必要です。</h4>';
+  print '☆CPU警告欄&emsp;&emsp;&emsp;警告値：危険値 デフォルト80;90<br>';
+  print '☆メモリ警告欄&emsp;&emsp;警告値：危険値<br>';
+  print '☆ディスク警告欄&emsp;警告値：危険値</h4>';
+  print '&emsp;<span class=kom>CPU警告：</span>&ensp;<input type="text" name="cpulimit" size="2" maxlength="5" value="80:90" />';
+  print '&emsp;<span class=kom>メモリ警告：</span>&ensp;<input type="text" name="ramlimit" size="2" maxlength="5" value="80:90" />';
+  print '&emsp;<span class=kom>ディスク警告：</span>&ensp;<input type="text" name="disklimit" size="2" maxlength="17" value="80:90"/><br>';
+  print '<h4>☆TCPポート欄&emsp;&emsp;ポート番号；区切<br>'; 
+  print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;UNIX系監視対象ホストをプライベートMIB方式で行うには先頭に「&」を付与<br>';
+  print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;監視対象ホストをNCAT方式で行うには先頭に「%」を付与<br>';
+  print '☆監視プロセス欄&emsp;プロセス名；区切<br>';
+  print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;UNIX系監視対象ホストをプライベートMIB方式で行うに先頭に「&」を付与</h4>';
+    
   print '&emsp;<span class=kom>TCPチェックポート：</span>&ensp;<input type="text" name="tcpport" placeholder="80;443;1521の様にセミコロンで区切る" size="40" maxlength="50" value="" /><br>';
   print '&emsp;<span class=kom>監視プロセス：</span>&ensp;<input type="text" name="process" placeholder="apache:sendmailの様にセミコロンで区切る、exe拡張子不要" size="60" maxlength="60" value="" />';
   print '<br><br>';

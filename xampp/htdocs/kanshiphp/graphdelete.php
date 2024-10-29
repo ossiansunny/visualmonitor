@@ -39,9 +39,9 @@ if(count($rtnPath)==3){
   $vpath_kanshiphp=$rtnPath[1];
   $vpath_mrtghome=$rtnPath[2];
 }else{
-  writeloge($pgm,"variable vpath_mrtgbase,vpath_kanshiphp,vpath_mrtghome could not get path");
+  writeloge($pgm,"vpath_mrtgbase,vpath_kanshiphp,vpath_mrtghome変数のパスが取得できません");
   $nextpage='MonitorManager.php';
-  $msg = "#error#".$user."#vpath_mmrtgbase,vpath_kanshiphp変数が取得出来ません";
+  $msg = "#error#".$user."#vpath_mmrtgbase,vpath_kanshiphp変数のパスが取得出来ません";
   $nextpage = "GraphListPage.php";
   branch($nextpage,$msg);
 }

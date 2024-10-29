@@ -4,7 +4,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 require_once "mysqlkanshi.php";
 
 //-----------------------------------
-//---- Šeí•Û‘¶î•ñæ“¾
+//---- å„ç¨®ä¿å­˜æƒ…å ±å–å¾—
 //------------------------------------
 function getmailstatus(){
   $stat_sql="select * from status";
@@ -40,7 +40,7 @@ function getmailstatus(){
 //---- get next status message
 //------------------------------------
 function getstatus($_poniter = 6){
-  /// $_poniter: mark1 mark2 mark3 ‚Ì@1 2 3‚ğw’èA0 < $_poniter > 6
+  /// $_poniter: mark1 mark2 mark3 ã®ã€€1 2 3ã‚’æŒ‡å®šã€0 < $_poniter > 6
   $result=array();  
   if($_poniter<1 or $_poniter>6){
     array_puch($result,'2','Pointer Invalid');
@@ -54,10 +54,10 @@ function getstatus($_poniter = 6){
   $val="";
   if ($_poniter==6) {
     $currentPtr=$statArr[0];
-    $markPtr=($statArr[0]*2)-1;     /// ƒŒƒR[ƒh“àƒ|ƒCƒ“ƒ^[
+    $markPtr=($statArr[0]*2)-1;     /// ãƒ¬ã‚³ãƒ¼ãƒ‰å†…ãƒã‚¤ãƒ³ã‚¿ãƒ¼
   }else{
     $currentPtr=$_poniter;
-    $markPtr=($_poniter*2)-1;  /// w’èƒ|ƒCƒ“ƒ^[
+    $markPtr=($_poniter*2)-1;  /// æŒ‡å®šãƒã‚¤ãƒ³ã‚¿ãƒ¼
   }
   $cnt=1;
   while ($cnt<=5){
@@ -82,7 +82,7 @@ function getstatus($_poniter = 6){
 }
 
 Function ptrstatus($_poniter){
-  /// $_poniter: mark1 mark2 mark3 ‚Ì@1 2 3‚ğw’èA0 < $_poniter > 
+  /// $_poniter: mark1 mark2 mark3 ã®ã€€1 2 3ã‚’æŒ‡å®šã€0 < $_poniter > 
   if($_poniter<1 or $_poniter>5){
     $_poniter=1;
   } 
@@ -95,9 +95,9 @@ Function ptrstatus($_poniter){
   // pointer key1 val1 key2 val2 key3 val3 key4 val4 key5 val5
  
   */
-/// Šeíî•ñ•Û‘¶
+/// å„ç¨®æƒ…å ±ä¿å­˜
 function setstatus($_key,$_val){
-  /// key ..•\¦F 
+  /// key ..è¡¨ç¤ºè‰² 
   /// 0: Green  1:Yellow  2:Red
   /// 
   $rtnCde=1;
@@ -116,7 +116,7 @@ function setstatus($_key,$_val){
       $rtnCde=2;
       break;
     }elseif(empty($msg) or is_null($msg) or $msg==" "){
-      /// mark#,msg# ‚Í cnt‚Æ“¯‚¶
+      /// mark#,msg# ã¯ cntã¨åŒã˜
       $stat_sql="update status set mark".strval($cnt)."='".$_key."',msg".strval($cnt)."='".$_val."'";
       putdata($stat_sql);      
       $rtnCde=0;
@@ -124,10 +124,10 @@ function setstatus($_key,$_val){
     }
     $cnt++;    
   }
-  return $rtnCde; // •Û‘¶Š®—¹=0 , •Û‘¶•s‰Â=1, Šù•Û‘¶=2
+  return $rtnCde; // ä¿å­˜å®Œäº†=0 , ä¿å­˜ä¸å¯=1, æ—¢ä¿å­˜=2
 }
 
-/// Šeíî•ñíœ
+/// å„ç¨®æƒ…å ±å‰Šé™¤
 function delstatus($_val){
   $rtnCde=1;
   $stat_sql="select * from status";

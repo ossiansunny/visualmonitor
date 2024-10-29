@@ -86,7 +86,7 @@ function mailsendevent($_eventLog,$_eventAdmin,$_eventCloseNo,$_eventConfClose,$
   if($flag==0){
     $mmsg='success '.$bodyStr.' '.$mailToAddr.' '.$mailFromAddr."\r\n";
     writelogd('sendmailevent debug',$mmsg);
-  }else{
+  }else if ($flag==1){
     $mmsg='failed '.$bodyStr.' '.$mailToAddr.' '.$mailFromAddr."\r\n";
     writeloge('sendmailevent debug',$mmsg);
   }

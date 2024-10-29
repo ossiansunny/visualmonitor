@@ -56,9 +56,6 @@ function gethostinfo($_host){
 }
 
 function layoutsform($_user,$_garr,$_sarr){
-  //var_dump($_garr);
-  //echo "<br>";
-  //var_dump($_sarr);
   /// $_garr=group array, $_sarr=host array
   ///　ホスト数の最大値をみつける
   $layout_sql='select * from glayout order by gsequence';
@@ -163,30 +160,32 @@ function layoutsform($_user,$_garr,$_sarr){
           $hostinfo=explode(',',$hostdata); 
           $action=$hostinfo[4]; 
           $result=$hostinfo[3]; 
-          $sql="select * from statistics where host='".$hostname."'"; 
-          $statdata=getdata($sql); 
-          if(empty($statdata[0]) || intval($action) < 2){
+          $stat_sql="select * from statistics where host='".$hostname."'"; 
+          $statRows=getdata($stat_sql); 
+          if(empty($statRows[0]) || intval($action) < 2){
             print '<td></td>'; /// statistics データなし,action=0,1
           }else { 
-            $statval=explode(',',$statdata[0]);
+            $statArr=explode(',',$statRows[0]);
             if($result != "1"){ /// 障害中 statistics データ表示しない
               print '<td></td>'; 
             }else if(substr($hostname,0,3)!='127'){ ///agent 127.x.x.x以外の処理
-              if ($statval[2]=='9'){ /// statisticsのgtype欄
+              if ($statArr[2]=='9'){ /// statisticsのgtype欄
                 $agst='aprob';
                 print "<td class=snmp align=center><table><tr><td class={$agst} align=center>standby</td></tr></table></td>";
+                $msg=$hostname.' set snmp standby ';
+                writelogd('layousform.php',$msg);
               } else {
-                $cb1=jdgnwc($statval[3]); ///cpu
-                $cb2=jdgnwc($statval[4]); ///ram
+                $cb1=jdgnwc($statArr[3]); ///cpu
+                $cb2=jdgnwc($statArr[4]); ///ram
                 /// statval[5]はagent 'ok'か'ng'
-                $cb3=jdgnwc($statval[6]);  ///disk
+                $cb3=jdgnwc($statArr[6]);  ///disk
                 /// 以下、stat="" host="any" なら green表示
-                $cb4=jdgnc($statval[7],$hostinfo[11]);  ///process
-                $cb5=jdgnc($statval[8],$hostinfo[7]);  ///port            
+                $cb4=jdgnc($statArr[7],$hostinfo[11]);  ///process
+                $cb5=jdgnc($statArr[8],$hostinfo[7]);  ///port            
                 print "<td class=snmp align=center><table border=0><tr><td class={$cb1}>c</td><td class={$cb2}>r</td><td class={$cb3}>d</td><td class={$cb4}>p</td><td class={$cb5}>t</td></tr></table></td>";
               }
             }else{ /// 127.x.x.x  Managerの処理
-              if($statval[5]=='ok'){ /// statisticsのagent欄
+              if($statArr[5]=='ok'){ /// statisticsのagent欄
                 $amsg='No Problem ';
                 $agst='snorm';
               }else{

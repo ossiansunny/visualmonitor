@@ -31,7 +31,10 @@ if(!isset($_GET['param'])){
   if(count($vpathArr)==1){
     if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
       /// xampp apache      
-      $currErrLog="error.log";
+      $now=new DateTime();
+      $ymd=$now->format("Ymd");
+      $currErrLog="error_".$ymd.".log";
+      //$currErrLog="error.log";
       $currPath = $vpath_weblog."\\".$currErrLog;      
       if (file_exists($currPath)){
         $contents = file($currPath , FILE_IGNORE_NEW_LINES);
@@ -82,8 +85,6 @@ if(!isset($_GET['param'])){
       }else{
         print "<h4>$currpath</h4>";
         print "<h3>表示すべき上記ファイルがありません、エラーが無いか又はマニュアルを参照して下さい</h3>";
-        print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
-        print '</body></html>';
       }
     }
   }else{

@@ -72,7 +72,7 @@ if (isset($_GET['delete'])){
       putdata($event_sql);
       $nextpage='EventLogPage.php';
       $alertMsg='#notic#'.$user.'#データが正常に範囲削除されました';
-      writeloge($pgm,$alertMsg.' '.$delsql); 
+      writelogd($pgm,$alertMsg.' '.$delsql); 
       branch($nextpage,$alertMsg);
     }else{
       $nextpage='EventLogPage.php';

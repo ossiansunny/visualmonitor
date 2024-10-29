@@ -58,7 +58,7 @@ if ($diffTime > intval($monitorInterval)*3){
       writelogd($pgm,'shell_exec '.$cmd1);
       $cmd2=$kanshibin.'/plotgraph.sh '.$htdocs;
       $out2 = shell_exec($cmd2);
-      writeloge($pgm,'shell_exec '.$cmd2);
+      writelogd($pgm,'shell_exec '.$cmd2);
     }else{
       $msg="Invalid path , Check kanshiphp.ini";
       writeloge($pgm,$msg);

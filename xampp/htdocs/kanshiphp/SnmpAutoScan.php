@@ -3,26 +3,30 @@ require_once "mysqlkanshi.php";
 require_once "snmpdataget.php";
 require_once "mailsendsnmp.php";
 require_once "mailsendany.php";
+require_once "phpsnmpprocessset.php";
+require_once "phpsnmptcpportset.php"; 
 
 $statisupsw="0";
 $snmpGType="0";
 $kanriuser="";
+$host_actioni="";
 $pgm='SnmpAutoScan.php';
-//// debug host
-$debughost = '255.255.255.255';
+
 ////
 function agentprocessset($host,$community,$process){
-  $rtncd=0;
   if (substr($process,0,1)=='&'){                    // &httpd;sshd
     $processx=substr($process,1,strlen($process)-1); // httpd;sshd
     $rtncd=snmpprocessset($host,$community,$processx);
   }
-  if (substr($h_process,0,1)=='%'){                  // %httpd;sshd
-    $processx=substr($process,1,strlen($process)-1); // httpd;sshd
-    $rtncd=snmptrapset($host,$community,$processx);
-  }  
-  return $rtncd;
-  
+  return 0;
+}
+
+function agenttcpportset($host,$community,$tcplist){
+  if (substr($tcplist,0,1)=='&'){                    // &httpd;sshd
+    $tcplistx=substr($tcplist,1,strlen($tcplist)-1); // httpd;sshd
+    $rtncd=snmptcpportset($host,$community,$tcplistx);
+  }
+  return 0;
 }
 
 function nullstatis($statis){
@@ -44,40 +48,45 @@ function snmpeventlog($hostrec,$stat,$snmpt,$snmpv,$stat2){
   global $snmpGType;
   global $kanriuser;
   global $pgm;
-  $msg="snmpeventlog entry";
-  writelogd($pgm,$msg);
-  ///
-  if ($stat=="1"){
-    $statisupsw="3";    /// statistics snmptype normal 
-  }elseif ($stat=="2"){
-    $statisupsw="4";    /// statistics snmptype alert
-  } 
-  /// event log
-  if (!($snmpGType=='5' or $snmpGType=='6')){
-    /// $stat=2でgtype=5のとき、confclose=2にする
-    $cfcl='0';
-    if ($stat=='2' and $snmpGType=='5'){
-      $cfcl='2';
+  global $host_action;
+  if ( $host_action!="3" ) {
+    $msg="snmpeventlog entry";
+    writelogd($pgm,$msg);
+    ///
+    if ($stat=="1"){
+      $statisupsw="3";    /// statistics snmptype normal 
+    }elseif ($stat=="2"){
+      $statisupsw="4";    /// statistics snmptype alert
+    } 
+    /// event log
+    if (!($snmpGType=='5' or $snmpGType=='6')){
+      /// $stat=2でgtype=5のとき、confclose=2にする
+      $cfcl='0';
+      if ($stat=='2' and $snmpGType=='5'){
+        $cfcl='2';
+      }
+      $eventtime = date('ymdHis');
+      $hostmei=$hostrec[0];
+      $eventt=strval(intval($snmpt)+1);
+      $insql = "insert into eventlog (host,eventtime,eventtype,snmptype,snmpvalue,kanrisha,kanrino,confclose) values('".$hostmei."','".$eventtime."','".$stat."','".$eventt."','".$snmpv."','" .$kanriuser. "','','" .$cfcl. "')";
+      putdata($insql); 
+      $msg = $hostmei . " Eventlog Insert sql: " .$insql;
+      writelogd($pgm,$msg);    
     }
-    $eventtime = date('ymdHis');
-    $hostmei=$hostrec[0];
-    $eventt=strval(intval($snmpt)+1);
-    $insql = "insert into eventlog (host,eventtime,eventtype,snmptype,snmpvalue,kanrisha,kanrino,confclose) values('".$hostmei."','".$eventtime."','".$stat."','".$eventt."','".$snmpv."','" .$kanriuser. "','','" .$cfcl. "')";
-    putdata($insql); 
-    $msg = $hostmei . " Eventlog Insert sql: " .$insql;
-    writelogd($pgm,$msg);    
   }
-  
 }
 ///
 function snmpmailsend($hostrec,$stat,$snmpt,$snmpv,$stat2){
   global $pgm;
-  $mailopt=$hostrec[6];
-  if ($mailopt =='1'){
-    $rtcd=mailsendsnmp($hostrec,$snmpt,$snmpv,$stat2);
-    if ($rtcd==1){
-      $mailerror='イベント変化のメール失敗、メールサーバをチェック';
-      writeloge($pgm,$mailerror);
+  global $host_action;
+  if ( $host_action != "3") {
+    $mailopt=$hostrec[6];
+    if ($mailopt =='1'){
+      $rtcd=mailsendsnmp($hostrec,$snmpt,$snmpv,$stat2);
+      if ($rtcd==1){
+        $mailerror='イベント変化のメール失敗、メールサーバをチェック';
+        writeloge($pgm,$mailerror);
+      }     
     }
   }
 }
@@ -150,7 +159,7 @@ for ($i=0;$i<$c;$i++){
     $snmpGType = '';
     if (empty($statRows)) {
       ///
-      /// 無ければ作成,Agentへプロセスセット
+      /// 無ければ作成,Agentへプロセス、ポートセット
       $stat_sql="insert into statistics (host,tstamp,gtype) values('".$host."','".$currentTimeStamp."','9')";
       putdata($stat_sql); 
       $logMsg = 'No statistics record then create new record: ' . $insql;
@@ -160,13 +169,15 @@ for ($i=0;$i<$c;$i++){
       $statArr[1] = $currentTimeStamp;
       $snmpGType = '9';
       agentprocessset($host,$process,$community); 
+      agenttcpportset($host,$tcpPort,$community);
     } else {
       ///
-      /// あれば読み込み,gtypr='9'ならばAgentへプロセスセット
+      /// あれば読み込み,gtypr='9'ならばAgentへプロセス、ポートセット
       $statArr = explode(',',$statRows[0]);
       $snmpGType=$statArr[2];
       if ($snmpGType=='9'){
         agentprocessset($host,$process,$community);
+        agenttcpportset($host,$tcpPort,$community);
       }
     }
     //////////////////////////////////////////////////////////////////
@@ -191,8 +202,8 @@ for ($i=0;$i<$c;$i++){
     }elseif($snmpGType=="0"){
       $host_result="1";
     }
-    if ($host_action=="2" && $host_result=="1"){ /// host recordのsnmp監視 and ping結果OK
-      /// hostdata Action=2(snmp) and Result=1(ping結果OK)
+    if (($host_action=="2" or $host_action=="3") and $host_result=="1"){ /// host recordのsnmp監視 and ping結果OK
+      /// hostdata Action=2(snmp) or Action=3(snmp通知なし) and Result=1(ping結果OK)
       $s_host = $statArr[0];
       $s_stamp = $statArr[1];      
       $s_cpuval = nullstatis($statArr[3]);  /// statistics nall値の場合　'empty'を入れる
@@ -212,19 +223,10 @@ for ($i=0;$i<$c;$i++){
       $snmpOldValue[3]=$s_diskval; //disk
       $snmpOldValue[4]=$s_process; //process
       $snmpOldValue[5]=$s_tcpport; //tcpport
-//// debug
-//if ($host==$debughost){
-//$snmpOldValue=array($debughost,"n:20","n:30","n:40","oracle","1521;403");
-//}
 ////
       /// snmpデータ取得 start ////////////////////////////////////////////////
       $snmpNewValue = snmpdataget($hostArr); 
       /// snmpデータ取得 end   ////////////////////////////////////////////////
-////
-//// debug
-//if ($host==$debughost){
-//$snmpNewValue=array($debughost,"w:50","n:30","w:40","oracle","1521;403");
-//}
 ////
       /// snmpdatagetでのエラーは各項目「unknown」が返される ////////////
       ///////////////////////////////////////////////////////////////////
@@ -243,39 +245,14 @@ for ($i=0;$i<$c;$i++){
           $snmpNewValue[$cc]=$snmpOldValue[$cc];
         }
       }
-      // ping 又はsnmp エラーで値不定のログ出力
-
-//// debug
-if ($host==$debughost){
-//$logMsg=$host.' cpulim='.$cpuLim.' old_cpulim='.$snmpOldValue[1].' new_cpulim='.$snmpNewValue[1];
-//writeloge($pgm,$logMsg);
-//$logMsg=$host.' ramlim='.$ramLim.' old_ramlim='.$snmpOldValue[2].' new_ramlim='.$snmpNewValue[2];
-//writeloge($pgm,$logMsg);
-//$logMsg=$host.' disklim='.$diskLim.' old_disklim='.$snmpOldValue[3].' new_disklim='.$snmpNewValue[3];
-//writeloge($pgm,$logMsg);
-$logMsg=$host.' process='.$process.' old_process='.$snmpOldValue[4].' new_process='.$snmpNewValue[4];
-writeloge($pgm,$logMsg);
-$logMsg=$host.' tcpport='.$tcpPort.' old_rcpport='.$snmpOldValue[5].' new_tcpport='.$snmpNewValue[5];
-writeloge($pgm,$logMsg);
-}
-////
-      
       $snmpOldCount = count($snmpOldValue);  ///snmpOldValue=statistics, snmpNewValue=測定値
 
       for ($scc=1;$scc<$snmpOldCount;$scc++){
         $old_val=$snmpOldValue[$scc];
         $new_val=$snmpNewValue[$scc]; 
-//// debug
-//if ($host==$debughost){
-//writeloge($pgm,$host.' scc='.strval($scc).' old='.$old_val.' new='.$new_val);
-//}
 ////
         if (substr($old_val,0,1) != substr($new_val,0,1)){ /// 各項目比較
           if ($scc<4){ ///scc:1 cpu, scc:2 ram, scc:3 disk　処理
-//// debug
-//if ($host==$debughost and $scc==1){
-//writeloge($pgm,$host.' scc='.strval($scc).' old='.$old_val.' new='.$new_val);
-//}
 ////
             if ($old_val=="empty" and substr($new_val,0,1)=="n"){  
               snmpeventlog($hostArr,"1",strval($scc),$new_val,"1"); 
@@ -300,10 +277,6 @@ writeloge($pgm,$logMsg);
               snmpmailsend($hostArr,"2",strval($scc),$new_val,"2");
             }             
           }else{ /// scc:4=process or scc:5==port 処理
-//// debug
-if ($host==$debughost){
-writeloge($pgm,$host.' process or port scc='.strval($scc).' old='.$old_val.' new='.$new_val );
-}
 ////
             if ($old_val=="empty" and $new_val=="allok"){ 
               snmpeventlog($hostArr,"1",strval($scc),$new_val,"1"); 
@@ -324,11 +297,6 @@ writeloge($pgm,$host.' process or port scc='.strval($scc).' old='.$old_val.' new
           } 
 
         } else {  /// 前回と今回が同じ状態の処理
-//// debug
-if ($host == $debughost){
-writeloge($pgm,$host.' same status scc='.strval($scc).' old='.$old_val.' new='.$new_val );
-
-}
 ////
           $currentTimeStamp = date('ymdHis');
           $eventType=''; 

@@ -90,7 +90,7 @@ function eventlog($_hostArr,$_cde){
   writelogd($pgm,$msg);
   putdata($event_sql);  
 }
-
+/*
 function mailservercheck(){
   $mailSvr_sql='select * from mailserver';
   $mailRows=getdata($mailSvr_sql);
@@ -116,7 +116,8 @@ function mailservercheck(){
     putdata($mailSql);
   }
 }
-
+*/
+/*
 function ncatping($_host,$_action){
   $rtnCde=0;
   if ($_action=="5"){
@@ -127,6 +128,7 @@ function ncatping($_host,$_action){
   //echo $_host.' action='.$_action.' done rc='.$rtnCde.'<br>';
   return $rtnCde;
 }
+*/
 //----------------viewscan-------------------------------
 //--------------------------------------------------------
 function viewscan(){
@@ -150,13 +152,14 @@ function viewscan(){
       $c_mailopt=$hostArr[6];
       $c_tcpport=$hostArr[7];
       $c_process=$hostArr[11];
+      $c_comm=$hostArr[13];
       ///        
       /// action 1(ping),2(snmp),3(snmp),4(agent)の場合 
       ///
       if ($c_action=='1' or $c_action=="2" or $c_action=="3" or $c_action=="4" or $c_action=="5"){  // action=1(ping),2(snmp),3(snmp通知なし),4(agent監視)
         /// 前回結果 正常　result=1
         if ($c_result=='1'){  
-          $rtnCde = ncatping($c_host,$c_action); // winhostping(windows command)
+          $rtnCde = hostping($c_host); // winhostping(windows command)
           $msg1="viewscan: ".$c_host. " result=1 new action rc=:".strval($rtnCde);
           if ($rtnCde != 0){ /// ping NG
             resultdbupdate($c_host,"2"); ///ホストデータ更新 result=2
@@ -183,7 +186,7 @@ function viewscan(){
           }  
         /// 前回結果 異常　result 0,2
         }else if ($c_result=='0' or $c_result=='2'){ /// result=0 or 2
-          $rtnCde = ncatping($c_host,$c_action);  /// winhostping(winddows command)
+          $rtnCde = hostping($c_host);  /// winhostping(winddows command)
           $msg1="viewscan: ".$c_host. " result=2 new action rc=".strval($rtnCde);
           writelogd($pgm,$msg1);
           /// ping ok
@@ -200,12 +203,12 @@ function viewscan(){
             /// tcpportの&があればsnmpset
             if (substr($c_tcpport,0,1) == '&'){
               $c_tcpportx=mb_substr($c_tcpport,1); //top char strip
-              snmptcpportset($hostmei,"remote",$c_tcpportx);
+              snmptcpportset($c_host,$c_comm,$c_tcpportx);
             }
             /// processの&があればsnmpset 
             if (substr($c_process,0,1) == '&'){
               $c_processx=mb_substr($c_process,1); //top char strip
-              snmpprocessset($hostmei,"remote",$c_processx);
+              snmpprocessset($c_host,$c_comm,$c_processx);
             }
             /// vmmib end
 

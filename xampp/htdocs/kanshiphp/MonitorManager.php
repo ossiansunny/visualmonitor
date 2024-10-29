@@ -87,7 +87,7 @@ if(!isset($_GET['param'])){
   print '<html><head>';
   print "<meta http-equiv='Refresh' content={$interval}>";
   print '<link rel="stylesheet" href="css/manager.css">';
-  print '</head><body>';
+  print '</head><body class=frostedright>';
   print '<p style="position: relative;">';
   print "<img src={$titleImage} width='600' height='50' alt='Title' /><br />";
   print "<span style='position: absolute; top: 5px; left: 5px; width: 600px; color: white; font-size: 25px; font-weight: bold'>{$title}</span>";

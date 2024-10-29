@@ -17,7 +17,7 @@ if(!isset($_GET['param'])){
   print '<html><head><meta>';
   print '<link rel="stylesheet" href="css/kanshi1_py.css">';
   print '</head><body>';
-  print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　プロットトレースログ　▽</h2>';
+  print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　プロット追跡ログ　▽</h2>';
   $lineNum = 40;   /// 表示する行数
   print "<h3>最新 {$lineNum} 行</h3>";
   $vpath_plothome="";

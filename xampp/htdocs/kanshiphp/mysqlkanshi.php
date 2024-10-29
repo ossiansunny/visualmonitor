@@ -7,21 +7,21 @@ $kanshi_pass="kanshipass";
 $kanshi_db="kanshi";
 $kanshiDir=__DIR__;
 //-------------------------------------------------
-//---------- ƒf[ƒ^ƒx[ƒX‚ÖÚ‘± -------------------
+//---------- ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã¸æ¥ç¶š -------------------
 //-------------------------------------------------
 function openconnect(){
   global $kanshi_host, $kanshi_user, $kanshi_pass,$kanshi_db;
   $dbc = mysqli_connect($kanshi_host,$kanshi_user,$kanshi_pass);
   if ($dbc) {
     $db_sel = mysqli_select_db($dbc,$kanshi_db);
-    /// $db_sel‚ÍAbool(true) ‚Ü‚½‚Í bool(false)
+    /// $db_selã¯ã€bool(true) ã¾ãŸã¯ bool(false)
     if($db_sel){
-      return $dbc; // ³í‚Ìê‡AƒIƒuƒWƒFƒNƒg‚ğ–ß‚·
+      return $dbc; // æ­£å¸¸ã®å ´åˆã€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æˆ»ã™
     }else{
-      return $db_sel; // ˆÙí‚Ìê‡Afalse‚ğ–ß‚·
+      return $db_sel; // ç•°å¸¸ã®å ´åˆã€falseã‚’æˆ»ã™
     }
   }else{
-    return $dbc; // Ú‘±ƒGƒ‰[‚Å@false‚ğ•Ô‚·
+    return $dbc; // æ¥ç¶šã‚¨ãƒ©ãƒ¼ã§ã€€falseã‚’è¿”ã™
   }
   
 }  
@@ -33,7 +33,7 @@ function default_str(String $raw_str = null, String $default = "") : String{
   return $default;
 }
 //-----------------------------------------------------
-// readlogŠÖ”
+// readlogé–¢æ•°
 //-----------------------------------------------------
 function readlog(){
   global $kanshiDir;
@@ -53,7 +53,7 @@ function readlog(){
 }
 
 //-----------------------------------------------------
-// writelogeŠÖ”i–³ğŒ‚ÉƒƒO‚ğo—Íj
+// writelogeé–¢æ•°ï¼ˆç„¡æ¡ä»¶ã«ãƒ­ã‚°ã‚’å‡ºåŠ›ï¼‰
 //-----------------------------------------------------
 function writeloge($_pgm,$_msg) {
   global $kanshiDir;
@@ -66,7 +66,7 @@ function writeloge($_pgm,$_msg) {
   fclose($fp);
 }
 //-----------------------------------------------------
-// writelogdŠÖ”iŠÇ—î•ñ‚ÌƒfƒoƒbƒO—L‚è‚Ìê‡ƒƒO‚ğo—Íj
+// writelogdé–¢æ•°ï¼ˆç®¡ç†æƒ…å ±ã®ãƒ‡ãƒãƒƒã‚°æœ‰ã‚Šã®å ´åˆãƒ­ã‚°ã‚’å‡ºåŠ›ï¼‰
 //-----------------------------------------------------
 function writelogd($_pgm,$_msg) {
   $adminRows=getdata("select debug from admintb");
@@ -76,7 +76,7 @@ function writelogd($_pgm,$_msg) {
   }  
 }
 //-----------------------------------------------------
-// writelogŠÖ”iŠÇ—î•ñ‚ÌƒfƒoƒbƒODB‚Ìê‡ƒƒOo—Íj
+// writelogé–¢æ•°ï¼ˆç®¡ç†æƒ…å ±ã®ãƒ‡ãƒãƒƒã‚°DBã®å ´åˆãƒ­ã‚°å‡ºåŠ›ï¼‰
 //-----------------------------------------------------
 function writelog($_pgm,$_msg) {
   $adminRows=getdata("select debug from admintb");
@@ -86,7 +86,7 @@ function writelog($_pgm,$_msg) {
   }
 }
 //---------------------------------------
-//----- sql select‚Åƒf[ƒ^‚ğ“Ç‚Ş---------
+//----- sql selectã§ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã‚€---------
 //---------------------------------------
 function getdata($_sql) {
   $dbg = debug_backtrace();
@@ -124,7 +124,7 @@ function getdata($_sql) {
 }
 
 // ----------------------------------------
-// -----SQL insert, update, delete‚ğÀs---
+// -----SQL insert, update, deleteã‚’å®Ÿè¡Œ---
 //-----------------------------------------
 function putdata($_sql) {  
   $dbg = debug_backtrace();
@@ -138,7 +138,7 @@ function putdata($_sql) {
   }else{
     $res = mysqli_query($dbc,$_sql);
     if (mysqli_error($dbc)) {
-      $msg="mysql query parse error: ".$sql; //•¶–@‚ÌŠÔˆá‚¢ rtn=-1
+      $msg="mysql query parse error: ".$sql; //æ–‡æ³•ã®é–“é•ã„ rtn=-1
       writeloge($pgm,$msg);
       $rtn = -1;
     } else {
@@ -147,10 +147,10 @@ function putdata($_sql) {
       mysqli_close($dbc);
     }
   }
-  return $rtn; // where‚ÌŠY“–‚È‚µ‚à 0‚Å‹A‚é
+  return $rtn; // whereã®è©²å½“ãªã—ã‚‚ 0ã§å¸°ã‚‹
 }
 //-------------------------------------------------------------------
-//---  Writelog‚È‚µ‚Ìcreate table,insert, update, delete ‚ğÀs---
+//---  Writelogãªã—ã®create table,insert, update, delete ã‚’å®Ÿè¡Œ---
 //--------------------------------------------------------------------
 function create($_sql) {
   $dbc=openconnect();
@@ -166,7 +166,7 @@ function create($_sql) {
       mysqli_close($dbc);
     }
   }
-  return $rtn; // where‚ÌŠY“–‚È‚µ‚à 0‚Å‹A‚é
+  return $rtn; // whereã®è©²å½“ãªã—ã‚‚ 0ã§å¸°ã‚‹
 }
 
 /*

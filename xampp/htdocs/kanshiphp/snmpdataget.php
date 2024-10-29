@@ -4,9 +4,18 @@ require_once "phpsnmptcpopen6.php";
 require_once "phpsnmpprocess.php";
 require_once "phpsnmpdiskram.php";
 require_once "phpsnmpcpuload.php";
+require_once "hostncat.php";
+//require_once "winhostncat.php";
+require_once "phpsnmpprocessset.php";
+require_once "phpsnmptcpportset.php";
 ///
 $pgm="snmpdataget.php";
 ///
+function deldqt($target){
+  $rtnval=rtrim(ltrim($target,'"'),'"');
+  return $rtnval;
+}
+/*
 function snmptrapget($host){
   $sql="select host,process from trapstatistics where host='".$host."'";
   $rows=getdata($sql);
@@ -17,11 +26,38 @@ function snmptrapget($host){
   }
   return $rtndd;
 }
+*/
+/// snmptcpport ncat拡張機能  
+function snmptcpgetext($host,$portlist){
+  $portArr=explode(';',$portlist);
+  //var_dump($portArr);
+  $rtnList="";
+  $rtnCde=0;
+  foreach ($portArr as $port){
+    //echo '<br>'.$port.' ';
+    //if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+    //  $rtnCde=winhostncat($host,$port);
+    //}else{
+      $rtnCde=hostncat($host,$port);
+    //}
+    if ($rtnCde!=0) {
+      $rtnList=$rtnList.$port.';';
+    }
+  }
+  $rtnList=rtrim($rtnList,";");
+  if ($rtnList=='') {
+    $rtnList="allok";
+  }
+  //echo '<br>'.$rtnList;
+  return $rtnList;  
+}
 
-function snmptcpget($host){
-  $getvalue = snmp2_get($host,'remote',".1.3.6.1.4.1.999999.1.3.0",1000000,1);
+function snmptcpget($host,$comm){
+  global $pgm;
+  $getvalue = snmp2_get($host,$comm,".1.3.6.1.4.1.999999.1.3.0",1000000,1);
   if (! $getvalue){
     $rtnval="error";
+    writelogd("snmpdataget.php",$host." php snmp2_get port error return");
   }else{
     if ($getvalue=="\"\""){
       $rtnval="allok";
@@ -29,16 +65,22 @@ function snmptcpget($host){
       $rtnarr=explode(':',$getvalue);
       $rtnvalsp=ltrim(rtrim(trim($rtnarr[1]),'"'),'"');
       $rtnval=str_replace(' ',';',$rtnvalsp);
-      return $rtnval;
     }
   }
+  /// $rtnval='error' snmp2_getに問題ある場合
+  /// $rtnval='empty' 999999.1.3.0 が空(setされていない、設定もれ)
+  /// $rtnval='allok' 全てのポートが開いている
+  /// $rtnval='xx;yy' xxとyyポートが閉じている  
+  //echo 'rtnval:'.$rtnval;
   return $rtnval;  
 }
 
-function snmpprocget($host){
-  $getvalue = snmp2_get($host,'remote',".1.3.6.1.4.1.999999.1.5.0",1000000,1);
+function snmpprocget($host,$comm){
+  global $pgm;
+  $getvalue = snmp2_get($host,$comm,".1.3.6.1.4.1.999999.1.5.0",1000000,1);
   if (! $getvalue){
     $rtnval="error";
+    writelogd("snmpdataget.php",$host." php snmp2_get process error return");
   }else{
     if ($getvalue=="\"\""){
       $rtnval="allok";
@@ -49,6 +91,10 @@ function snmpprocget($host){
       return $rtnval;
     }
   }
+  /// $rtnval='error' snmp2_getに問題ある場合
+  /// $rtnval='empty' 999999.1.5.0 が空(setされていない、設定もれ)
+  /// $rtnval='allok' 全てのプロセスが動作している
+  /// $rtnval='xx;yy' xxとyyプロセスが動作していない
   return $rtnval;  
 }
 
@@ -68,13 +114,13 @@ function snmpdataget($hostArr){
   $ramlim=$hostArr[9];
   $disklim=$hostArr[10];
   $process=$hostArr[11]; //top & is use trap data
+  $community=$hostArr[13];
   if ($hostArr[13]=='' || is_null($hostArr[13])){
     $community='public';
-  }else{
-    $community=$hostArr[13];
   }
   $snmparray = array('','','','','','');
   $snmparray[0]=$host;
+  
   if ($ostype == "0" || $ostype == "1"){ 
     ///------------------------------------------------------------------
     /// ostype=1はWindows ostype=2はUnix
@@ -186,29 +232,32 @@ function snmpdataget($hostArr){
       //----------------------------------------------------
       // ------windows / unix process　同じ処理---------
       //----------------------------------------------------
-      $ckproc=explode(';',$process);
       $string="";
-      if ($ostype=='1' && substr($ckproc[0],0,1)=='&'){
+      if ($ostype=='1' && substr($process,0,1)=='&'){
         /// 拡張プロセスチェック unix ostype=1 && processtop=&
-        $traprtntb=snmpprocget($host);
-        if ($traprtntb=='error'){
-          $string='';
-        }else{         
-          $string=$traprtntb;
+        $rtntb=snmpprocget($host,$community);
+        if ($rtntb=='error'){
+          $string='unkown';
+        }else if($rtntb=='empty'){
+          $rtnCde=snmpprocessset($host,$community,substr($process,1));
+          if ($rtnCde==1){
+            writeloge($pgm,"host:".$host." community:".$community." process snmpset failed");
+          }
+          $string='unkown';
+        }else{
+          $string=$rtntb;
         }
         writelogd($pgm,$host."snmpprocget return extend process ".$string);
-      }else if ($ostype=='1' && substr($ckproc[0],0,1)=='%'){
+      /*
+      }else if ($ostype=='1' && substr($process,0,1)=='%'){
         /// tラッププロセスチェック unix ostype=1 && processtop=%
         $traprtntb=snmptrapget($host);
         $string=$traprtntb;
         writelogd($pgm,$host."snmptrapget return trapped process ".$string);
-        
+      */  
       }else{        
-        /// snmpprocess チェック
-        $reqlist=array();
-        foreach ($ckproc as $ckitem){
-          array_push($reqlist,$ckitem);
-        }
+        /// 基本プロセスチェック　snmp応答プロセスとチェックプロセス配列(reqlist)比較
+        $reqlist=explode(';',$process);
         $rtntb=phpsnmpprocess($host,$ostype,$community,$reqlist);
         if ($rtntb=='error'){
           $string='unknown';
@@ -217,32 +266,41 @@ function snmpdataget($hostArr){
         }
         writelogd($pgm,$host."phpsnmpprocess return normal process ".$string);
       }
-      $snmparray[4]=$string;
-      
+      $snmparray[4]=$string;      
     }
 
     if ($tcpport != ''){ 
       ///-------------------------------------------------
       /// --------windows / unix port　同じ処理-------
       ///-------------------------------------------------
-      $reqlist=explode(';',$tcpport);
       $string="";
-      if ($ostype=='1' && substr($reqlist[0],0,1)=='&'){
-        /// 拡張TCPポートチェック
-        $traprtntb=snmptcpget($host);
-        if ($traprtntb=='error'){
-          $string='';
-        }else{         
-          $string=$traprtntb;
-          //writeloge($pgm,"extend tcpport ".$string);
+      if (substr($tcpport,0,1)=='%'){
+        //echo '<br>'.$tcpport;
+        /// 拡張 NCAT TCPポートチェック
+        $rtntb=snmptcpgetext($host,substr($tcpport,1));
+        $string=$rtntb;
+      }else if ($ostype=='1' and substr($tcpport,0,1)=='&'){
+        /// 拡張 VMMIB TCPポートチェック
+        $rtntb=snmptcpget($host,$community);
+        if ($rtntb=='error'){
+          $string='unkown';
+        }else if($rtntb=='empty'){
+          $rtnCde=snmptcpportset($host,$community,substr($tcpport,1));
+          if ($rtnCde==1){
+            writeloge($pgm,"host:".$host." community:".$community." tcp port snmpset failed");
+          }
+          $string='unkown';
+        }else{
+          $string=$rtntb;
         }
-      }else{  
-        if ($ostype=='0'){ 
+      }else{
+        /// 基本TCPポートチェック  
+        $reqlist=explode(';',$tcpport);
+        if ($ostype=='0'){ /// windows tcpport get
           $rtntb=phpsnmptcpopenwin($host,$community,$reqlist);
-        } else {
+        } else {           /// unix/linux tcpport get
           $rtntb=phpsnmptcpopen($host,$community,$reqlist);
-        }
-      
+        }      
         if ($rtntb=='error'){
         /// snmp no response
           $string='unknown'; 

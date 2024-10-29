@@ -17,8 +17,8 @@ function mailsendsnmp($_hostArr,$_snmpType,$_snmpValue,$_updown){
   $host=$_hostArr[0];
   $viewName=$_hostArr[5];
   $snmpName=""; 
-  $subj0='Problem';
-  $subj1='Alert';
+  $subj0='異常';
+  $subj1='警告';
   $noticeType='ALERT';
   $stat='';
   $info='';  
@@ -46,8 +46,8 @@ function mailsendsnmp($_hostArr,$_snmpType,$_snmpValue,$_updown){
           $stat='Monitoring normal';
         }
         $info=$_wcMark[1].'% normal';
-        $subj0='Information';
-        $subj1='Info';
+        $subj0='正常';
+        $subj1='通知';
         $noticeType='INFO';
       }
       if($_snmpType=='1'){
@@ -63,8 +63,8 @@ function mailsendsnmp($_hostArr,$_snmpType,$_snmpValue,$_updown){
       if($_snmpValue=='' || $_snmpValue=='allok'){
         $stat='All Process running';
         $info='Process normal';
-        $subj0='Information';
-        $subj1='Info';
+        $subj0='正常';
+        $subj1='通知';
         $noticeType='INFO';
       }else{
         $stat='Process not running';
@@ -76,8 +76,8 @@ function mailsendsnmp($_hostArr,$_snmpType,$_snmpValue,$_updown){
       if($_snmpValue=='' || $_snmpValue=='allok'){
         $stat='No TCP Port closing';
         $info='TCP Port Normal';
-        $subj0='Information';
-        $subj1='Info';
+        $subj0='正常';
+        $subj1='通知';
         $noticeType='INFO';
       }else{
         $stat='TCP Port closing';
@@ -121,20 +121,23 @@ function mailsendsnmp($_hostArr,$_snmpType,$_snmpValue,$_updown){
     $subj2=$viewName;
     $subj3='SNMP'; /// PING|SERVICE
     $subj4=$stat;
-    $title='**'.$subj0.' Service ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
+    $title='**'.$subj0.' ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
+    //$title='**'.$subj0.' Service ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
   }
     
   $flag=phpsendmail("", "", $mailFromAddr, $mailToAddr, $title, $bodystr);
   if($flag==0){
-    $mmsg='success '.$bodystr.' '.$mailToAddr.' '.$mailFromAddr."\r\n";
-    writelogd('mailsendsnmp debug',$mmsg);
+    $mmsg='送信完了 '.$bodystr.' '.$mailToAddr.' '.$mailFromAddr."\r\n";
+    writelogd($pgm,$mmsg);
     //print $mmsg;
     return 0;
-  }else{
-    $mmsg='failed '.$bodystr.' '.$mailToAddr.' '.$mailFromAddr."\r\n";
+  }else if($flag==1){
+    $mmsg='送信失敗 '.$bodystr.' '.$mailToAddr.' '.$mailFromAddr."\r\n";
     //print $mmsg;
-    writelogd('mailsendsnmp debug',$mmsg);
+    writeloge($pgm,$mmsg);
     return 1;
+  }else{
+    return 2;
   }
 }
 ?>

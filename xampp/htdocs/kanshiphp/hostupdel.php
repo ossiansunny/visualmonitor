@@ -111,8 +111,8 @@ if (isset($_GET['delete'])){
   $host=$_GET['host'];
   $user=$_GET['user'];
   $updel=$_GET['delete']; 
-  $hostRow=$_GET['fdata']; /// host table データ
-  $rdarray=explode(',',$hostRow);
+  //$hostRow=$_GET['fdata']; /// host table データ
+  //$hostArr=explode(',',$hostRow);
   /// delete host record
   $host_sql="delete from host where host='".$host."'";
   putdata($host_sql);
@@ -135,14 +135,11 @@ if (isset($_GET['delete'])){
 ///-- ホストデータ更新処理 -------
 ///-------------------------------
 }elseif (isset($_GET['update'])){
-  $trapswt = '0'; 
-  $trapswp = '0';
-  $trapswp2 = '0';
   $host=$_GET['host'];
   $user=$_GET['user'];
   $updel=$_GET['update']; //update host record to host table
   $hostRow=$_GET['fdata']; // host レコードデータ
-  $rdarray=explode(',',$hostRow);
+  $hostArr=explode(',',$hostRow);
   $groupName='notused';
   $osType=$_GET['ostype'];
   $action=$_GET['action'];
@@ -150,14 +147,16 @@ if (isset($_GET['delete'])){
 
   $comm="";
   if ($action=='2' or $action=='3' or $action=='4'){
+    /// action=2(SNMP監視),3(SNMP通知なし),4(Agent監視)
     if (is_null($_GET['comm']) or empty($_GET['comm'])){
-      $msg = '#error#'.$user.'#ホスト'.$host.'SNMPコミュニティの設定がなし';
+      $msg = '#error#'.$user.'#ホスト'.$host.'SNMPコミュニティの設定なし、更新無効';
       $nextpage = "HostListPage.php";
       writelogd($pgm,$msg);
       branch($nextpage,$msg);
     }else{
       $comm=$_GET['comm'];
       if ($action!=$oldAction){
+        /// Action変更、SNMP監視試行
         $rtnck=snmpcheck($host,$osType,$comm);
         if ($rtnck!=0){
           $msg = '#error#'.$user.'#ホスト'.$host.'SNMPコミュニティがアクセス不可、更新無効';
@@ -177,8 +176,22 @@ if (isset($_GET['delete'])){
   $mailOpt=$_GET['mailopt'];
   $tcpPortb=cknotype($_GET['tcpport']);
   $tcpPort=cksemicolon($tcpPortb,$host);
+  //$trapswt = '0';
+  /// TCP拡張機能チェック 
   if (substr($tcpPort,0,1) == '&'){
-    $trapswt = '1';
+    if ($osType!='1'){
+      $msg = "#error#".$user."#ホスト".$hostmei."のWindowsでは使えません";
+      $nextpage = "NewHostPage.php";
+      branch($nextpage,$msg);
+    }
+    //$trapswt = '1';
+  //}else if(substr($tcpPort,0,1) == '%'){
+    //if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+    //  $msg = "#error#".$user."#監視マネージャがWindowsでは使えません";
+    //  $nextpage = "NewHostPage.php";
+    //  branch($nextpage,$msg);
+    //}
+    //$trapswt = '2';
   }
   $cpuLimb=ckcnotype($_GET['cpulim']);
   $cpuLim=ckcolon($cpuLimb,$host);
@@ -188,17 +201,23 @@ if (isset($_GET['delete'])){
   $diskLim=ckcolon($diskLimb,$host);
   $processb=cknotype($_GET['process']);
   $process=cksemicolon($processb,$host);
+  //$trapswp='0';
+  /// プロセス拡張機能チェック
   if (substr($process,0,1) == '&'){
-    $trapswp = '1';
+    if ($osType!='1'){
+      $msg = "#error#".$user."#ホスト".$hostmei."のWindowsでは使えません";
+      $nextpage = "NewHostPage.php";
+      branch($nextpage,$msg);
+    }
+    //$trapswp = '1';
   }
   if (substr($process,0,1) == '%'){
-    $trapswp2 = '1';
+    $msg = "#error#".$user."#この機能は使えません";
+    $nextpage = "NewHostPage.php";
+    branch($nextpage,$msg);
   }
-  if ($action=='2' || $action=='3'){
-    if ($tcpPort==""){
-      $tcpPort="22";
-    }
-  }
+  //$trapswp = '2';
+  ///
   $image=$_GET['image'];
   if ($image==''){
     if ($osType=='0'){
@@ -211,98 +230,61 @@ if (isset($_GET['delete'])){
       $image="pc.jpg";
     }
   }
+  ///
+  /// Flag|列名|データの配列
   $wtarray=array("","","","","","","","","","","","","","");
   $wtarray[0]='0|host|'.$host; 
   $wtarray[1]='0|groupname|'.$groupName; 
   $wtarray[2]='0|ostype|'.$osType; 
-  $wtarray[3]='0|result|'.$rdarray[3]; 
+  $wtarray[3]='0|result|'.$hostArr[3]; 
   $wtarray[4]='0|action|'.$action; 
   $wtarray[5]='0|viewname|'.$viewName; 
-  $wtarray[6]='0|mailopt|'.$mailOpt; 
-  if ($trapswt == '1'){ 
-    $wtarray[7]='1|tcpport|'.$tcpPort;
-  }else{
-    $wtarray[7]='0|tcpport|'.$tcpPort;
-  }
+  $wtarray[6]='0|mailopt|'.$mailOpt;
+  $wtarray[7]='0|tcpport|'.$tcpPort;
   $wtarray[8]='0|cpulim|'.$cpuLim; 
   $wtarray[9]='0|ramlim|'.$ramLim; 
   $wtarray[10]='0|disklim|'.$diskLim;
-  if ($trapswp == '1' or $trapswp2 == '1'){ 
-    $wtarray[11]='1|process|'.$process;
-  }else{
-    $wtarray[11]='0|process|'.$process;
-  }
+  $wtarray[11]='0|process|'.$process;
   $wtarray[12]='0|image|'.$image;
-  $wtarray[13]='0|snmpcomm|'.$comm; 
+  $wtarray[13]='0|snmpcomm|'.$comm;
+  /// 
+  /// ホストデータの配列と更新データを比較、相違あれば更新のFlag列へ２をセット
   $cct=0;
   foreach ($wtarray as $wtrec){  
     $wtval=explode('|',$wtrec);
-    if (cknotype($rdarray[$cct]) != $wtval[2]){ /// table_dataｔと 入力データが違うか
+    if (cknotype($hostArr[$cct]) != $wtval[2]){ /// table_dataｔと 入力データが違うか
       $wtarray[$cct]='2|'.$wtval[1].'|'.$wtval[2];
     }
     $cct++;
   }
-  /// action 0->1に変化したらping、
-  /// action 1->2 又は3->2へ変化したらsnmp
-  $wtval4=explode('|',$wtarray[4]);
-  if ($wtval4[0]=='2' && $wtval4[2]=='1') {  // actionの1列目=2(inactive) and 4
-    $hrc=hostping($host); // winhostping.php
-    if ($hrc==1){
-       $msg = '#error#'.$user.'#ホスト'.$host.'がpingに応答しない、更新無効';
-       $nextpage = "HostListPage.php";
-       writelogd($pgm,$msg);
-       branch($nextpage,$msg);
-    }
-  }elseif($wtval4[0]=='2' && $wtval4[2]=='2') {
-    $hrc=snmpactive($host,$comm);
-    if ($hrc==1){
-      $msg = "#error".$user."#ホスト".$host ."がsnmp対応でないか無応答、更新無効";
-      $nextpage = "HostListPage.php";
-      writelogd($pgm,$msg);
-      branch($nextpage,$msg);
-    }
-  }
-  ///  action 5(Ncat)以外から5へ変更したら
-  if ($wtval4[0]=='5' && $wtval4[2]!='5') {
-    $hrc=hostncat($host);
-    if ($hrc==1){
-       $msg = '#error#'.$user.'#ホスト'.$host.'がNcatに応答しない、更新無効';
-       $nextpage = "HostListPage.php";
-       writelogd($pgm,$msg);
-       branch($nextpage,$msg);
-    }
-  }
-  ///
+  /// update sql作成
   $host_sql="update host set result='1',";
   $svalue="";
-  $issw='0';
+  $updatesw='0';
   foreach ($wtarray as $wtrec){
     $wtval = explode('|',$wtrec);
-    if ($wtval[0]=='2'){ //## update target = 2
+    if ($wtval[0]=='2'){ //## update flag = 2
+      /// 列名=値作成
       $svalue=$svalue.$wtval[1]. "='" .$wtval[2]. "',";
       //writeloge($pgm,'temporary '.$svalue); /////////////////
-      $issw='1';
-      if ($wtval[1]=='tcpport' && $trapswt=='1'){
-        $trapswt = '2';
-      }
-      if ($wtval[1]=='process' && $trapswp=='1'){
-        $trapswp = '2';
-      }
-      if ($wtval[1]=='process' && $trapswp2=='1'){
-        $trapswp2 = '2';
-      }
+      $updatesw='1'; /// 更新スイッチオン
+      
     }
   }
   $oksval=rtrim($svalue,',');
+  /// 一般監視ホストのupdate sql
   $upsql=$host_sql.$oksval;
+  /// 127.0.0.1の場合は別のSql
   if(substr($host,0,3)=='127'){
     $agentHost=$_GET['agenthost'];
     $upsql=$upsql.",agenthost='".$agentHost."'";
-    $issw='1';
+    $updatesw='1';
   }
+  /// sql完成
   $upsql=$upsql." where host='".$host."'";
   //writeloge($pgm,$upsql);   /////////////////////////////
-  if ($issw!='0'){
+  if ($updatesw!='0'){
+    /// ホスト更新実行　　
     putdata($upsql);
     //------------------------------------------
     // statisticsの削除と作成
@@ -328,35 +310,39 @@ if (isset($_GET['delete'])){
     putdata($event_sql);    
   }
   ///------------------------------
-  ///----------snmp tcpport & processset------
+  ///----------tcpportとprocessの拡張機能snmpset処理------
   ///------------------------------
-  if ($trapswt=='2' and $action=='2'){
-    $tcpPortx=mb_substr($tcpPort,1); //##top char strip
-    $status=snmptcpportset($host,"remote",$tcpPortx);
+  $tcpext=explode('|',$wtarray[7]);
+  if ($tcpext[0]=='2' and  substr($tcpPort,0,1)=='&' and ($action=='2' or $action=='3')){
+    $status=snmptcpportset($host,$comm,substr($tcpPort,1));
     if ($status==1){
-      $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでTCPport登録失敗しました";
-      $nextpage = "NewHostPage.php";
+      $msg = "#alert#".$user."#ホスト".$hostmei."へsnmpsetで拡張機能TCPport登録失敗しました";
+      $nextpage = "HostListPage.php";
       branch($nextpage,$msg);
     } 
   }
-  if ($trapswp=='2' and $action=='2'){ // &process
-    $processx=mb_substr($process,1); //##top char strip
-    $status=snmpprocessset($host,"remote",$processx);
+  $procext=explode('|',$wtarray[11]);
+  if ($procext[0]=='2' and substr($process,0,1)=='&' and ($action=='2' or $action=='3')){ // &process
+    $status=snmpprocessset($host,$comm,substr($process,1));
     if ($status==1){
-      $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでProcess登録失敗しました";
-      $nextpage = "NewHostPage.php";
+      $msg = "#alert#".$user."#ホスト".$hostmei."へsnmpsetで拡張機能Process登録失敗しました";
+      $nextpage = "HostListPage.php";
       branch($nextpage,$msg);
     } 
   }
-  if ($trapswp2=='2' and $action=='2'){ // %process
-    $processx=mb_substr($process,1); //##top char strip
-    $status=snmptrapset($host,"remote",$processx);
+  /*
+  $trapext=explode('|',$wtarray[11]);
+  if ($procext[0]=='2' and substr($process,0,1)=='%' and ($action=='2' or $action=='3')){ // &process
+    $status=snmptrapset($host,$comm,substr($process,1));
     if ($status==1){
-      $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでProcess登録失敗しました";
-      $nextpage = "NewHostPage.php";
+      $msg = "#alert#".$user."#ホスト".$hostmei."へsnmpsetでTrap拡張機能Process登録失敗しました";
+      $nextpage = "HostListPage.php";
       branch($nextpage,$msg);
     } 
-  } 
+  }
+  */ 
+  ///
+  ///
   $msg = '#notic#'.$user.'#ホスト'.$host.'情報が正常に更新されました';
   $nextpage = "HostListPage.php";
   writelogd($pgm,$msg);
@@ -463,9 +449,15 @@ if (isset($_GET['delete'])){
   print '</table>';
   ///
   if (substr($host,0,3)!='127'){
-    print '<h4>ＣＰＵ警告欄&emsp;&emsp;&emsp;警告値：危険値<br>メモリ警告欄&emsp;&emsp;&emsp;警告値：危険値<br>ディスク警告欄&emsp;&emsp;警告値：危険値<br>';
-    print 'ＴＣＰポート欄&emsp;&emsp;ポート番号；区切 UNIX系ホストのプライベートMIBサーバーは先頭に「&」可能<br>';
-    print '監視プロセス欄&emsp;&emsp;プロセス名；区切 UNIX系ホストのプライベートMIBサーバーは先頭に「&」可能</h4>';
+    print '<h4>☆CPU警告欄&emsp;&emsp;&emsp;警告値：危険値<br>';
+    print '☆メモリ警告欄&emsp;&emsp;警告値：危険値<br>';
+    print '☆ディスク警告欄&emsp;警告値：危険値<br>';
+    print '☆TCPポート欄&emsp;&emsp;ポート番号；区切<br>'; 
+    print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;UNIX系監視対象ホストをプライベートMIB方式で行うには先頭に「&」を付与<br>';
+    print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;監視対象ホストをNCAT方式で行うには先頭に「%」を付与<br>';
+    print '☆監視プロセス欄&emsp;プロセス名；区切<br>';
+    print '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;UNIX系監視対象ホストをプライベートMIB方式で行うに先頭に「&」を付与</h4>';
+    
   } else {
     print '<h4>エージェントホスト名欄&emsp;&emsp;他監視サイトのエージェントホスト名<br>SNMPコミュニティ名欄&emsp;&emsp;エージェントホストのコミュニティ名</h4>';
   }

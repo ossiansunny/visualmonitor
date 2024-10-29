@@ -67,7 +67,7 @@ if(!isset($_GET['param'])){
   $disable="";  
   for($i=0;$i<$recCount;$i++){
     $hostArr = explode(',',$hostRows[$i]);
-    if($hostArr[4]=="2"){ // snmp監視
+    if($hostArr[4]=="2" or $hostArr[4]=="3"){ // snmp監視 snmp監視通知なし
       $color="colorred"; 
       if($hostArr[3]=="1"){$active="グラフ登録済";$disable="";$color="colorgreen";}
       if($hostArr[3]!="1"){$active="非稼働";$disable="";}

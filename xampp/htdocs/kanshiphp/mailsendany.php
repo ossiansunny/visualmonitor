@@ -76,9 +76,9 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
   if($rtnFlag==0){
     $mmsg='success '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
     writelogd('mailsendany debug',$mmsg);
-  }else{
+  }else if($rtnFlag==1){
     $mmsg='failed '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
-    writelogd('mailsendany debug',$mmsg);
+    writeloge('mailsendany debug',$mmsg);
     //print("mailsendany failed\n");
   }
   return $rtnFlag;
