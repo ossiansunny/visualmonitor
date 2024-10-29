@@ -140,9 +140,8 @@ if($rtn==1){
   echo ' 又、Mysql 5.7.5以前では、DROP USER IF EXISTS が使えないためエラーになる '.PHP_EOL;
   echo ' ので、手動で対応して下さい (例)                                         '.PHP_EOL;
   echo " mysql> grant usage on *.* to 'kanshiadmin'@'localhost' identified by 'kanshipass'".PHP_EOL;
-  echo " mysql> drop user 'kanshiadmin'@'localhost'".PH`_EOL;
+  echo " mysql> drop user 'kanshiadmin'@'localhost'".PHP_EOL;
   echo " mysql> select user,host from user".PHP_EOL;
-';$                                              '.PHP_EOL;
   echo '-------------------------------------------------------------------------'.PHP_EOL;
 }else{
   echo "mysqlにuser='{$dbuser}'@'{$dbhost}'、passwd='{$dbpass}'、db='{$dbname}'を設定しました".PHP_EOL;
