@@ -1,0 +1,63 @@
+#!/bin/bash
+###
+###
+# Calling script reffer array vpathval variable after 
+#   call varread provided by varread.func script
+# ex.
+#   vpathreq=("vpath_ncat vpath_plothome")
+#   varread "${vpathreq[*]}"
+#   anscount=${#vpathval[@]}
+#   if [ $anscount -ne 2 ]
+#   then
+#     echo "no data, check kanshiphp.ini"
+#   else
+#     for ansitem in ${vpathval[@]}
+#     do    
+#       echo $$ansitem
+#     done
+#   fi
+###
+### varread function ###
+###
+varread(){
+  inifile=`pwd`
+  inifile=`dirname $inifile`
+  #inifile=`pwd | awk 'BEGIN{FS="ubin"}{print $1}'`
+  inifile="${inifile}/kanshiphp/vmsetup/kanshiphp.ini"
+  #inifile=`echo "${inifile}/kanshiphp/vmsetup/kanshiphp.ini"`
+  #echo "inifile:"$inifile >> varreadfile
+  reqkey=$1
+  keyvalx=("")
+  while read kanshidata
+  do
+    #echo $kanshidata
+    key=`echo $kanshidata | awk 'BEGIN{FS="="}{print $1}' | sed 's/\n//'`
+    val=`echo $kanshidata | awk 'BEGIN{FS="="}{print $2}' | sed 's/"//g' | sed 's/\n//' | sed 's/\r//'`
+    keyx=`echo -n $key`
+    valx=`echo -n $val`
+    keyvalx+=($keyx:$valx)
+  done < $inifile
+  ###
+  #echo 'start'
+  vpathval=()
+  for reqitem in ${reqkey[@]}
+  do
+    #echo $reqitem
+    for ansitem in ${keyvalx[@]}
+    do
+      keyitem=`echo $ansitem | awk 'BEGIN{FS=":"}{print $1}'`
+      #echo $keyitem
+      if [ $reqitem == $keyitem ]
+      then
+        #echo -n 'match:'
+        #echo $ansitem
+        valitem=`echo $ansitem | awk 'BEGIN{FS=":"}{print $2}'`
+        #echo $valitem >> valitem
+        vpathval+=($valitem)
+      fi
+    done
+  done
+}
+###
+### end function
+###

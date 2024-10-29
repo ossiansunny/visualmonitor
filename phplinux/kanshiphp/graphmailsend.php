@@ -34,11 +34,12 @@ $header=$headerArr[0];
 $subj1='Email'; 
 $subj2='Attachment';
 $subj3='Graph';
-$title='**'.$subj1.' '.$subj2. ' ' .$subj3. '**';
+$title='*** グラフ添付メール ***';
+//$title='**'.$subj1.' '.$subj2. ' ' .$subj3. '**';
 $msg='Host '.$host;
 ///
 bodyformat($user,$title,$msg,$bodyStr);
-writeloge($pgm,$bodystr);
+writelogd($pgm,"トレースログ\r\n".$bodystr);
 ///
 $admin_sql="select * from admintb";
 $adminRows=getdata($admin_sql);
@@ -46,26 +47,29 @@ $adminArr=explode(',',$adminRows[0]);
 $mailToAddr=$adminArr[3]; /// mail to addr
 $mailFromAddr=$adminArr[4]; /// mail from addr
 ///
-//echo 'test3';
 $mailFlag=phpsendmailat("", "", $mailFromAddr, $mailToAddr, $title, $bodyStr,$graphArr);
-//echo 'test4';
 ///
 if (strpos($graphArr[0],'.svg') !== false){
   $nextpage='GraphListPlotPage.php';
 }else{
   $nextpage='GraphListPage.php';
 }
+///
 if($mailFlag==0){
-  $mmsg='success '.$bodyStr.' '.$mailToAddr.' '.$mailFromAddr;
+  $mmsg='グラフ送信完了 '.$bodyStr.' '.$mailToAddr.' '.$mailFromAddr;
   writelogd($pgm,$mmsg);
   $msg="#notic#".$user."#ホスト".$host."のグラフ添付メール送信完了";
   branch($nextpage,$msg);
+}else if($mailFlag==2){
+  $mmsg='グラフ送信不可 '.$bodyStr.' '.$mailToAddr.' '.$mailFromAddr;
+  writelogd($pgm,$mmsg);
+  $msg='#alert#'.$user.'#送信不可、送信可能phpsendmailAt.php.sendを置き換え>て下さい';
+  branch($nextpage,$msg);
 }else{
-  $mmsg='failed '.$bodyStr.' '.$mailToAddr.' '.$mailFromAddr;
+  $mmsg='グラフ送信失敗 '.$bodyStr.' '.$mailToAddr.' '.$mailFromAddr;
   writeloge($pgm,$mmsg);
   $msg="#error#".$user."#ホスト".$host."のグラフ添付メール送信失敗";
   branch($nextpage,$msg);
-}
 
 ?>
 

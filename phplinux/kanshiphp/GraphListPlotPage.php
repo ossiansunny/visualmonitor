@@ -72,7 +72,7 @@ if(!isset($_GET['param'])){
   print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
   for($i=0;$i<$recCount;$i++){
     $hostArr = explode(',',$hostRows[$i]);
-    if($hostArr[4]=="2"){ // snmp監視対象ホストチェック action="2" snmp
+    if($hostArr[4]=="2" or $hostArr[4]=="3" ){ // snmp監視対象ホストチェック action="2" snmp
       $color="colorred"; 
       if($hostArr[3]=="1"){$active="グラフ作成中";$dis="";$color="colorgreen";} /// result == 1 active 
       if($hostArr[3]!="1"){$active="非稼働";$dis="disabled";}                   /// result != 1 not active

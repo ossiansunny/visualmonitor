@@ -86,11 +86,20 @@ if (!isset($_GET['param']) and !isset($_GET['set']) and !isset($_GET['send'])){
       $sql="update mailserver set status='0'";  /// mailserverをActiveにする
       putdata($sql);
       $flg=phpsendmail($server,$port,$from,$to,$subj,$body);
+      var_dump($flg);
       if($flg==0){
         delstatus('Mail Server InActive');
         delstatus('Mail Server Active');
         setstatus('0','Mail Server Active');
         $msg='#notic#'.$user.'#送信完了、受信を確認して下さい';
+        branch($pgm,$msg);
+      }else if($flg==2){
+        $sql="update mailserver set status='1'";
+        putdata($sql);
+        delstatus('Mail Server InActive');
+        delstatus('Mail Server Active');
+        setstatus('1','Mail Server InActive');
+        $msg='#alert#'.$user.'#送信不可、送信可能phpsendmail.php.sendを置き換えて下さい';
         branch($pgm,$msg);
       }else{
         $sql="update mailserver set status='1'";

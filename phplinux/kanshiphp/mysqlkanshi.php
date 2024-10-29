@@ -26,14 +26,12 @@ function openconnect(){
   
 }  
 //
-/*
 function default_str(String $raw_str = null, String $default = "") : String{
   if(isset($raw_str) === true){
       return $raw_str;
   }     
   return $default;
 }
-*/
 //-----------------------------------------------------
 // readlog関数
 //-----------------------------------------------------
@@ -41,7 +39,7 @@ function readlog(){
   global $kanshiDir;
   $tstamp = date("ymdHis");
   $ymd=substr($tstamp,0,6);
-  $fp = fopen($kanshiDir."/logs/kanshi_".$ymd.".log","r");
+  $fp = fopen($kanshiDir."\logs\kanshi_".$ymd.".log","r");
   $rtable = array();
   $c=0;
   if($fp){
@@ -61,8 +59,8 @@ function writeloge($_pgm,$_msg) {
   global $kanshiDir;
   $timeStamp = date("ymdHis");
   $ymd=substr($timeStamp,0,6);
-  $logFile=$kanshiDir."/logs/kanshi_".$ymd.".log";
-  $fp = fopen($kanshiDir."/logs/kanshi_".$ymd.".log","a");
+  $fp = fopen($kanshiDir."\logs\kanshi_".$ymd.".log","a");
+  //$tstamp = date("ymdHis");
   $data = $timeStamp . ": " . $_pgm . ": " . $_msg . "\n";
   fwrite($fp,$data);
   fclose($fp);
@@ -114,8 +112,7 @@ function getdata($_sql) {
     $rc=count($row);
     $rtables="";
     for($cc=0;$cc<$rc;$cc++){
-      $ajstr=$row[$cc];
-      //$ajstr=default_str($row[$cc]," ");
+      $ajstr=default_str($row[$cc]," ");
       $rtables = $rtables . "," . $ajstr;  
     }
     $rtablex=substr($rtables,1);
@@ -172,15 +169,14 @@ function create($_sql) {
   return $rtn; // whereの該当なしも 0で帰る
 }
 
-
-//$pgm='mysqlkanshi.php';
-//$sql="select * from user where userid='admin'";
-//$rtn=getdata($sql);
+/*
+$pgm='mysqlkanshi.php';
+$sql="select * from user where userid='aadmin'";
+$rtn=getdata($sql);
 //writeloge($pgm,"mysql pgm test ".$sql);
-//var_dump($rtn);
-//if (empty($rtn)){
-//  echo 'none';
-//}
-
-
+var_dump($rtn);
+if (empty($rtn)){
+  echo 'none';
+}
+*/
 ?>

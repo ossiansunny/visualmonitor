@@ -16,9 +16,11 @@ if (!isset($_GET['param'])){
   }
 }
 $disabled='';
+/*
 if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
   $disabled="disabled";
 }
+*/
 print '<html lang="ja">';
 print '<head>';
 print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';

@@ -8,6 +8,6 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
   setstatus("1","Mail Server InActive");
   $mail_sql='update mailserver set status="1"';
   putdata($mail_sql);
-  return 0;
+  return 2;
 }
 ?>

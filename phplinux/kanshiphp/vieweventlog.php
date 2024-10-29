@@ -72,7 +72,7 @@ if (isset($_GET['delete'])){
       putdata($event_sql);
       $nextpage='EventLogPage.php';
       $alertMsg='#notic#'.$user.'#データが正常に範囲削除されました';
-      writeloge($pgm,$alertMsg.' '.$delsql); 
+      writelogd($pgm,$alertMsg.' '.$delsql); 
       branch($nextpage,$alertMsg);
     }else{
       $nextpage='EventLogPage.php';
@@ -222,7 +222,7 @@ if ($auth=='1'){
   print '</h4>';
 
   print '<form name="logdbupform" method="get" action="eventlogupdeldb.php">';
-  print "<input type='hidden' name='fckbox' value={$fckrec} />";
+  print "<input type='hidden' name='fckbox' value={$eventRow} />";
   print "<input type='hidden' name='user' value={$user} />";
   print '<hr>';
   print '<h4>☆　障害確認は、<span class=trylw>「障害確認」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';  

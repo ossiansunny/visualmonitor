@@ -3,26 +3,26 @@ require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "varread.php";
 ///
-$htdocsLogDir='';
+$webLogDir='';
 $plotLogDir='';
 $kanshiLogDir='';
 $osDirSep='';
-$vpathParam=array("vpath_htdocs","vpath_plothome","vpath_kanshiphp");
+$vpathParam=array("vpath_weblog","vpath_plothome","vpath_kanshiphp");
 $rtnPath=pathget($vpathParam);
 if(count($rtnPath)==3){
   if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-    //$htdocsLogDir=$rtnPath[0]."\\logs";
+    $webLogDir=$rtnPath[0];
     $plotLogDir=$rtnPath[1]."\\logs";
     $kanshiLogDir=$rtnPath[2]."\\logs";
     $osDirSep="\\";
   }else{
-    $htdocsLogDir=$rtnPath[0]."/httplogs";
+    $webLogDir=$rtnPath[0];
     $plotLogDir=$rtnPath[1]."/logs";
     $kanshiLogDir=$rtnPath[2]."/logs";
     $osDirSep="/";
   }
 }else{
-  $msg="#error#".$user."#vpath_htdocs,vpath_base,vpath_kanshiphpが不正です";
+  $msg="#error#".$user."#vpath_weblog,vpath_base,vpath_kanshiphpが不正です";
   $nextpage='LogClear.php';
   branch($nextpage,$msg);
 }
@@ -33,6 +33,7 @@ $ymd=$now->format("ymd");
 $pgm = "logcleardel.php";
 $user = $_GET['user'];
 ///
+
 if (!isset($_GET['log'])){  
   $msg="#error#".$user."#チェックボックスにチェックをして下さい";
   $nextpage='LogClear.php';
@@ -40,14 +41,16 @@ if (!isset($_GET['log'])){
 }
 
 $logType = $_GET['log'];  /// 選択されたlog種類
+
 ///--- log削除処理 -----------
-if($logType=='Web' && $osDirSep=="/"){
-  $fileRows=glob($htdocsLogDir.$osDirSep.'*_*.log');
+//if($logType=='Web' && $osDirSep=="/"){
+if($logType=='Web'){
+  $fileRows=glob($webLogDir.$osDirSep.'*_*.log');
   foreach($fileRows as $fileRowsRec){
     $filename=basename($fileRowsRec);
     //echo $filename.'<br>';
     if (false === strpos($filename,$ymd)){
-      unlink($htdocsLogDir.$osDirSep.$filename);
+      unlink($webLogDir.$osDirSep.$filename);
     } // end of if    
   }  // end of for
 }elseif($logType=='監視'){
@@ -72,5 +75,5 @@ $msg="#notic#".$user."#".$logType."ログの削除が完了しました";
 $nextpage="LogClear.php";
 branch($nextpage,$msg);
 
-//echo '</body></html>';
+
 ?>

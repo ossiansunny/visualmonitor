@@ -14,11 +14,11 @@ print '</head>';
 print '<body>';
 print "<h4>Discover Refresh {$interval}sec</h4>";
 ///
-$osDirsep='';
+$osDirSep='';
 if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
   $osDirSep="\\";
 }else{
-  $osDirsep="/";
+  $osDirSep="/";
 }
 ///
 $vpathParam=array("vpath_kanshiphp","vpath_mrtgbase");
@@ -28,17 +28,17 @@ $rtnPath=pathget($vpathParam);
 $now=new DateTime();
 $ymd=$now->format("ymd");
 if(count($rtnPath)==2){
-  /// htdocs_log
-  $vpath_htdocs="";
-  $rtnVPathHtdocs=pathget(array("vpath_htdocs"));
+  /// weblog
+  $vpath_weblog="";
+  $rtnVPathHtdocs=pathget(array("vpath_weblog"));
   if(count($rtnVPathHtdocs)==1){
-    /// vpath_htdocsがある場合、無ければデフォルトの場所のログ
-    $vpath_htdocs=$rtnVPathHtdocs[0];
-    $htdocsLogLists=glob($vpath_htdocs.$osDirsep.'logs'.$osDirSep.'*_*.log');
+    /// vpath_weblogがある場合、無ければデフォルトの場所のログ
+    $vpath_weblog=$rtnVPathHtdocs[0];
+    $webLogLists=glob($vpath_weblog.$osDirSep.'*_*.log');
     delstatus('Web Log Remain');
-    foreach($htdocsLogLists as $htdocsLogFilePath){        
-      $htdocsFileName=basename($htdocsLogFilePath);
-      if (false === strpos($htdocsFileName,$ymd)){
+    foreach($webLogLists as $webLogFilePath){        
+      $webLogFileName=basename($webLogFilePath);
+      if (false === strpos($webLogFileName,$ymd)){
         setstatus('1','Web Log Remain'); 
         break;
       }
@@ -56,8 +56,8 @@ if(count($rtnPath)==2){
     }
   }
   /// plot_log 
-  $vpath_plot=$rtnPath[1].$osDirSep.'ubin'.$osDirsep.'gnuplot';
-  $plotLogLists=glob($vpath_plot.$osDirsep.'logs'.$osDirSep.'plot_*.log');
+  $vpath_plot=$rtnPath[1].$osDirSep.'ubin'.$osDirSep.'gnuplot';
+  $plotLogLists=glob($vpath_plot.$osDirSep.'logs'.$osDirSep.'plot_*.log');
   delstatus('Plot Log Remain');
   foreach($plotLogLists as $plotFileNamePath){        
     $plotFileName=basename($plotFileNamePath);
@@ -71,38 +71,21 @@ if(count($rtnPath)==2){
 }
  
 /// mailserver active check
-//function mailservercheck(){
-echo 'enter mail server check';
-  $mailSvr_sql='select server from mailserver';
+$vpathParam=array("vpath_phpmailer");
+$rtnPath=pathget($vpathParam);
+if(count($rtnPath)==1){
+  $mailSvr_sql='select server,port from mailserver';
   $mailRows=getdata($mailSvr_sql);
-  if ($mailRows[0] != '127.0.0.1'){
-    $server=$mailRows[0];
-    $rtnCde = hostping($server);
-    //echo 'server:'.$server.' rtn:'.$rtnCde;
-    $mailSql="";
-    if ($rtnCde == 0){
-      $mailPort=array(25,587);  /// mail port is array
-      $host_sql="select snmpcomm from host where host='{$server}'";
-      $hostRows=getdata($host_sql);
-      if($hostRows[0]=='' or empty($hostRows[0])){
-        $community='public';
-      }else{
-        $community=$hostRows[0];
-      }
-      echo 'comm:'.$community;
-      $rtnPort=phpsnmptcpopen($server,$community,$mailPort);
-      echo 'return:'.$rtnPort;
-      if ($rtnPort=='allok'){
-        delstatus('Mail Server InActive');
-        delstatus('Mail Server Active');
-        setstatus('0','Mail Server Active');
-        $mailSql="update mailserver set status='0'";
-      }else{
-        delstatus('Mail Server Active');
-        delstatus('Mail Server InActive');
-        setstatus('1','Mail Server InActive');
-        $mailSql="update mailserver set status='1'";
-      }
+  $mailArr=explode(',',$mailRows[0]);
+  $server=$mailArr[0];
+  $port=$mailArr[1];
+  if ($server != '127.0.0.1'){
+    $rtnCde=hostncat($server,$port);
+    if ($rtnCde==0){
+      delstatus('Mail Server InActive');
+      delstatus('Mail Server Active');
+      setstatus('0','Mail Server Active');
+      $mailSql="update mailserver set status='0'";
     }else{
       delstatus('Mail Server Active');
       delstatus('Mail Server InActive');
@@ -115,7 +98,14 @@ echo 'enter mail server check';
     setstatus('1','Mail Server InActive');
     $mailSql="update mailserver set status='1'";
   }
-  putdata($mailSql);
+}else{
+    delstatus('Mail Server Active');
+    delstatus('Mail Server InActive');
+    setstatus('1','Mail Server InActive');
+    $mailSql="update mailserver set status='1'";
+}
+putdata($mailSql);
 
+//}
 print '</body></html>';
 ?>  

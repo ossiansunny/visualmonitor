@@ -42,7 +42,7 @@ if(isset($_GET['remove'])){
   ///
   $interval="60";
   $title1='<img src="header/php.jpg" width="30" height="30">';
-  $title2='　▽　デバッグログ　▽　';
+  $title2='　▽　追跡ログ　▽　';
   $title3=$interval . '　秒間隔更新';
   $title=$title1 . $title2 . $title3;
   print '<html>';

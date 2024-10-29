@@ -41,8 +41,8 @@ function mailupdown($_hostRow,$_noticeType){
     $info='PING Status - Packet loss/ Timed out';
   }elseif($_noticeType=='RECOVERY'){
     $stat='UP';
-    $subj0='Information';
-    $subj1='Recovery';
+    $subj0='正常';
+    $subj1='復旧';
     $info='PING Status - Packet loss = 0%';
   }else{
     $stat='UNKNOWN';
@@ -75,13 +75,14 @@ function mailupdown($_hostRow,$_noticeType){
   $subj2=$viewn;
   $subj3=$prsn; /// PING|SERVICE
   $subj4=$stat; ///$subj4='WARNING|Down|UP|UNKNOWN|CRITICAL|RECOVERY';
-  $title='**'.$subj0.' Service ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
+  $title='**'.$subj0.' ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
+  //$title='**'.$subj0.' Service ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
   $flg=phpsendmail("", "", $fromMailAddr, $toMailAddr, $title, $bodyStr);
   if($flg==0){
-    $msg="send mail success by phpsendmail";
+    $msg="phpsendmailにより送信完了しました";
     writelogd($pgm,$msg);
   }else{
-    $msg="send mail failed by phpsendmail";
+    $msg="phpsendmailが送信に失敗しました";
     writeloge($pgm,$msg);
   }
   return $flg;

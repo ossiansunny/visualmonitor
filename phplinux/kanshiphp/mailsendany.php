@@ -26,7 +26,6 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
   $headerRows=getdata($header_sql);
   $headerArr=explode(',',$headerRows[0]);
   $adjSubject=$_subject;
-  ///  adminsubject
   if($_mailType=='adminsubject'){
     $header=$headerArr[0];
     $check='';
@@ -35,7 +34,6 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
     $adjSubject=str_replace('<title>',$headerArr[0],$adjSubject);
     $title=$adjSubject;
     bodyformat($header,$title,$_body,$bodyStr);
-  ///  mysql
   }elseif($_mailType=='mysql'){
     $hsarr=explode(' ',$_body);
     $header=$hsarr[2];
@@ -45,8 +43,8 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
     $subj3=$_subject;
     $title='**'.$subj1.' '.$subj2. ' ' .$subj3. '**';
     bodyformat($header,$title,$_body,$bodyStr);
-  ///  loginlogout
   }else{
+    /// loginlogout
     $header=$headerArr[0];
     $check='';
     $subj1=$headerArr[0]; 
@@ -55,7 +53,6 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
     $title='**'.$subj1. ' '.$subj3.'**';
     bodyformat($header,$title,$_body,$bodyStr); 
   }
-  /// common
   if ($_to=="" or $_from==""){
     /// get mail from, to address
     $admin_sql="select * from admintb";
@@ -79,14 +76,14 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
   if($rtnFlag==0){
     $mmsg='success '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
     writelogd('mailsendany debug',$mmsg);
-  }else{
+  }else if($rtnFlag==1){
     $mmsg='failed '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
-    writelogd('mailsendany debug',$mmsg);
+    writeloge('mailsendany debug',$mmsg);
     //print("mailsendany failed\n");
   }
   return $rtnFlag;
 
 }
-//mailsendany("loginlogout","vmadmin@mydomain.jp","mailuser@mydomain","subject","body")
+//mailsendany("hostupdate","vmadmin@sunnyblue.mydns.jp","oshima@sunnyblue.mydns.jp","subject","bosy")
 ?>
 
