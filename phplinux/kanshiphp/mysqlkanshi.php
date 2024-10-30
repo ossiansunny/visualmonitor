@@ -26,12 +26,14 @@ function openconnect(){
   
 }  
 //
+/*
 function default_str(String $raw_str = null, String $default = "") : String{
   if(isset($raw_str) === true){
       return $raw_str;
   }     
   return $default;
 }
+*/
 //-----------------------------------------------------
 // readlog関数
 //-----------------------------------------------------
@@ -39,7 +41,7 @@ function readlog(){
   global $kanshiDir;
   $tstamp = date("ymdHis");
   $ymd=substr($tstamp,0,6);
-  $fp = fopen($kanshiDir."\logs\kanshi_".$ymd.".log","r");
+  $fp = fopen($kanshiDir."/logs/kanshi_".$ymd.".log","r");
   $rtable = array();
   $c=0;
   if($fp){
@@ -59,7 +61,7 @@ function writeloge($_pgm,$_msg) {
   global $kanshiDir;
   $timeStamp = date("ymdHis");
   $ymd=substr($timeStamp,0,6);
-  $fp = fopen($kanshiDir."\logs\kanshi_".$ymd.".log","a");
+  $fp = fopen($kanshiDir."/logs/kanshi_".$ymd.".log","a");
   //$tstamp = date("ymdHis");
   $data = $timeStamp . ": " . $_pgm . ": " . $_msg . "\n";
   fwrite($fp,$data);
@@ -112,8 +114,8 @@ function getdata($_sql) {
     $rc=count($row);
     $rtables="";
     for($cc=0;$cc<$rc;$cc++){
-      $ajstr=default_str($row[$cc]," ");
-      $rtables = $rtables . "," . $ajstr;  
+      //$ajstr=default_str($row[$cc]," ");
+      $rtables = $rtables . "," . $row[$cc];  
     }
     $rtablex=substr($rtables,1);
     $rtable[$c]=$rtablex;

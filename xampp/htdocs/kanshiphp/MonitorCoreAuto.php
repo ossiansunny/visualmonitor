@@ -90,50 +90,11 @@ function eventlog($_hostArr,$_cde){
   writelogd($pgm,$msg);
   putdata($event_sql);  
 }
-/*
-function mailservercheck(){
-  $mailSvr_sql='select * from mailserver';
-  $mailRows=getdata($mailSvr_sql);
-  $mailArr=explode(',',$mailRows[0]);
-  $server=$mailArr[0];
-  $port=$mailArr[1];
-  $status=$mailArr[4];
-  /// status=1の場合、ping試験で死活確認
-  if ($status=='1'){
-    $rtnCde = hostping($server);
-    $mailSql="";
-    if ($rtnCde != 0){
-      delstatus('Mail Server Active');
-      delstatus('Mail Server InActive');
-      setstatus('1','Mail Server InActive');
-      $mailSql="update mailserver set status='1'";
-    }else{
-      delstatus('Mail Server InActive');
-      delstatus('Mail Server Active');
-      setstatus('0','Mail Server Active');
-      $mailSql="update mailserver set status='0'";
-    }
-    putdata($mailSql);
-  }
-}
-*/
-/*
-function ncatping($_host,$_action){
-  $rtnCde=0;
-  if ($_action=="5"){
-    $rtnCde=hostncat($_host);
-  }else{
-    $rtnCde=hostping($_host);
-  }
-  //echo $_host.' action='.$_action.' done rc='.$rtnCde.'<br>';
-  return $rtnCde;
-}
-*/
 //----------------viewscan-------------------------------
 //--------------------------------------------------------
 function viewscan(){
   global $pgm;  
-  writelogd($pgm,"Enter viewscan function");
+  writelogd($pgm,"viewscan関数開始");
   /// get host layout
   $layout_sql='select host from layout where host!="No Assign" or host!=""';
   $layoutRows=getdata($layout_sql);
@@ -308,9 +269,9 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   $msg="Retry Time ".$startStamp;
   writelogd($pgm,$msg);
   ///----------- viewscan 呼び出し--------------
-  writelogd($pgm,"--------------->> viewscan enter");
+  writelogd($pgm,"--------------->> viewscan 開始");
   viewscan(); 
-  writelogd($pgm,"--------------->> viewscan exit");
+  writelogd($pgm,"--------------->> viewscan 終了");
   ///--------------------------------------------
   $local_sql="select host,snmpcomm,agenthost from host where host like '127%'";
   $localRows=getdata($local_sql);
@@ -327,7 +288,7 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
     $stat_sql="select agent from statistics where host='".$localHost."'";
     $statRows=getdata($stat_sql);
     if(! isset($statRows)){
-      writeloge($pgm,"Failed No statistics: ".$stat_sql); 
+      writeloge($pgm,"statisticsテーブルselect失敗".$stat_sql); 
       eventlog($hostArr,"a"); /// 
       branch($pgm,$user);
     }
@@ -350,7 +311,7 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
       }  
       $rtnCde=putdata($usql);
       if (!empty($rtnCde)){ /// connection error || sql error || not found
-        writeloge($pgm,"Failed DB Access: ".$usql); 
+        writeloge($pgm,"statisticsテーブル更新エラー: ".$usql); 
         eventlog($hostArr,"a"); /// a DB異常
         branch($pgm,$user);
       }
@@ -359,7 +320,7 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
       $usql="update statistics set agent='".$astat."' where host='".$localHost."'";
       $rtnCde=putdata($usql);
       if (!empty($rtnCde)){ /// connection error || sql error || not found
-        writeloge($pgm,"Failed DB Access: ".$usql); 
+        writeloge($pgm,"statisticsテーブル接続エラー: ".$usql); 
         eventlog($hostArr,"a"); /// a DB異常
         branch($pgm,$user);
       }
@@ -376,9 +337,6 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   $coreStamp=time(); 
   $proc_sql='update processtb set corestamp="'.strval($coreStamp).'"';
   putdata($proc_sql);
-  /// mailserver active check , move to Discover.php
-  //mailservercheck();
-  //print '</body></html>';
 }
 ?>
 

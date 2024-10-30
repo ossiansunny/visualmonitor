@@ -74,16 +74,15 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
   //print("phpsendmail done\n");
   $mmsg='';
   if($rtnFlag==0){
-    $mmsg='success '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
-    writelogd('mailsendany debug',$mmsg);
+    $mmsg='送信完了 '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
+    writelogd($pgm,'phpsendmailから通知 ',$mmsg);
   }else if($rtnFlag==1){
-    $mmsg='failed '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
-    writeloge('mailsendany debug',$mmsg);
-    //print("mailsendany failed\n");
+    $mmsg='送信失敗 '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
+    writeloge($pgm,'phpsendmailから通知 ',$mmsg);
   }
   return $rtnFlag;
 
 }
-//mailsendany("hostupdate","vmadmin@sunnyblue.mydns.jp","oshima@sunnyblue.mydns.jp","subject","bosy")
+//mailsendany("hostupdate","vmadmin@mydomain.jp","mailuser@mydomain.jp","subject","boidy")
 ?>
 
