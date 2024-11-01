@@ -75,10 +75,10 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
   $mmsg='';
   if($rtnFlag==0){
     $mmsg='送信完了 '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
-    writelogd($pgm,'phpsendmailから通知 ',$mmsg);
+    writelogd($pgm,'phpsendmailから通知 '.$mmsg);
   }else if($rtnFlag==1){
     $mmsg='送信失敗 '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
-    writeloge($pgm,'phpsendmailから通知 ',$mmsg);
+    writeloge($pgm,'phpsendmailから通知 '.$mmsg);
   }
   return $rtnFlag;
 
