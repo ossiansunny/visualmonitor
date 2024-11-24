@@ -122,18 +122,15 @@ function mailsendsnmp($_hostArr,$_snmpType,$_snmpValue,$_updown){
     $subj3='SNMP'; /// PING|SERVICE
     $subj4=$stat;
     $title='**'.$subj0.' ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
-    //$title='**'.$subj0.' Service ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
   }
     
   $flag=phpsendmail("", "", $mailFromAddr, $mailToAddr, $title, $bodystr);
   if($flag==0){
     $mmsg='送信完了 '.$bodystr.' '.$mailToAddr.' '.$mailFromAddr."\r\n";
     writelogd($pgm,$mmsg);
-    //print $mmsg;
     return 0;
   }else if($flag==1){
     $mmsg='送信失敗 '.$bodystr.' '.$mailToAddr.' '.$mailFromAddr."\r\n";
-    //print $mmsg;
     writeloge($pgm,$mmsg);
     return 1;
   }else{

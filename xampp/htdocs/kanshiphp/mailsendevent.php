@@ -18,13 +18,13 @@ function mailsendevent($_eventLog,$_eventAdmin,$_eventCloseNo,$_eventConfClose,$
   $eventArr=explode(',',$_eventLog);
   $host=$eventArr[0];
   $eventTime=$eventArr[1];
-  //$evenType=$eventArr[2];
+  ///$evenType=$eventArr[2];
   $eventSnmpType=$eventArr[3];
-  //$evenSnmpValue=$eventArr[4];
-  //$kanrisha=$eventArr[5];
-  //$kanrino=$eventArr[6];
-  //$mailsend=$eventArr[8];
-  //$emsg=$eventArr[9];
+  ///$evenSnmpValue=$eventArr[4];
+  ///$kanrisha=$eventArr[5];
+  ///$kanrino=$eventArr[6];
+  ///$mailsend=$eventArr[8];
+  ///$emsg=$eventArr[9];
   /*
   $snmpType="";
   switch ($eventSnmpType) { ///snmptype

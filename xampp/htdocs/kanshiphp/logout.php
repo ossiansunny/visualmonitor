@@ -2,6 +2,7 @@
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "mailsendany.php";
+require_once "snmpagent.php";
 
 date_default_timezone_set('Asia/Tokyo');
 $pgm = "logout.php";
@@ -37,9 +38,17 @@ if(!isset($_GET['param'])){
   $userRows=getdata($user_sql);
   $userArr=explode(',',$userRows[0]);
   $user_Auth=$userArr[0];
-  if ($user_Auth=='1'){   
-    $admin_sql='update admintb set authority="0"';
-    putdata($admin_sql);
+  if ($user_Auth=='1'){ 
+    /// 
+    /// 2024/11/9 ログイン前にコア(SnmpAutoScan.php)が実行されるため 
+    /// 127.0.0.1, snmp agentへ'sb' および admintbへ'2' セット
+    ///
+    $stat_sql="update statistics set agent='sb' where host='127.0.0.1'";
+    $statRows=putdata($stat_sql);
+    ///putagent('127.0.0.1'.'private','sb'); ///実行するとログアウトに時間がかかる
+    ///$admin_sql="update admintb set authority='0', snmpintval=30, standby='2', saveintval='".$snmpintval."'";
+    ///putdata($admin_sql);
+    ///
   }
   print '<!DOCTYPE html>';
   print '<html>';

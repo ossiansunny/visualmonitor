@@ -1,8 +1,8 @@
 ﻿<?php
 require_once "varread.php";
 require_once 'alarmwindow.php';
-require_once 'phpsnmptcpopen6.php';
-require_once 'hostping.php';
+require_once 'hostncat.php';
+require_once 'mysqlkanshi.php';
 
 $interval=120;
 $pgm='Discover.php';
@@ -12,7 +12,7 @@ print "<meta http-equiv='refresh' content={$interval}>";
 print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head>';
 print '<body>';
-print "<h4>Discover Refresh {$interval}sec</h4>";
+print "<h4>Discover {$interval}sec </h4>";
 ///
 $osDirSep='';
 if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
@@ -21,7 +21,7 @@ if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
   $osDirSep="/";
 }
 ///
-$vpathParam=array("vpath_kanshiphp","vpath_mrtgbase");
+$vpathParam=array("vpath_kanshiphp","vpath_plothome");
 $vpath_kanshi="";
 $vpath_plot="";
 $rtnPath=pathget($vpathParam);
@@ -48,7 +48,7 @@ if(count($rtnPath)==2){
   $vpath_kanshi=$rtnPath[0];
   $kanshiLogLists=glob($vpath_kanshi.$osDirSep.'logs'.$osDirSep.'kanshi_*.log');
   delstatus('Kanshi Log Remain');
-  foreach($kanshilogLists as $kanshiFileNamePath){        
+  foreach($kanshiLogLists as $kanshiFileNamePath){        
     $kanshiFileName=basename($kanshiFileNamePath);
     if (false === strpos($kanshiFileName,$ymd)){
       setstatus('1','Kanshi Log Remain'); 
@@ -56,7 +56,7 @@ if(count($rtnPath)==2){
     }
   }
   /// plot_log 
-  $vpath_plot=$rtnPath[1].$osDirSep.'ubin'.$osDirSep.'gnuplot';
+  $vpath_plot=$rtnPath[1];
   $plotLogLists=glob($vpath_plot.$osDirSep.'logs'.$osDirSep.'plot_*.log');
   delstatus('Plot Log Remain');
   foreach($plotLogLists as $plotFileNamePath){        
@@ -67,7 +67,8 @@ if(count($rtnPath)==2){
     }
   }
 }else{
-  setstatus('2',"Can't get Path");
+  $msg="Can't get Path";
+  writeloge($pgm,$msg);
 }
  
 /// mailserver active check
@@ -106,6 +107,5 @@ if(count($rtnPath)==1){
 }
 putdata($mailSql);
 
-//}
 print '</body></html>';
 ?>  

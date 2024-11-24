@@ -43,7 +43,7 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
       $get_auth=$_GET['auth'];
       $get_uname=$_GET['uname'];
       $get_ucode=$_GET['ucode'];
-      //$get_tstamp=$_GET['tstamp'];
+      ///$get_tstamp=$_GET['tstamp'];
       $userId=$get_uid[$idx];
       $password=$get_upass[$idx]; 
       $authority=$get_auth[$idx];
@@ -118,9 +118,9 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
 
   print "<h2>{$title}</h2>";
   print "<h4><font color=red>{$errormsg}</font></h4>";
-  //
-  //--------------------View Process --------------------
-  //
+  ///
+  ///--------------------View Process --------------------
+  ///
   $displaysw='';
   $rows='';
   $user_sql='select * from user order by userid';
@@ -147,12 +147,10 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
       $userName=$userArr[3];
       $userCode=$userArr[4];
       $timeStamp=$userArr[5];
-      //$trcssColor="";
       print '<tr>';
       print '<td class=vatop><input type=radio name=select value="'.strval($idx).'" ></td>';
       print "<td class={$cssColor}><input type=text name=uid[] value={$userId} size=9 readonly></td>";
       print "<td class={$cssColor}><input type=text name=upass[] value={$password} size=9 ></td>";
-      //print '<td class="'.$cssColor.'"><input type=text name=auth[] value='.$auth.' size=9 ></td>';
       $selOptArr=array('','');
       $selOptArr[intval($authority)]="selected";
       print "<td class={$cssColor}><select name=auth[] >";
@@ -164,7 +162,7 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
       print "<td class={$cssColor}><input type=text name=tstamp[] value={$timeStamp} size=10 readonly></td>";
       print '</tr>';
       $idx++;
-    } //end of for
+    } ///end of for
     print '</table>';
     print "<input type=hidden name=user value={$user}>";
     print '<br><input class=button type="submit" name="update" value="変更実行" >';

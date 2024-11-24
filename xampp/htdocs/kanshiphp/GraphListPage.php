@@ -2,9 +2,9 @@
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "varread.php";
-$brcode=""; // 通知コード
-$user=""; // ユーザID
-$brmsg=""; //メッセージ $user = "";
+$brcode=""; /// 通知コード
+$user=""; /// ユーザID
+$brmsg=""; ///メッセージ $user = "";
 $pgm="GraphListPage.php";
 $vpath_kanshiphp="";
 $osDirSep='';
@@ -57,38 +57,46 @@ if(!isset($_GET['param'])){
   ///
   print "<h4>☆ホストを１つ選択して「グラフ表示/メール添付」「グラフ登録」「グラフ削除」のいずれかをクリックする<br>";
   print "☆グラフのメール添付には、ホストのメール「自動送信」が必要です</h4>";
-  $host_sql="select * from host order by groupname";
-  $hostRows = getdata($host_sql);
-  $recCount = count($hostRows);
+  ///
+  $layout_sql="select host from layout";
+  $layoutRows=getdata($layout_sql);
   print '<form name="rform" method="get" action="viewgraph.php">';
   print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
   $exeSw=0;
   $active="";
-  $disable="";  
-  for($i=0;$i<$recCount;$i++){
-    $hostArr = explode(',',$hostRows[$i]);
-    if($hostArr[4]=="2" or $hostArr[4]=="3"){ // snmp監視 snmp監視通知なし
-      $color="colorred"; 
-      if($hostArr[3]=="1"){$active="グラフ登録済";$disable="";$color="colorgreen";}
-      if($hostArr[3]!="1"){$active="非稼働";$disable="";}
-      $cfgrtn=mrtgcfgck($hostArr[0]);
-      if($cfgrtn==1){$active="グラフ未登録";$disable="";$color="colorred";}
-      if($hostArr[8]!="" || $hostArr[9]!="" || $hostArr[10]!="") {
-        $graphType="";
-        if($hostArr[8]!=""){$graphType="CPU";}
-        if($hostArr[9]!=""){$graphType=$graphType . ";" . "RAM";}
-        if($hostArr[10]!=""){$graphType=$graphType . ";" . "Disk";}
-        $graphType=trim($graphType,';');
-        print "<tr><td><input type=radio name=fradio value={$hostRows[$i]} {$disable}></td>";
-        print "<td><input type=text name=host value={$hostArr[0]}></td>";
-        print "<td><input type=text name=graphtype value={$graphType}></td>";
-        print "<td><input type=text name=viewname value={$hostArr[5]}></td>";
-        print "<td><input class={$color} type=text name=active value={$active}></font></td></tr>";
-        print "<input type=hidden name=user value={$user}>";
-        $exeSw=1;
+  $disable="";
+  foreach ($layoutRows as $layoutRowsRec){
+    if (!($layoutRowsRec=='' or $layoutRowsRec=='NoAssign')){
+      $host_sql="select * from host where host='".$layoutRowsRec."'";
+      $hostRows=getdata($host_sql);
+      if (isset($hostRows)){
+        $hostArr=explode(',',$hostRows[0]);
+        if($hostArr[4]=="2" or $hostArr[4]=="3"){ /// snmp監視 snmp監視通知なし
+          $color="colorred"; 
+          if($hostArr[3]=="1"){$active="グラフ登録済";$disable="";$color="colorgreen";}
+          if($hostArr[3]!="1"){$active="非稼働";$disable="";}
+          $cfgrtn=mrtgcfgck($hostArr[0]);
+          if($cfgrtn==1){$active="グラフ未登録";$disable="";$color="colorred";}
+          if($hostArr[8]!="" || $hostArr[9]!="" || $hostArr[10]!="") {
+            $graphType="";
+            if($hostArr[8]!=""){$graphType="CPU";}
+            if($hostArr[9]!=""){$graphType=$graphType . ";" . "RAM";}
+            if($hostArr[10]!=""){$graphType=$graphType . ";" . "Disk";}
+            $graphType=trim($graphType,';');
+            print "<tr><td><input type=radio name=fradio value={$hostRows[0]} {$disable}></td>";
+            print "<td><input type=text name=host value={$hostArr[0]}></td>";
+            print "<td><input type=text name=graphtype value={$graphType}></td>";
+            print "<td><input type=text name=viewname value={$hostArr[5]}></td>";
+            print "<td><input class={$color} type=text name=active value={$active}></font></td></tr>";
+            print "<input type=hidden name=user value={$user}>";
+            $exeSw=1;
+          }
+        }
       }
     }
   }
+
+
   if ($exeSw==1){    
     $user_sql='select authority from user where userid="'.$user.'"';
     $userRows=getdata($user_sql);

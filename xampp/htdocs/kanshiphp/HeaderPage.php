@@ -93,8 +93,6 @@ if(!isset($_GET['param'])){
   print "<form action={$linkUrl4} target='_blank' method='get'>";
   print "<input class='button' type='submit' name='id' value={$linkTtl4}></form>";
   print '</div></td><td>';
-  //print '<form onsubmit="javascript:changeFramehp()">';
-  //print '<input class="buttonhref" type="submit" value="ヘッダ更新"></form>';
   print "<form action='logout.php' target='sframe' method='get'>";
   if ($user=='unknown'){  
     print "<input class='buttonalerm' type='submit' name='id' value='Logout'></form>";

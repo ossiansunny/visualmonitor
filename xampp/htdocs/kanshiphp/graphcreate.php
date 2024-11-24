@@ -23,8 +23,7 @@ if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
 
 function cfgtemplate($_ip,$_comm,$_gtype,$_os,$_title){
     global $pgm, $vpath_base, $vpath_kanshiphp, $osDirSep, $getExt;
-    $fname=$vpath_kanshiphp.$osDirSep.'mrtgcfg'.$osDirSep.$_ip.'.'.$_gtype.'.cfg';  //windowsは\\,Unixは/がセパレータ
-    //echo $fname."<br>";
+    $fname=$vpath_kanshiphp.$osDirSep.'mrtgcfg'.$osDirSep.$_ip.'.'.$_gtype.'.cfg';  ///windowsは\\,Unixは/がセパレータ
     $snmpget=$vpath_base.$osDirSep.'ubin'.$osDirSep.'snmp'.$_gtype.$getExt.' '.$_ip.' '.$_os.' '.$_comm;
     $fp = fopen($fname,'w');
     $data = array();
@@ -41,7 +40,6 @@ function cfgtemplate($_ip,$_comm,$_gtype,$_os,$_title){
     fwrite($fp,$border."\r\n");
     for($cs=0;$cs<$cc;$cs++){
       fwrite($fp,$data[$cs]."\r\n");      
-      //echo $data[$cs]."<br>";      
     }    
     fclose($fp);
 }
@@ -54,7 +52,6 @@ if(!isset($_GET['fradio'])){
 }
 ///
 $hostArr = explode(',',$_GET['fradio']);
-//var_dump($hostArr);
 $host=$hostArr[0];
 $osType=$hostArr[2];
 if (isset($hostArr[13])){
@@ -81,7 +78,6 @@ if(count($rtnPath)==3){
 }
 ///
 $zerofile=$vpath_kanshiphp.$osDirSep.'mrtgcfg'.$osDirSep.'0.0.0.0.cfg'; 
-//echo $zerofile;
 if(!file_exists($zerofile)){
   $msg = "#error#".$user."#mrtgcfg".$osDirSep."0.0.0.0.cfgがありません";
   $nextpage = "GraphListPage.php";
@@ -103,11 +99,9 @@ foreach(glob($vpath_kanshiphp.$osDirSep.'mrtgcfg'.$osDirSep.'*.cfg') as $filenam
   echo $filename.'<br>';
   $it->append(new SplFileObject($filename, "r"));
 }
-//echo $vpath_mrtgbase.$osDirSep.'newmrtg.cfg<br>';
 unlink($vpath_mrtgbase.$osDirSep.'newmrtg.cfg');
 $file = new SplFileObject($vpath_mrtgbase.$osDirSep.'newmrtg.cfg', 'w');
 foreach($it as $line) {
-  //echo $line.'<br>';
   if(! is_null($line)) {
     $file->fwrite($line);
   }

@@ -8,7 +8,7 @@ function gcreatearray($_gdata,&$ghai){
   $gCount=count($_gdata);
   for ($i=0;$i<$gCount;$i++){
     $garr=explode(',',$_gdata[$i]);
-    $ghai[$i]=$garr; //group name
+    $ghai[$i]=$garr; ///group name
   }
 }
 
@@ -33,7 +33,7 @@ function screatearray($_hdata,$_garr){
     $hitemArr[$i]=$hitem;
   }
   $num=0;
-  $maxg=count($_garr); // 4
+  $maxg=count($_garr); /// 4
   $gnameArr=array();
   for ($i=0;$i<$maxg;$i++){ 
   /// グループ数分繰り返し
@@ -41,7 +41,7 @@ function screatearray($_hdata,$_garr){
     $snameArr=array();
     for ($j=0;$j<$segCount;$j++){
       /// セグメント数分繰り返し
-      $hostCount=intval($_garr[$j][2]);        // ホスト数取得
+      $hostCount=intval($_garr[$j][2]);        /// ホスト数取得
       $hnameArr=array();
       for ($k=0;$k<$hostCount;$k++){
       /// ホスト数分繰り返し

@@ -3,9 +3,9 @@ date_default_timezone_set('Asia/Tokyo');
 error_reporting(E_ALL & ~E_NOTICE);
 require_once "mysqlkanshi.php";
 
-//-----------------------------------
-//---- 各種保存情報取得
-//------------------------------------
+///-----------------------------------
+///---- 各種保存情報取得
+///------------------------------------
 function getmailstatus(){
   $stat_sql="select * from status";
   $statRows=getdata($stat_sql);
@@ -17,7 +17,7 @@ function getmailstatus(){
   $result=array(" "," ");
   $cnt=1;
   while ($cnt<=5){
-    $pointer++; // 2
+    $pointer++; /// 2
     if ($pointer>5){
       $pointer=1;
     }
@@ -27,7 +27,7 @@ function getmailstatus(){
       continue;
     }else{
       if ($val=='Mail Server Active'){
-        $rtncd=0; // found
+        $rtncd=0; /// found
         break;
       }
     }
@@ -36,9 +36,9 @@ function getmailstatus(){
   return $rtncd;
 }
 
-//-----------------------------------
-//---- get next status message
-//------------------------------------
+///-----------------------------------
+///---- get next status message
+///------------------------------------
 function getstatus($_poniter = 6){
   /// $_poniter: mark1 mark2 mark3 の　1 2 3を指定、0 < $_poniter > 6
   $result=array();  
@@ -65,7 +65,6 @@ function getstatus($_poniter = 6){
     $valPtr=$cnt*2; 
     $key=$statArr[$keyPtr];
     $val=$statArr[$valPtr];
-    //print 'mark:'.$key.' msg:'.$val."\r\n";
     if ($keyPtr==$markPtr){ 
       if (empty($val) || $val==" " || is_null($val)){
         array_push($result,"","");
@@ -90,11 +89,10 @@ Function ptrstatus($_poniter){
   putdata($stat_sql);
   return 0;
 }
-  /*
-  // 0       1    2    3    4    5    6    7    8    9    10 
-  // pointer key1 val1 key2 val2 key3 val3 key4 val4 key5 val5
- 
-  */
+  
+  /// 0       1    2    3    4    5    6    7    8    9    10 
+  /// pointer key1 val1 key2 val2 key3 val3 key4 val4 key5 val5
+
 /// 各種情報保存
 function setstatus($_key,$_val){
   /// key ..表示色 
@@ -106,12 +104,10 @@ function setstatus($_key,$_val){
   $statArr=explode(',',$statRows[0]);
   $cnt=1;
   while($cnt<=5){
-    $_keyPtr=($cnt*2)-1; // key position
-    $_valPtr=$cnt*2;     // msg position
+    $_keyPtr=($cnt*2)-1; /// key position
+    $_valPtr=$cnt*2;     /// msg position
     $mark=$statArr[$_keyPtr];
     $msg=$statArr[$_valPtr];
-    //print 'cnt:'.strval($cnt).' keyPtr:'.strval($_keyPtr).' valPtr:'.strval($_valPtr)."\r\n";
-    //print 'mark:'.$mark.' msg:'.$msg."\r\n"; 
     if ($msg==$_val){
       $rtnCde=2;
       break;
@@ -124,7 +120,7 @@ function setstatus($_key,$_val){
     }
     $cnt++;    
   }
-  return $rtnCde; // 保存完了=0 , 保存不可=1, 既保存=2
+  return $rtnCde; /// 保存完了=0 , 保存不可=1, 既保存=2
 }
 
 /// 各種情報削除
@@ -142,6 +138,6 @@ function delstatus($_val){
       break;
     }
   }
-  return $rtnCde; // deleted=0 , not found=1
+  return $rtnCde; /// deleted=0 , not found=1
 }
 ?>

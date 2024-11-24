@@ -172,7 +172,7 @@ function phpsendmailat($hst, $prt, $from, $to, $subj, $body, $attach){
       ///送信先情報クリア
       ///$mail->clearAllRecipients();
     } catch (Exception $e) {
-      $msg="メッセージ送信不可、PHPMailer不具合か設定ミス: {$mail->ErrorInfo}";
+      $msg="メッセージ送信不可、メールサーバー、PHPMailer不具合か設定ミス: {$mail->ErrorInfo}";
       writelogd($pgm,$msg);
       $rcode=1;
     }

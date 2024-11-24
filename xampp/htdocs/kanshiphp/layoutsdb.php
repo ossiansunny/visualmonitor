@@ -4,10 +4,8 @@ print '<html><head>';
 print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head><body>';
 ///
-//$layout=substr($_GET['layoutname'],1); // cut left g
 $layoutNick=$_GET['laynick'];
 $layout='layout_'.$layoutNick;
-//$layarr=explode('_',$layout);
 $user = $_GET['user'];
 $grpHostArr = $_GET['host'];
 $grpSeq=$_GET['gseq'];

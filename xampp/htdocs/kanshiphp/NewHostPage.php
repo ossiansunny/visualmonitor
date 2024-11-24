@@ -10,9 +10,7 @@ require_once "phpsnmptcpportset.php";
 $pgm="NewHostPage.php";
 
 function writelogsendmail($msg,$host){
-  //writeloge($msg);
   $msg=msg.' host '.$host;
-  //writeloge('NewHostPage.php',$msg);
   $sql='select * from admintb';
   $rows=getdata($sql);
   $sdata=explode(',',$rows[0]);
@@ -25,11 +23,8 @@ function writelogsendmail($msg,$host){
 function cksemicolon($_data,$host){
   if (preg_match("/,/",$_data)){
     $rdata=str_replace(',',';',$_data);
-    //writelogsendmail('PORT,PROCESS列区分をセミコロンへ変換',$host);
-    //writeloge("NewHostPage.php","cksemicolon after writelogsendmail");
   }elseif (preg_match("/:/",$_data)){
     $rdata=str_replace(':',';',$_data);
-    //writelogsendmail('PORT,PROCESS列区分をセミコロンへ変換',$host);
   }else{
     $rdata=$_data;
   }
@@ -38,10 +33,8 @@ function cksemicolon($_data,$host){
 function ckcolon($data,$host){
   if (false !== strpos($data, ',')){
     $rdata=str_replace(',',':',$_data);
-    //writelogsendmail('CPU,RAM,DISK制限値をコロンへ変換',$host);
   }elseif (false !== strpos($data, ';')){
     $rdata=str_replace(';',':',$data);
-    //writelogsendmail('CPU,RAM,DISK制限値をコロンへ変換',$host);
   }else{
     $rdata=$data;
   }
@@ -87,6 +80,7 @@ function hostcreate(){
   $action=$_GET['action'];
   $viewname = $_GET['viewname'];
   $mailopt=$_GET['mailopt'];
+  $eventlog=$_GET['eventlog'];
   $image=$_GET['image'];
   $comm=cknotype($_GET['comm']);
   $agenthost=cknotype($_GET['agenthost']);
@@ -102,15 +96,6 @@ function hostcreate(){
     }
     $trapswt = '1';
   }
-  //if (substr($tcpport,0,1) == '%'){
-    //if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-    //  $msg = "#error#".$user."#監視マネージャがWindowsでは使えません";
-    //  $nextpage = "NewHostPage.php";
-    //  branch($nextpage,$msg);
-    //}
-    //$trapswt = '2';
-  //}
-
   /// コミュニティチェック
   if ($action=="2" || $action=="3"){
     if ($comm==""){
@@ -119,7 +104,6 @@ function hostcreate(){
       branch($nextpage,$msg);
     }
   }
-  //writeloge($pgm,"check cpulimt before");
   $cpulimb=ckcnotype($_GET['cpulimit']);
   $cpuLim=ckcolon($cpulimb,$hostmei);
   $ramlimb=ckcnotype($_GET['ramlimit']);
@@ -144,7 +128,6 @@ function hostcreate(){
     branch($nextpage,$msg);
   }
   
-  
 ///
   if ($image == ''){
     if ($ostype=='0'){
@@ -159,9 +142,8 @@ function hostcreate(){
   }
 ///
 /// vmmib process & tcpport
-  if ($trapswt=='1'){ // &tcpport
-    $tcpportx=mb_substr($tcpport,1); //top char strip
-    //writeloge($pgm,$tcpportx);
+  if ($trapswt=='1'){ /// &tcpport
+    $tcpportx=mb_substr($tcpport,1); ///top char strip
     $status=snmptcpportset($hostmei,$comm,$tcpportx);
     if ($status==1){
       $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでTCPport登録失敗しました";
@@ -169,8 +151,8 @@ function hostcreate(){
       branch($nextpage,$msg);
     } 
   }
-  if ($trapswp=='1'){ // $process
-    $processx=mb_substr($process,1); //top char strip
+  if ($trapswp=='1'){ /// $process
+    $processx=mb_substr($process,1); ///top char strip
     $status=snmpprocessset($hostmei,$comm,$processx);
     if ($status==1){
       $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでProcess登録失敗しました";
@@ -179,8 +161,8 @@ function hostcreate(){
     } 
   }
   /*
-  if ($trapswp=='2'){ // %process
-    $processx=mb_substr($process,1); //top char strip
+  if ($trapswp=='2'){ /// %process
+    $processx=mb_substr($process,1); ///top char strip
     $status=snmptrapset($hostmei,$comm,$processx);
     if ($status==1){
       $msg = "#error#".$user."#ホスト".$hostmei."へsnmpsetでProcess登録失敗しました";
@@ -190,8 +172,8 @@ function hostcreate(){
   }
   */
   $delsql="delete from host where host='".$hostmei."'";
-  putdata($delsql);  //ok
-  $insql="insert into host values('".$hostmei."','".$groupname."','".$ostype."','".$result."','".$action."','".$viewname."','".$mailopt."','".$tcpport."','".$cpuLim."','".$ramLim."','".$diskLim."','".$process."','".$image."','".$comm."','".$agenthost."')";
+  putdata($delsql); 
+  $insql="insert into host values('".$hostmei."','".$groupname."','".$ostype."','".$result."','".$action."','".$viewname."','".$mailopt."','".$tcpport."','".$cpuLim."','".$ramLim."','".$diskLim."','".$process."','".$image."','".$comm."','".$agenthost."','".$eventlog."')";
   putdata($insql); 
   ///
   /// statisticsレコードの削除と作成
@@ -207,30 +189,29 @@ function hostcreate(){
   /// eventレコードの作成
   ///
   $etime = date('ymdHis');
-  $etype='5'; //新規作成
+  $etype='5'; ///新規作成
   $insql="insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$hostmei."','".$etime."','".$etype."','".$user."')";
   putdata($insql); 
   $msg = $insql . " イベントレコード作成完了";
   ///
-  //alert('終了前に中断');
+  ///alert('終了前に中断');
   ///
   $msg="#notic#".$user."#新しいホスト".$hostmei."が作成されました";
   $nextpage="NewHostPage.php"; 
   branch($nextpage,$msg);
-  //exit;
 }
-//-------------------------------------------------
-//---------------変数初期化------------------------
-//-------------------------------------------------
-$brcode=""; // global
-$user="";   // global
-$brmsg="";  // global;
+///-------------------------------------------------
+///---------------変数初期化------------------------
+///-------------------------------------------------
+$brcode=""; /// global
+$user="";   /// global
+$brmsg="";  /// global;
 $cpuLim="";
 $diskLim="";
 $ramLim="";
-//-------------------------------------------------
-//---------------新規ホスト追加処理----------------
-//-------------------------------------------------
+///-------------------------------------------------
+///---------------新規ホスト追加処理----------------
+///-------------------------------------------------
 if (isset($_GET['create'])){  
   hostcreate();
 
@@ -261,7 +242,8 @@ if (isset($_GET['create'])){
   hostimagelist(); 
   print '<h4>☆各項目の入力文字列間に空白を入れないこと（例：[abc def]はNG, [abcdef]または[abc_def]はOK）<br>';
   print '☆[監視他サイトホスト名]は他サイトのAgent監視先実ホスト名を指定します<br>';
-  print '☆死活動作の[snmp通知なし]はイベントログなし、メールなし</h4>';
+  print '☆死活動作の[snmp通知なし]はイベントログなし、メールなし<br>';
+  print '☆イベントログの[snmpログ抑止]は、snmpエラー連続出力を止める</h4>';
   print '<form name="newhost" method="get" action="NewHostPage.php">';
   print '&emsp;<span class=kom>ホスト名：</span>&ensp;<input type="text" name="hostname" placeholder="ホスト名又はIPアドレス" size="25" maxlength="25" value="" required/>';
   $image_sql='select * from serverimage';
@@ -275,7 +257,15 @@ if (isset($_GET['create'])){
   print '</select>';
   print '<br>';
   print '&emsp;<span class=kom>表示名：</span>&ensp;<input type="text" name="viewname" placeholder="監視画像上の名前" size="20" maxlength="20" value="" required/>';
-  print '&emsp;<span class=kom>コミュニティ名：</span>&ensp;<input type="text" name="comm" placeholder="snmp監視時必須" size="10" maxlength="10" value="" /><br>';
+  print '&emsp;<span class=kom>メール：</span>&ensp;<select name="mailopt">';
+  print '<option value="0">メール非送信</option>';
+  print '<option value="1">メール自動送信</option>';
+  print '</select>';
+  print '&emsp;<span class=kom>イベントログ：</span>&ensp;<select name="eventlog">';
+  print '<option value="0">ログ出力</option>';
+  print '<option value="1">snmpログ抑止</option>';
+  print '</select><br>';
+
   print '&emsp;<span class=kom>OS種類：</span>&ensp;<select name="ostype">';
   print '<option value="0">Windows</option>';
   print '<option value="1">Unix/Linux</option>';
@@ -287,12 +277,10 @@ if (isset($_GET['create'])){
   print '<option value="2">SNMP監視</option>';
   print '<option value="3">SNMP通知なし</option>';
   print '<option value="4">Agent監視</option>';
-//  print '<option value="5">Ncat監視</option>';  
+  ///  print '<option value="5">Ncat監視</option>';  
   print '</select>';
-  print '&emsp;<span class=kom>メール：</span>&ensp;<select name="mailopt">';
-  print '<option value="0">メール非送信</option>';
-  print '<option value="1">メール自動送信</option>';
-  print '</select><br>';
+  print '&emsp;<span class=kom>コミュニティ名：</span>&ensp;<input type="text" name="comm" placeholder="snmp監視時必須" size="10" maxlength="10" value="" /><br>';
+  
   print '&emsp;<span class=kom>監視他サイトホスト名：</span>&ensp;<input type="text" name="agenthost" placeholder="他監視サイトのホスト名" size="20" maxlength="20" value="" />';
   print '&emsp;&emsp;&emsp;<h4>以下、入力オプション<br>';
   print '☆CPU警告欄&emsp;&emsp;&emsp;警告値：危険値 デフォルト80;90<br>';
@@ -314,12 +302,11 @@ if (isset($_GET['create'])){
   print "<input type=hidden name=user value={$user}>";
   print '</form>';
 
-  //-------------------------------------------------
-  //---------------監視モニターへ--------------------
-  //-------------------------------------------------
+  ///-------------------------------------------------
+  ///---------------監視モニターへ--------------------
+  ///-------------------------------------------------
   print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
   print '</body></html>';
-  //writeloge($pgm,"goto monitor");
 }
 ?>
 

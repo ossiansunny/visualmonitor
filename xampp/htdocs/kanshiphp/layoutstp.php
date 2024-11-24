@@ -16,11 +16,8 @@ $radio="";
 $grp = array();
 $seg = array();
 $hst = array();
-//$gh = array($grp,$seg,$hst);
 $user=$_GET['user'];
-//$glayout=$_GET['glayout'];
 $layoutNick=$_GET['laynick'];
-//$layoutNick=explode('_',$glayout);
 if (isset($_GET['radio'])) {
   $radio = $_GET['radio'];
 }else{
@@ -41,7 +38,6 @@ if($finishFlag=='1'){
   $hostLayoutCount=count($hostLayoutRows);
   print '<form name=myname action=layoutsdb.php method=get>';
   print "<input type=hidden name=laynick value={$layoutNick}>";
-  //print "<input type=hidden name=layoutname value={$glayout}>";
   print "<h4>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h4>";
   print '<table border=1>';
   print '<tr>';
@@ -73,7 +69,6 @@ if($finishFlag=='1'){
   $hs=intval($grpHostNum);
   print '<form name=myname action=layoutsdb.php method=get>';
   print "<input type=hidden name=laynick value={$layoutNick}>";
-  //print "<input type=hidden name=layoutname value={$glayout}>";
   print "<h4>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h4>";
   print '<table border=1>';
   print '<tr>';

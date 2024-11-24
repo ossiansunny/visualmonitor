@@ -2,7 +2,6 @@
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 require_once 'layoutsform.php';
-//require_once 'hostping.php';
 date_default_timezone_set('Asia/Tokyo');
 
 function groupCreateArray($gdata,&$ghai){
@@ -25,7 +24,7 @@ function hostCreateArray($hdata,$garr,&$hhai){ ///$hdata is host layout record
     $dc=intval($garr[$gcc][3]); /// 段数取得
     for($dcc=0;$dcc<$dc;$dcc++){ /// 段数のループ
       $hc=intval($garr[$gcc][2]); /// ホスト数取得
-      for($hcc=0;$hcc<$hc;$hcc++){ // ホストのループ
+      for($hcc=0;$hcc<$hc;$hcc++){ /// ホストのループ
         if(is_null($hdata[$hdataidx])){
           break;
         }
@@ -54,7 +53,7 @@ if(!isset($_GET['param'])){
   $admin_sql="select * from admintb";
   $adminRows=getdata($admin_sql);
   $adminStr=explode(',',$adminRows[0]);
-  //----------
+  ///----------
   $countdown = strval($adminStr[12]); 
   $interval = strval($adminStr[7]);
   $blink="";
@@ -74,20 +73,19 @@ if(!isset($_GET['param'])){
     $blink="";
     $blinkMmsg="";
   }
-  //------------------------------------
+  $nameImage=$adminStr[14];
+  $titleImage='haikeiimg/'.$nameImage;
+  ///------------------------------------
   $header_sql="select * from header";
   $headerArr=getdata($header_sql);
   $headerStr=explode(',',$headerArr[0]);
   $title="&ensp;&ensp;&ensp;".$headerStr[0]."(".$interval."秒間隔更新)";
   $subTitle="&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;".$headerStr[1];
-  $admin_sql="select haikei from admintb";
-  $adminRows=getdata($admin_sql);
-  $nameImage=$adminRows[0];
-  $titleImage='haikeiimg/'.$nameImage;
+  /// 
   print '<html><head>';
   print "<meta http-equiv='Refresh' content={$interval}>";
   print '<link rel="stylesheet" href="css/manager.css">';
-  print '</head><body class=frostedright>';
+  print '</head><body>';
   print '<p style="position: relative;">';
   print "<img src={$titleImage} width='600' height='50' alt='Title' /><br />";
   print "<span style='position: absolute; top: 5px; left: 5px; width: 600px; color: white; font-size: 25px; font-weight: bold'>{$title}</span>";
@@ -111,7 +109,7 @@ if(!isset($_GET['param'])){
   print "<br><table><tr class=big><td>&ensp;&ensp;監視時刻&ensp;</td><td class=okcolor>{$currTime}</td>";
   print "<td>&ensp;&ensp;SNMPカウントダウン　</td><td class=okcolor>{$countdown}</td></tr></table>";
   print '</form><br>';
-  $groupArr = array(); // group 配列テーブル
+  $groupArr = array(); /// group 配列テーブル
   
   /// グループ配列テーブル作成
   $glayout_sql='select * from glayout order by gsequence';
@@ -123,16 +121,24 @@ if(!isset($_GET['param'])){
   $layoutRows=getdata($layout_sql);
   hostCreateArray($layoutRows,$groupArr,$hostArr);
   ///　　
-  layoutsform($user,$groupArr,$hostArr);
-  ///
-  $timeStamp=date('ymdHis');
   $user_sql='select authority from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
-  $userArr=explode(',',$userRows[0]);
-  $userAuth=$userArr[0];
-  if ($userAuth=='1'){
-    $proc_sql='update processtb set monstamp='.$timeStamp;
-    putdata($proc_sql);
+  if(!empty($userRows)) {
+    $userArr=explode(',',$userRows[0]);
+    $userAuth=$userArr[0];
+    ///　　
+    /// 監視ホスト配置　　
+    layoutsform($user,$userAuth,$groupArr,$hostArr);
+    ///
+    $timeStamp=date('ymdHis');
+    if ($userAuth=='1'){
+      $proc_sql='update processtb set monstamp='.$timeStamp;
+      putdata($proc_sql);
+    }
+  }else{
+    $msg='ユーザーが見つかりません、ログアウトしてから再ログインして下さい';
+    print "<h4>{$msg}</h4>";    
+    writeloge($pgm,$msg);
   }
 }
 print '</body></html>';

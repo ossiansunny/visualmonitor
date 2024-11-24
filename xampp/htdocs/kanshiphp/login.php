@@ -1,10 +1,11 @@
 ﻿<?php
-//error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE);
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "hostping.php";
 require_once "mailsendany.php";
 require_once "alarmwindow.php";
+require_once "snmpagent.php";
 ///
 
 date_default_timezone_set('Asia/Tokyo');
@@ -12,10 +13,12 @@ $pgm = "login.php";
 $user= "";
 $brcode="";
 $brmsg="";
+$admin_snmpintval="";
 
 ///
 
 function checkProcess($_admin){
+  global $pgm;
   $proc_sql='select * from processtb';
   $procArr=getdata($proc_sql);
   $procStr=explode(',',$procArr[0]);
@@ -50,17 +53,30 @@ function setSession($_sessvalue){
   print 'sessionStorage.setItem("user","'.$_sessvalue.'");';
   print '</script>';
 }
-
+/*
 function deleteStatistics(){
+  /// 全statistics削除
   $stat_sql='delete from statistics';
   putdata($stat_sql);
 }
-
+*/
+/*
 function setStandby(){
+  ///----------------------------------------------------
+  /// 127.0.0.1, snmp Agent および admintb standbyセット
+  ///----------------------------------------------------
+  global $admin_snmpintval;
+  $stat_sql="update statistics set agent='sb' where host='127.0.0.1'";
+  $statRows=putdata($stat_sql);
+  ///
+  $admin_sql="update admintb set snmpintval=30, standby='2', saveintval='".$admin_snmpintval."'";
+  putdata($admin_sql);
+  ///
   $statis_sql='update statistics set gtype="9"';
   putdata($statis_sql);
+  putagent('127.0.0.1','private','sb');
 }
-
+*/
 /////////////////////////////////////////////////
 
 $firstSw=0;  /// 初回=0 param有り=1
@@ -74,7 +90,9 @@ $admin_Authority=$adminArr[2];/// 管理者がログイン済であると、auth
 $admin_Toaddr=$adminArr[3];
 $admin_Fromaddr=$adminArr[4];
 $admin_Subject=$adminArr[5];
-$admin_Body=$adminArr[6];
+$admin_snmpintval=$adminArr[8];
+///$admin_standby=$adminArr[15];
+///$admin_saveintval=$adminArr[16];
 /// 
 if (isset($_GET['param'])){   /// branchで戻った時の処理
   paramSet();
@@ -92,7 +110,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
     $userName="";
     $user_sql='select * from user where userId="'.$user.'"';
     $userRows=getdata($user_sql);
-    //$c=count($userArr);
+    
     if (count($userRows)==0){ 
       /// userなし
       $msg="#2002#".$user."#●入力したユーザー".$user."がありません、<br>ログイン出来るユーザーでログインして下さい";
@@ -129,7 +147,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $logName = "LOGIN_" . $user; 
               $evtLog_sql = "insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino) values('".$logName."','".$timeStamp."','0',' ','".$user."','0')";
               putdata($evtLog_sql); 
-              $msg = $logName . " Eventlog Insert sql: " . $insql;
+              $msg = $logName . " Eventlog Insert sql: " . $evtLog_sql;
               writelogd($pgm,$msg);  
             
               /// 開始メール送信 
@@ -140,11 +158,15 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $snmpInitTime=sprintf('%s',time());
               $admin_sql='update admintb set kanriname="'.$userId.'",authority="'.$admin_Authority.'",kanrino="'.$userCode.'",kanripass="'.$snmpInitTime.'"';
               putdata($admin_sql);
-              /// statisticsのgtypeを9(スタンバイ)にする
-              //setStandby();
+              /*
+              ///--------------------------------------------- 
+              /// statisticsのgtypeを9(スタンバイ)にするなど
+              setStandby();
               /// 監視を初期状態から始める
               deleteStatistics();
-              /// MainIdexphp.php呼び出し
+              */
+              ///---------------------------------------------
+              /// MainIindexphp呼び出し
               $nextPage="MainIndexphp.html";
               branch($nextPage,"");
             }else{ /// auth=0

@@ -20,7 +20,6 @@ $getvalue = snmp2_get($host,$community,".1.3.6.1.4.1.999999.1.5.0",1000000,1);
       $rtnval="allok";
       
     }else{
-      //print($getvalue);
       $rtnval=$getvalue;					/// STRING: "oracle master"
       $rtnarr=explode(':',$getvalue);				/// oracle master
       $rtnvalsp=ltrim(rtrim(trim($rtnarr[1]),'"'),'"'); 	/// oracle;master
@@ -30,7 +29,9 @@ $getvalue = snmp2_get($host,$community,".1.3.6.1.4.1.999999.1.5.0",1000000,1);
   }
   return $rtnval;  
 }
-//snmpprocessset("192.168.1.18","remote","httpd oracle master sshd");
-//snmpprocessget("192.168.1.21","remote");
+/*
+snmpprocessset("192.168.1.18","remote","httpd oracle master sshd");
+snmpprocessget("192.168.1.21","remote");
+*/
 ?>
 

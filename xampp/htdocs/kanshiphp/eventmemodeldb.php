@@ -1,11 +1,6 @@
 ﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-/*
-print '<html><head><meta>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
-print '</head><body>';
-*/
 $pgm = "eventmemodeldb.php";
 $user = $_GET['user'];
 if (!isset($_GET['fckbox'])){
@@ -19,7 +14,7 @@ if (!isset($_GET['fckbox'])){
 ///--------------------------------------------------------
 $memoRows = $_GET['fckbox'];
 
-if (is_array($fckbox)){ //複数行
+if (is_array($fckbox)){ ///複数行
   foreach ($memoRows as $memoRowsRec){  
     $memoArr=explode(',',$memoRowsRec);
     $evTime = $memoArr[0];
@@ -28,7 +23,7 @@ if (is_array($fckbox)){ //複数行
     putdata($memo_sql);
       
   }  
-}else{ // 1行
+}else{ /// 1行
   $memoArr=explode(',',$memoRowsRec);
   $evTime = $memoArr[0];
   $host = $memoArr[1];

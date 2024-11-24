@@ -5,7 +5,6 @@ require_once "phpsnmpprocess.php";
 require_once "phpsnmpdiskram.php";
 require_once "phpsnmpcpuload.php";
 require_once "hostncat.php";
-//require_once "winhostncat.php";
 require_once "phpsnmpprocessset.php";
 require_once "phpsnmptcpportset.php";
 ///
@@ -30,16 +29,10 @@ function snmptrapget($host){
 /// snmptcpport ncat拡張機能  
 function snmptcpgetext($host,$portlist){
   $portArr=explode(';',$portlist);
-  //var_dump($portArr);
   $rtnList="";
   $rtnCde=0;
   foreach ($portArr as $port){
-    //echo '<br>'.$port.' ';
-    //if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-    //  $rtnCde=winhostncat($host,$port);
-    //}else{
-      $rtnCde=hostncat($host,$port);
-    //}
+    $rtnCde=hostncat($host,$port);
     if ($rtnCde!=0) {
       $rtnList=$rtnList.$port.';';
     }
@@ -48,7 +41,6 @@ function snmptcpgetext($host,$portlist){
   if ($rtnList=='') {
     $rtnList="allok";
   }
-  //echo '<br>'.$rtnList;
   return $rtnList;  
 }
 
@@ -71,7 +63,6 @@ function snmptcpget($host,$comm){
   /// $rtnval='empty' 999999.1.3.0 が空(setされていない、設定もれ)
   /// $rtnval='allok' 全てのポートが開いている
   /// $rtnval='xx;yy' xxとyyポートが閉じている  
-  //echo 'rtnval:'.$rtnval;
   return $rtnval;  
 }
 
@@ -113,14 +104,13 @@ function snmpdataget($hostArr){
   $cpulim=$hostArr[8];
   $ramlim=$hostArr[9];
   $disklim=$hostArr[10];
-  $process=$hostArr[11]; //top & is use trap data
+  $process=$hostArr[11]; ///top & is use trap data
   $community=$hostArr[13];
   if ($hostArr[13]=='' || is_null($hostArr[13])){
     $community='public';
   }
   $snmparray = array('','','','','','');
   $snmparray[0]=$host;
-  
   if ($ostype == "0" || $ostype == "1"){ 
     ///------------------------------------------------------------------
     /// ostype=1はWindows ostype=2はUnix
@@ -149,11 +139,11 @@ function snmpdataget($hostArr){
         }else{
           $cpuval=intval($data);
         }   
-        if ($cpuval >= intval($cpuwc[1])){  // critical check 90
+        if ($cpuval >= intval($cpuwc[1])){  /// critical check 90
           $snmparray[1] = "c:" . strval($cpuval);
-        }else if($cpuval >= intval($cpuwc[0])){ // warning check 80
+        }else if($cpuval >= intval($cpuwc[0])){ /// warning check 80
           $snmparray[1] = "w:" . strval($cpuval);
-        }else{ // normal
+        }else{ /// normal
           $snmparray[1] = 'n:' . strval($cpuval);
         }
       }             
@@ -182,20 +172,20 @@ function snmpdataget($hostArr){
         }else{
           $ramval=intval($data);
         }   
-        if ($ramval >= intval($ramwc[1])){  // critical check
+        if ($ramval >= intval($ramwc[1])){  /// critical check
           $snmparray[2] = "c:" . strval($ramval);
-        }else if($ramval >= intval($ramwc[0])){ // warning check
+        }else if($ramval >= intval($ramwc[0])){ /// warning check
           $snmparray[2] = "w:" . strval($ramval);
-        }else{ // normal
+        }else{ /// normal
           $snmparray[2] = "n:" . strval($ramval);
         }
       }
     }
 
     if ($disklim != ''){ 
-      //--------------------------------------------------
-      // ------windows / unix disk　同じ処理----------
-      //--------------------------------------------------
+      ///--------------------------------------------------
+      /// ------windows / unix disk　同じ処理----------
+      ///--------------------------------------------------
       $diskwc = explode(':',$disklim);
       $diskc = count($diskwc);
       if ($diskc==1 || $diskwc[1]==""){
@@ -229,9 +219,9 @@ function snmpdataget($hostArr){
     }	
 
     if ($process != ''){ 
-      //----------------------------------------------------
-      // ------windows / unix process　同じ処理---------
-      //----------------------------------------------------
+      ///----------------------------------------------------
+      /// ------windows / unix process　同じ処理---------
+      ///----------------------------------------------------
       $string="";
       if ($ostype=='1' && substr($process,0,1)=='&'){
         /// 拡張プロセスチェック unix ostype=1 && processtop=&
@@ -275,7 +265,6 @@ function snmpdataget($hostArr){
       ///-------------------------------------------------
       $string="";
       if (substr($tcpport,0,1)=='%'){
-        //echo '<br>'.$tcpport;
         /// 拡張 NCAT TCPポートチェック
         $rtntb=snmptcpgetext($host,substr($tcpport,1));
         $string=$rtntb;

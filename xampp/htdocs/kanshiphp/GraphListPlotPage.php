@@ -7,13 +7,13 @@ require_once "mailsendany.php";
 $dirSep='';
 $vpath_kanshiphp="";
 ///
-function mrtgcfgck($_host){
+function plotsvgck($_host){
   global $dirSep, $vpath_kanshiphp;
-  $files = glob($vpath_kanshiphp.$dirSep."mrtgcfg".$dirSep.$_host.".*");
+  $files = glob($vpath_plothome.$dirSep."plot".$dirSep."plotimage".$_host.".svg");
   if (empty($files)){
-    return 1; //グラフ未作成
+    return 1; ///グラフなし
   }else{
-    return 0; //グラフ作成中
+    return 0; ///グラフあり
   }
 }
 ///
@@ -29,7 +29,7 @@ $user = "";
 $brcode="";
 $brmsg="";
 $pgm="GraphListPlotPage.php";
-$vpath_kanshiphp="";
+$vpath_plothome="";
 $graphStatus="";
 $dis="";
 
@@ -39,9 +39,9 @@ if(!isset($_GET['param'])){
 }else{
   paramSet();
   ///
-  $vpathParam=array("vpath_kanshiphp");
+  $vpathParam=array("vpath_plothome");
   $rtnPath=pathget($vpathParam);
-  $vpath_kanshiphp=$rtnPath[0];
+  $vpath_plothome=$rtnPath[0];
   
   ///
   $title1='<img src="header/php.jpg" width="30" height="30">';
@@ -60,37 +60,39 @@ if(!isset($_GET['param'])){
   print "<h2>{$title}</h2>";
   print "<h4>☆ホストを１つ選択して「グラフ表示／メール添付」をクリックする<br>";
   print "☆グラフのメール添付には、ホストのメール「自動送信」が必要</h4>";
-
-  
   /// host[0] groupname[1] ostype[2] result[3] action[4] viewname[5] mailopt[6] ...
-  $host_sql="select * from host order by groupname";
-  $hostRows = getdata($host_sql);
-  $recCount = count($hostRows);
-  $submitSw=0;
-  $active="";
+  $layout_sql="select host from layout";
+  $layoutRows=getdata($layout_sql);
   print '<form name="rform" method="get" action="viewgraphplot.php">';
   print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
-  for($i=0;$i<$recCount;$i++){
-    $hostArr = explode(',',$hostRows[$i]);
-    if($hostArr[4]=="2" or $hostArr[4]=="3" ){ // snmp監視対象ホストチェック action="2" snmp
-      $color="colorred"; 
-      if($hostArr[3]=="1"){$active="グラフ作成中";$dis="";$color="colorgreen";} /// result == 1 active 
-      if($hostArr[3]!="1"){$active="非稼働";$dis="disabled";}                   /// result != 1 not active
-      $graphStatus=mrtgcfgck($hostArr[0]);                     /// mrtg登録あり=0 なし=1
-      if ($graphStatus==1){$active='グラフ未登録';$dis='disabled';}             /// 
-      if($hostArr[8]!="" || $hostArr[9]!="" || $hostArr[10]!="") {              /// cpu ram disk あり
-        $graphType="";
-        if($hostArr[8]!=""){$graphType="CPU";}
-        if($hostArr[9]!=""){$graphType=$graphType . ";" . "RAM";}
-        if($hostArr[10]!=""){$graphType=$graphType . ";" . "Disk";}
-        $graphType=trim($graphType,';');
-        print "<tr><td><input type=radio name=fradio value={$hostRows[$i]} {$dis}></td>";
-        print "<td><input type=text name=host value={$hostArr[0]}></td>";
-        print "<td><input type=text name=graphtype value={$graphType}></td>";
-        print "<td><input type=text name=viewname value={$hostArr[5]}></td>";
-        print "<td><input type=text name=active value={$active}></td></tr>";
-        print "<input type=hidden name=user value={$user}>";
-        $submitSw=1; 
+  $submitSw=0;
+  $active="";
+  foreach ($layoutRows as $layoutRowsRec){
+    if (!($layoutRowsRec=='' or $layoutRowsRec=='NoAssign')){
+      $fileName=$vpath_plothome.$dirSep."plotimage".$dirSep.$layoutRowsRec.".svg";
+      if (file_exists($fileName)) {
+        $active="グラフ取得可能";
+        $dis="";
+        $color="colorgreen";
+        $host_sql="select * from host where host='".$layoutRowsRec."'";
+        $hostRows=getdata($host_sql);
+        if (isset($hostRows)){
+          $hostArr=explode(',',$hostRows[0]);
+          if (!($hostArr[8]=="" or $hostArr[9]=="" or $hostArr[10]=="")) { /// cpu ram disk あり
+            $graphType="";
+            if($hostArr[8]!=""){$graphType="CPU";}
+            if($hostArr[9]!=""){$graphType=$graphType . ";" . "RAM";}
+            if($hostArr[10]!=""){$graphType=$graphType . ";" . "Disk";}
+            $graphType=trim($graphType,';');
+            print "<tr><td><input type=radio name=fradio value={$hostRows[0]} {$dis}></td>";
+            print "<td><input type=text name=host value={$hostArr[0]}></td>";
+            print "<td><input type=text name=graphtype value={$graphType}></td>";
+            print "<td><input type=text name=viewname value={$hostArr[5]}></td>";
+            print "<td><input class={$color} type=text name=active value={$active}></td></tr>";
+            print "<input type=hidden name=user value={$user}>";
+            $submitSw=1;
+          }
+        } 
       }
     }
   }

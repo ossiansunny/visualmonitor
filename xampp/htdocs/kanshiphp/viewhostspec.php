@@ -7,7 +7,6 @@ print '</head><body>';
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "phpsnmpprocessset.php";
-//require_once "phpsnmptrapset.php";
 require_once "phpsnmptcpportset.php";
 
 function reform($_reformVal){
@@ -61,7 +60,7 @@ if(empty($hostRows)){
 }else{
   $hostArr = explode(',',$hostRows[0]);
   $groupName = $hostArr[1];
-  switch ($hostArr[2]){  // ostype
+  switch ($hostArr[2]){  /// ostype
     case '0': $osType='Windows';break;
     case '1': $osType="Unix/Linux";break;
     case '2': $osType="Gateway";break;
@@ -69,7 +68,7 @@ if(empty($hostRows)){
     default: $osType="データ異常";break;
   }
   $resultSw="0";
-  switch ($hostArr[3]){ // result
+  switch ($hostArr[3]){ /// result
     case '0': $result="非監視";$resultSw="0";break;
     case '1': $result="正常";$resultSw="0";break;
     case '2': $result="異常";$resultSw="1";break;
@@ -122,9 +121,17 @@ if(empty($hostRows)){
   print "<td>{$image}</td>";
   print '</tr>';
   print '</table>';
+  if (strpos($host,'127.0.0.') !== false){
+    if ($host!='127.0.0.1'){
+      print '<table border=1>';
+      print '<tr><th>リモートエージェントホスト</th></tr>';
+      $agentHost=$hostArr[14];
+      print "<tr><td>{$agentHost}</td></tr>";
+      print '</table>';
+    }
+  }
   print '<br><br>';
-
-  if($hostArr[4]=="2"){
+  if($hostArr[4]=="2" or $hostArr[4]=="3" or $hostArr[4]=="4"){
     $statis_sql="select * from statistics where host='".$host."'";
     $statisRows=getdata($statis_sql);
     if($statisRows[0]=="error"){
@@ -141,14 +148,14 @@ if(empty($hostRows)){
       $cssDisk = bgColor($statisArr[6]);
       $process=$statisArr[7];
       $cssProc="snorm"; 
-      if($process=="" || $process=="empty"){
+      if($process=="" or $process=="empty"){
         $process="なし";
       }elseif($process!="allok"){
         $cssProc="scrit";
       }
       $tcpPort=$statisArr[8];
       $cssTcp="snorm"; 
-      if($tcpPort=="" || $tcpport=="empty"){ 
+      if($tcpPort=="" or $tcpPort=="empty"){ 
         $tcpPort="なし";
       }elseif($tcpPort!="allok"){
         $cssTcp="scrit";
@@ -172,7 +179,6 @@ if(empty($hostRows)){
   print '<br><br>';
 }
 
-//}
 print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</button></a>";
 print '</body></html>';
 ?>
