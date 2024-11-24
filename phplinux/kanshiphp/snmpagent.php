@@ -26,8 +26,10 @@ function putagent($host,$community,$value) {
   if ($pingsw==0){
     if($value=='ok'){
       $resstr = snmpset($host, $community, ".1.3.6.1.2.1.1.6.0" , "s", "ok");
-    }else{
+    }else if($value=='ng'){
       $resstr = snmpset($host, $community, ".1.3.6.1.2.1.1.6.0" , "s", "ng");
+    }else{
+      $resstr = snmpset($host, $community, ".1.3.6.1.2.1.1.6.0" , "s", "sb");
     }
     if($resstr){
       return true;

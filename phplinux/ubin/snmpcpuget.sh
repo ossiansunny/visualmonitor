@@ -10,7 +10,7 @@ ping -w 1 $ipaddr > /dev/null
 if [ $? -eq 0 ]; then
 ${bpath}/logwriter.sh "snmpcpuget.sh" " $ipaddr ping ok" "$hpath"
 #### ping ok
-  if [ "$ostype" == 'windows' ]; then
+  if [ "$ostype" == 'windows' ] || [ "$ostype" == 'unix' ] || [ "$ostype" == 'linux' ]; then
   #### windows
     ${bpath}/logwriter.sh "snmpcpuget.sh" "$ostype" "$hpath"
     cpuarr+=(`snmpwalk -v1 -c$comm $ipaddr .1.3.6.1.2.1.25.3.3.1.2 2> /dev/null | awk 'BEGIN{FS=":"}{print $4}'`)

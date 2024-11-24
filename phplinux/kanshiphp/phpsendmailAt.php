@@ -80,9 +80,7 @@ function phpsendmailat($hst, $prt, $from, $to, $subj, $body, $attach){
   }
   $authuser=$mailArr[2];  ///認証ユーザー
   $passwd=$mailArr[3];    ///認証パスワード
-  $status=$mailArr[4]; // mailserverのstatus 0:ok 1:ng
-  ///$status="0"; //---------------------------------debug
-  ///echo $host.' '.strval($port).PHP_EOL; //--------debug
+  $status=$mailArr[4]; /// mailserverのstatus 0:ok 1:ng
   if ($status == "0" || is_null($status)) {
     /// post : integer
     /// body : array
@@ -96,7 +94,7 @@ function phpsendmailat($hst, $prt, $from, $to, $subj, $body, $attach){
       $mail->Debugoutput = function($str, $level) { syslog(LOG_ERR, "PHP Mailer:" . $str); };                      
       /// SMTPの使用
       $mail->isSMTP();
-      // smtpサーバー設定
+      /// smtpサーバー設定
       $mail->Host       = $host;
       if ( $port==587 ) {
         /// SMTP認証                  
@@ -185,13 +183,13 @@ function phpsendmailat($hst, $prt, $from, $to, $subj, $body, $attach){
   }
   return $rcode;
  } else {
-  $msg="メールサーバ使用不可能をstatusテーブルで検知"; // getmailstatusでInActiveになっていた
+  $msg="メールサーバ使用不可能をstatusテーブルで検知"; /// getmailstatusでInActiveになっていた
   writelogd($pgm,$msg);
   return 1;
  }
 }
 
-// test
+/// test
 /*
 $arrayat=array('192.168.1.139.cpu-day.png','192.168.1.139.svg','192.168.1.139.ram-day.png');
 $rtncd=phpsendmailat('192.168.1.139',587, $from, $to, '画像添付混合', 'png,svg添付参照',$arrayat);

@@ -1,7 +1,7 @@
 ﻿<?php
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
-require_once 'layoutsform.php';
+require_once 'layoutsformU.php';  /// layoutsformU.php 試験中
 date_default_timezone_set('Asia/Tokyo');
 
 function groupCreateArray($gdata,&$ghai){
@@ -39,7 +39,7 @@ function hostCreateArray($hdata,$garr,&$hhai){ ///$hdata is host layout record
   }
 }
 
-$pgm="MonitorManager.php";
+$pgm="MonitorManagerU.php";
 $user="";
 $brcode="";
 $brmsg="";
@@ -75,17 +75,17 @@ if(!isset($_GET['param'])){
   }
   $nameImage=$adminStr[14];
   $titleImage='haikeiimg/'.$nameImage;
+  $bgcolor=$adminStr[17];
   ///------------------------------------
   $header_sql="select * from header";
   $headerArr=getdata($header_sql);
   $headerStr=explode(',',$headerArr[0]);
   $title="&ensp;&ensp;&ensp;".$headerStr[0]."(".$interval."秒間隔更新)";
   $subTitle="&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;".$headerStr[1];
-  /// 
   print '<html><head>';
   print "<meta http-equiv='Refresh' content={$interval}>";
-  print '<link rel="stylesheet" href="css/manager.css">';
-  print '</head><body>';
+  print '<link rel="stylesheet" href="css/managerU.css">'; 
+  print "</head><body class='{$bgcolor}'>";
   print '<p style="position: relative;">';
   print "<img src={$titleImage} width='600' height='50' alt='Title' /><br />";
   print "<span style='position: absolute; top: 5px; left: 5px; width: 600px; color: white; font-size: 25px; font-weight: bold'>{$title}</span>";
@@ -123,22 +123,16 @@ if(!isset($_GET['param'])){
   ///　　
   $user_sql='select authority from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
-  if(!empty($userRows)) {
-    $userArr=explode(',',$userRows[0]);
-    $userAuth=$userArr[0];
-    ///　　
-    /// 監視ホスト配置　　
-    layoutsform($user,$userAuth,$groupArr,$hostArr);
-    ///
-    $timeStamp=date('ymdHis');
-    if ($userAuth=='1'){
-      $proc_sql='update processtb set monstamp='.$timeStamp;
-      putdata($proc_sql);
-    }
-  }else{
-    $msg='ユーザーが見つかりません、ログアウトしてから再ログインして下さい';
-    print "<h4>{$msg}</h4>";    
-    writeloge($pgm,$msg);
+  $userArr=explode(',',$userRows[0]);
+  $userAuth=$userArr[0];
+  ///　　
+  /// 監視ホスト配置　　
+  layoutsform($user,$userAuth,$groupArr,$hostArr);
+  ///
+  $timeStamp=date('ymdHis');
+  if ($userAuth=='1'){
+    $proc_sql='update processtb set monstamp='.$timeStamp;
+    putdata($proc_sql);
   }
 }
 print '</body></html>';

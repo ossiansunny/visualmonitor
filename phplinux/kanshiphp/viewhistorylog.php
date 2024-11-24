@@ -52,13 +52,6 @@ if (isset($_GET['add'])){
   $histArr=explode(',',$histRow,4);
   $logType=$histArr[0];
   $logTimeStamp=$histArr[1];
-  //if (! is_null($histArr[2])){
-  //  $subject=$histArr[2];
-  //  $webSubject=htmlspecialchars($subject,ENT_QUOTES);
-  //  $webSubject=str_replace("\\","\\\\",$webSubject);
-  //}else{
-  //  $webSubject='';
-  //} 
   $hist_sql="select * from historylog where logtime='".$logTimeStamp."'";
   $histRows=getdata($hist_sql);
   $histArr=explode(',',$histRows[0]);
@@ -72,7 +65,7 @@ if (isset($_GET['add'])){
   if (! is_null($histArr[3])){
     $contents=$histArr[3];
     $webContents=htmlspecialchars($contents,ENT_QUOTES);
-    $lineCount=strval(substr_count($webContents,"\n")+1); //行数を調べる
+    $lineCount=strval(substr_count($webContents,"\n")+1); ///行数を調べる
   }else{
     $lineCount="0";
   }

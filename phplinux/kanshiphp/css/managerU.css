@@ -1,0 +1,37 @@
+/*body {background-color: #000000;}*/
+h1 { font-weight: bold; color: #3366ff; }
+h2 { font-weight: bold; color: white; }
+/* h2 { font-weight: bold; color: #3366ff; } */
+
+h3 { font-weight: bold; color: Gray; }
+.wihi { width: 120; }
+td { font-size: small; color: white; border-radius: 12%; }
+/* td { font-size: small; color: #006DD9; border-radius: 12%; }*/
+td.back { background-color: #f4a460;}
+td.host { font-size: 10px; font-weight: bold; }
+.tablelayout { layout-fixed; }
+.viewname { font-weight: bold;  color: white; background-color: #3366ff; }
+.snmp { font-weight: bold; font-size: small; color: green; background-color: lightgray; }
+.unknown { font-weight: bold; font-size: small; color: green; background-color: gray; }
+.alarm { font-weight: bold; font-size: small; color: green; background-color: red;}
+.normal {font-weight: bold; font-size: small; color: green; background-color: green; }
+.snorm {font-weight:vold font-size:small; color:white; background-color:green; }
+.swarn {font-weight:vold font-size:small; color:gray; background-color:yellow; }
+.scrit {font-weight:vold font-size:small; color:white; background-color:red; }
+.bgstand {font-weight:vold font-size:small; color:#00FFFF; background-color:#00FFFF; }
+.bgblack {font-weight:vold font-size:small; color:black; background-color:black; }
+.bgbrown {font-weight:vold font-size:small; color:brown; background-color:brown; }
+.bgindig {font-weight:vold font-size:small; color:indigo; background-color:indigo; }
+.bgpurpl {font-weight:vold font-size:small; color:purple; background-color:purple; }
+.bgdarks {font-weight:vold font-size:small; color:darkslategray; background-color:darkslategray; } 
+.sunko {font-weight:vold font-size:small; color:#000000; background-color:#000000; } */
+
+.anorm {font-weight:vold font-size:small; color:white; background-color:green; }
+.aprob {font-weight:vold font-size:small; color:gray; background-color:yellow; }
+input.okcolor {background-color: green; color: white;}
+input.ngcolor {background-color: red; color:white; }
+.okcolor {background-color: green; color: white;}
+.ngcolor {background-color: red; color:white; }
+.big{font-size:1.6em; font-weight:800; color:gray;}
+.blink{animation:BLINK 0.5s ease-in-out infinite alternate;}@keyframes BLINK {0%{opacity:1.0;}100% {opacity:0;}}
+

@@ -11,7 +11,7 @@ function bodyformat($_from,$_status,$_msg,&$bodyStr){
   $_body[0]='***** VisualMonitor *****';
   $_body[1]='From: ' . $_from;
   $_body[2]='Date: ' .$dte;
-  $_body[3]='State: ' .$_status; // 
+  $_body[3]='State: ' .$_status;  
   $_body[4]='Messages:';
   $_body[5]=$_msg; /// message
   $bodyStr='';
@@ -21,7 +21,7 @@ function bodyformat($_from,$_status,$_msg,&$bodyStr){
 }
 ///
 $graphStr=$_GET['graph'];
-$graphArr=explode(',',$graphStr); // xxxxx.png,yyyyy.svg
+$graphArr=explode(',',$graphStr); /// xxxxx.png,yyyyy.svg
 $host=$_GET['host'];
 $user=$_GET['user'];
 
@@ -35,7 +35,6 @@ $subj1='Email';
 $subj2='Attachment';
 $subj3='Graph';
 $title='*** グラフ添付メール ***';
-//$title='**'.$subj1.' '.$subj2. ' ' .$subj3. '**';
 $msg='Host '.$host;
 ///
 bodyformat($user,$title,$msg,$bodyStr);

@@ -23,7 +23,7 @@ if (!isset($_GET['param'])){
   $head_sql="select * from header";
   $headRows=getdata($head_sql);
   $headArr=explode(',',$headRows[0]);
-  $title = $headArr[0]; //host
+  $title = $headArr[0]; 
   $subTitle=$headArr[1];
   $image1=$headArr[2];
   $image2=$headArr[3];

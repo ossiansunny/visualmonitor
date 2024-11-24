@@ -1,8 +1,8 @@
 <?php
 error_reporting(E_ALL & ~E_WARNING);
-//==================================================
-//====================== windows ===================
-//==================================================
+///==================================================
+///====================== windows ===================
+///==================================================
 function phpsnmptcpopenwin($host,$community,&$data) {
   $strings="";
   $resarray = array();
@@ -18,8 +18,7 @@ function phpsnmptcpopenwin($host,$community,&$data) {
     foreach ($keyv4 as $v4data){
       $ar2=explode('"',$v4data);
       if ($ar2[1] == '0.0.0.0'){   
-        $ar3=explode('.',$ar2[2]); //print $v4port.'\r\n';
-        //print $ar3[1].'<br>';
+        $ar3=explode('.',$ar2[2]);
         $v4port=$ar3[1];
         $v4item[$cnt]=$v4port;
         $cnt++;
@@ -37,12 +36,10 @@ function phpsnmptcpopenwin($host,$community,&$data) {
     $v6item = array();
     $cnt=0;
     foreach ($keyv6 as $v6data){
-      //print $v6data.'<br>';
       $ar2 = explode('"',$v6data);
       if ($ar2[1]=='00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00') {
         $ar3=explode('.',$ar2[2]);
         $v6port=$ar3[1]; 
-        //print $v6port.'<br>';
         $v6item[$cnt]=$v6port;
         $cnt++;
       }    
@@ -97,9 +94,9 @@ function phpsnmptcpopenwin($host,$community,&$data) {
   
 }
 
-//==================================================
-//====================== unix/linux ================
-//==================================================
+///==================================================
+///====================== unix/linux ================
+///==================================================
 
 function phpsnmptcpopen($host,$community,&$data) {
   $resarray = array();

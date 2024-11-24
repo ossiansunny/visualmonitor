@@ -49,7 +49,6 @@ if ($layoutRows[0]=='error'){
   print '<form name=myform action=layoutstp.php method=get>';
   print '<table border=1>';
   print '<tr><th>選択</th><th>グループ名</th><th>配置順序</th><th>行ホスト数</th><th>段数</th><th>ホスト配置</th></tr>';
-  //print "<input type=hidden name=glayout value={$grpLayout}>";
   print "<input type=hidden name=laynick value={$layoutNick}>";
   for($i=0;$i<$groupCount;$i++){
     $groupArr=explode(',',$layoutRows[$i]);

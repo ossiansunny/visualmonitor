@@ -13,7 +13,6 @@ $logType=$_GET["logtype"];
 $logTime=$_GET["logtime"];
 $logSubject=$_GET["logsubj"];
 $logContents=$_GET["logcont"];
-//print $pgm;
 $webLogSubject=htmlspecialchars($logSubject,ENT_QUOTES);
 $webLogContents=htmlspecialchars($logContents,ENT_QUOTES);
   

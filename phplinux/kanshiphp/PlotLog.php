@@ -17,7 +17,7 @@ if(!isset($_GET['param'])){
   print '<html><head><meta>';
   print '<link rel="stylesheet" href="css/kanshi1_py.css">';
   print '</head><body>';
-  print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　プロット追跡ログ　▽</h2>';
+  print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　プロットトレースログ　▽</h2>';
   $lineNum = 40;   /// 表示する行数
   print "<h3>最新 {$lineNum} 行</h3>";
   $vpath_plothome="";
@@ -35,6 +35,7 @@ if(!isset($_GET['param'])){
       /// Linux
       $currLogPath = $vpath_plothome."/logs/".$plotLogName;
     }
+    print "<h4>{$currLogPath}</h4>";
     if (file_exists($currLogPath)){
       $logRecArr = file($currLogPath , FILE_IGNORE_NEW_LINES);
       $start_index = count($logRecArr) - $lineNum;
@@ -51,7 +52,6 @@ if(!isset($_GET['param'])){
       print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
       print '</body></html>';
     }else{
-      print "<h4>$currLogPath</h4>";
       print "<h3>表示すべき上記ファイルがありません、エラーが無いか又はマニュアルを参照して下さい</h3>";
       print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
       print '</body></html>';

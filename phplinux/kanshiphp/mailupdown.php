@@ -24,7 +24,6 @@ function mailupdown($_hostRow,$_noticeType){
   $subj1='';
   $stat='';
   $info='';
-  //$prorec=$mtype;
   $snmpt='';
   $prsn='';
   if($action=='1' || $action=='4'){
@@ -76,7 +75,6 @@ function mailupdown($_hostRow,$_noticeType){
   $subj3=$prsn; /// PING|SERVICE
   $subj4=$stat; ///$subj4='WARNING|Down|UP|UNKNOWN|CRITICAL|RECOVERY';
   $title='**'.$subj0.' ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
-  //$title='**'.$subj0.' Service ' .$subj1. ' ' .$subj2. '/' .$subj3. ' is ' .$subj4. '**'; 
   $flg=phpsendmail("", "", $fromMailAddr, $toMailAddr, $title, $bodyStr);
   if($flg==0){
     $msg="phpsendmailにより送信完了しました";

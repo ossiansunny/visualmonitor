@@ -62,7 +62,7 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
   }
   $authuser=$mailArr[2];  ///認証ユーザー
   $passwd=$mailArr[3];    ///認証パスワード
-  $status=$mailArr[4]; // mailserverのstatus 0:ok 1:ng
+  $status=$mailArr[4]; /// mailserverのstatus 0:ok 1:ng
   if ($status == "0" || is_null($status)) {
     /// post : integer
     /// body : array
@@ -132,26 +132,26 @@ function phpsendmail($hst, $prt, $from, $to, $subj, $body){
       setstatus('0','Mail Server Active');
       
       ///添付ファイルクリア      
-      //$mail->clearAttachments();
+      ///$mail->clearAttachments();
       
       ///送信先情報クリア
       ///$mail->clearAllRecipients();
     } catch (Exception $e) {
       $msg="メッセージ送信不可、PHPMailer不具合か設定ミス: {$mail->ErrorInfo}";
-      writeloge($pgm,$msg);
+      writelogd($pgm,$msg);
       $rcode=1;
     }
   } else {
     delstatus('Mail Server Active');               /// mail送出がエラーで返って来たので
     setstatus('1','Mail Server InActive');         /// InActiveにしている
     $msg="メールサーバがDBのmailserverテーブルに未登録か状態が非活動";
-    writeloge($pgm,$msg);
+    writelogd($pgm,$msg);
     $rcode=1;
   }
   return $rcode;
  } else {
-  $msg="メールサーバ使用不可能をstatusテーブルで検知"; // getmailstatusでInActiveになっていた
-  writeloge($pgm,$msg);
+  $msg="メールサーバ使用不可能をstatusテーブルで検知"; /// getmailstatusでInActiveになっていた
+  writelogd($pgm,$msg);
   return 1;
  }
 }

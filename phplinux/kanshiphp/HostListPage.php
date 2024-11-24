@@ -24,9 +24,9 @@ if (!isset($_GET['param'])){
   }
 
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　ホスト一覧　▽</h2>';
-  //
+  ///
   ///----画面表示処理 --------------------
-  //
+  ///
   print '<h4>☆更新・削除するホストを１つ選択して「実行」をクリック</h4>';
   print '<form name="rform" method="get" action="hostupdel.php">';
   print '<table><tr><th width=20">選択</th><th width=100>ホスト</th><th>表示名</th><th>現行レイアウト</th></tr>';

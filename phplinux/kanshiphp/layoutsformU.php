@@ -1,12 +1,14 @@
 ﻿<?php
 print '<html><head>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head><body>';
+/// global
+$bgcolor='';
 
 function jdgnwc($_jdgdata){
+  global $bgcolor;
   $jdgRtn="";
   if($_jdgdata==""){
-    $jdgRtn="sunko";
+    $jdgRtn=$bgcolor;
   }else{
     $jdgArr=explode(':',$_jdgdata);
     if($jdgArr[0]=="n"){
@@ -16,21 +18,22 @@ function jdgnwc($_jdgdata){
     }else if($jdgArr[0]=="c"){
       $jdgRtn="scrit";
     }else{
-      $jdgRtn="sunko";
+      $jdgRtn=$bgcolor;
     }
   }
   return $jdgRtn; 
 }
 function jdgnc($_jdgdata,$_hdata){ /// statistics data, host data
+  global $bgcolor;
   $jdgRtn="";
   if($_jdgdata=="" || $_jdgdata=="allok" || $_jdgdata=="empty"){ /// statistics process data が無い=>正常
     if($_hdata!=""){ /// host process data はある、is not ""
-      $jdgRtn="snorm";
+      $jdgRtn="snorm"; /// host dataにprocessまたはportあれば正常表示
     }else{
-      $jdgRtn="sunko";
+      $jdgRtn=$bgcolor; /// host dataにprocessまたはportなければ表示せず
     }
   }else{
-    $jdgRtn="scrit";
+    $jdgRtn="scrit"; /// allok,empty以外ならば異常表示
   }
   return $jdgRtn;
 }
@@ -60,7 +63,7 @@ function gethostinfo($_host){
   if(isset($hostRows)){
     $rtnVal=$hostRows[0];
   }else{
-    $rtnVal=',,,,,,,,,,,,,,';
+    $rtnVal=',,,,,,,,,,,,';
   }
   return $rtnVal;
 }
@@ -89,7 +92,7 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
   $adminArr=explode(',',$adminRows[0]);
   $hostEnable=$adminArr[13]; /// hosthyoji
   $grpimg=$adminArr[14]; /// haikei
-  ///$standby=$adminArr[15]; /// standby
+  $bgcolor=$adminArr[17]; /// background color
   $bgImage='haikeiimg/'.$grpimg;
   /// 管理者でホスト名表示の場合のみ
   if($hostEnable=='1' and $_userAuth=='1'){
@@ -117,7 +120,6 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
               print '<td  align="center" class="host">No Assign</td>';
             }else{
               print "<td  align='center' class='host'>{$_sarr[$gcc][$dcc][$hcc][0]}</td>";  ///host
-              
             }  
           }        
           print '</tr>';        
@@ -167,8 +169,8 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
               }else{ /// action=0以外　result=3-9
                 $img='hostimage\\'.$imgsep[0].'2.'.$imgsep[1];
                 print "<td align=center class=alarm ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; 
-              }             
-            }
+              }
+            }             
           }
         }  
         print '</tr>';
@@ -201,38 +203,40 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
                 /// statArr[8] tcpport
                 if($result != "1"){ /// 障害中 statistics データ表示しない
                   print '<td></td>'; 
-                }else if(substr($hostname,0,8)!='127.0.0.'){ 
-                  ///agent 127.0.0.x以外の処理 statisticsのgtype=9
-                  if ($statArr[2]=='9'){ ///and ($standby=='1' or $standby=='2')){
-                    /// statisticsのgtype=9で,admintbのstandby=1 or 2はstandbyを表示
+                }else if(substr($hostname,0,8)!='127.0.0.'){ ///agent 127.0.0.x以外の処理
+                  if ($statArr[2]=='9'){ /// statisticsのgtype欄
                     $agst='aprob';
-                    print "<td class=snmp align=center><table><tr><td class={$agst} align=center>standby</td></tr></table></td>";
+                    print "<td align=center><table><tr><td class={$agst} align=center>standby</td></tr></table></td>";
                     $msg=$hostname.' set snmp standby ';
                     writelogd('layousform.php',$msg);
                   } else {
                     $cb1=jdgnwc($statArr[3]); ///cpu
                     $cb2=jdgnwc($statArr[4]); ///ram
                     $cb3=jdgnwc($statArr[6]);  ///disk
-                    /// 以下、stat="" host="any" なら green表示
-                    $cb4=jdgnc($statArr[7],$hostinfo[11]);  ///process
-                    $cb5=jdgnc($statArr[8],$hostinfo[7]);  ///port            
-                    print "<td class=snmp align=center><table border=0><tr><td class={$cb1}>c</td><td class={$cb2}>r</td><td class={$cb3}>d</td><td class={$cb4}>p</td><td class={$cb5}>t</td></tr></table></td>";
+                    $cb4=jdgnc($statArr[7],$hostinfo[11]);  ///$hostinfo[11]はprocess情報
+                    $cb5=jdgnc($statArr[8],$hostinfo[7]);  ///$hostinfo[7]はport情報        
+                    print "<td align=center><table border=0><tr>";
+                    print "<td class={$cb1}>c</td>";
+                    print "<td class={$cb2}>r</td>";
+                    print "<td class={$cb3}>d</td>";
+                    print "<td class={$cb4}>p</td>";
+                    print "<td class={$cb5}>t</td>";
+                    print "</tr></table></td>";
                   }
-                }else{ 
-                  /// 127.0.0.x  Managerの処理 admintbのstandby=1,2 statisticsのsb
-                  if($statArr[5]=='sb'){ /// or $standby=='1' or $standby=='2'){
-                    $amsg='Standby ';
-                    $agst='aprob';
-                  }else if($statArr[5]=='ok'){ 
+                }else{ /// 127.0.0.x  Managerの処理
+                  if($statArr[5]=='ok'){ /// statisticsのagent欄
                     $amsg='No Problem ';
                     $agst='snorm';
-                  }else if($statArr[5]=='ng'){
+                  }else if($statArr[5]=='ng') {
                     $amsg='Problem ';
                     $agst='scrit';
+                  }else{
+                    $amsg='Standby ';
+                    $agst='swarn';
                   }
-                  print "<td class=snmp align=center><table><tr><td align=center class={$agst}>{$amsg}</td></tr></table></td>";
+                  print "<td align=center><table><tr><td align=center class={$agst}>{$amsg}</td></tr></table></td>";
                 }
-              }
+              }            
             }else{
               $msg='mysql error or no data:'.$stat_sql;
               writeloge($pgm,$msg);

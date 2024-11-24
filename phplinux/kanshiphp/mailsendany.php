@@ -11,7 +11,7 @@ function bodyformat($_from,$_status,$_msg,&$bodystr){
   $_body[0]='***** VisualMonitor *****';
   $_body[1]='From: ' . $_from;
   $_body[2]='Date: ' .$dte;
-  $_body[3]='State: ' .$_status; // 
+  $_body[3]='State: ' .$_status;  
   $_body[4]='Messages:';
   $_body[5]=$_msg; /// message
   $bodyStr='';
@@ -21,6 +21,7 @@ function bodyformat($_from,$_status,$_msg,&$bodystr){
 }
 
 function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
+  global $pgm;
   $bodyStr = "";
   $header_sql='select * from header';
   $headerRows=getdata($header_sql);
@@ -71,7 +72,6 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
   }
   $rtnFlag=1;
   $rtnFlag=phpsendmail("", "", $fromAddr, $toAddr, $title, $bodyStr);
-  //print("phpsendmail done\n");
   $mmsg='';
   if($rtnFlag==0){
     $mmsg='送信完了 '.$bodyStr.' '.$toAddr.' '.$fromAddr."\r\n";
@@ -83,6 +83,8 @@ function mailsendany($_mailType,$_from,$_to,$_subject,$_body){
   return $rtnFlag;
 
 }
-//mailsendany("hostupdate","vmadmin@mydomain.jp","mailuser@mydomain.jp","subject","boidy")
+/*
+mailsendany("hostupdate","vmadmin@mydomain.jp","mailuser@mydomain.jp","subject","body")
+*/
 ?>
 

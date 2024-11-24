@@ -66,7 +66,6 @@ if ($diffTime > intval($monitorInterval)*3){
     }
   }
 }else{
-  //echo 'less than '.$mrtgTimeStamp.'sec'.PHP_EOL;
   print "<h4>MRTG Daemon Running</h4>";
 }
 

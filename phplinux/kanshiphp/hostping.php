@@ -27,7 +27,6 @@ function hostping($_host){
          }
       }
       if($breakSw == 1){
-         //mailactive($_host);
          return 0;
       } else {
          return 1;
@@ -46,7 +45,6 @@ function hostping($_host){
          }
       }
       if($breakSw == 1){
-         //mailactive($_host);
          return 0;
       } else {
          return 1;

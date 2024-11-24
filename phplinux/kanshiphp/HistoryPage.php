@@ -118,7 +118,6 @@ if(!(isset($_GET['display']) || isset($_GET['select']) || isset($_GET['search'])
 ///
   if ($brcode=='error' or $brcode=='notic' or $brcode=='alert'){
     print '<h4 class="'.$brcode.'">"'.$brmsg.'"</h4><hr>';
-    //print "<h4 class={$ercode}>{$brmsg}</h4><hr>";
   }
 ///
   $hist_sql='select * from historylog order by type, logtime desc';
@@ -181,7 +180,7 @@ if (empty($histRows)){
     }else{
       $webContents='';
     }
-    $histStr = myjoin($histArr); //## for post string to vieweventlog.py
+    $histStr = myjoin($histArr); /// for post string to vieweventlog.py
     print '<tr>';
     print "<td class=vatop><input type='radio' name='select' value={$histStr} ></td>";
     print "<td class={$bgColor}><span class=vatop >{$logType}</span></td>";
@@ -189,7 +188,7 @@ if (empty($histRows)){
     print "<td class=vatop>{$webSubject}</td>";
     print "<td width='60'>{$webContents}</td>";
     print '</tr>';
-  } //end of for
+  } 
   print '</table>';
   print '<br><input class=button type="submit" name="update" value="変更実行" >';
   print '&nbsp;&nbsp;<input class=buttondel type="submit" name="delete" value="削除実行" onClick="set_val()">';

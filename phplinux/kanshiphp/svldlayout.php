@@ -79,7 +79,7 @@ if($get_layout=='layout' && $get_tosave==''){
     ///
   }else{
     /// 指定レイアウトを削除
-    $get_layout=$_GET['terms']; // termsからlayout_xxが来るので、groupの場合はgをつけglayoutにする
+    $get_layout=$_GET['terms']; /// termsからlayout_xxが来るので、groupの場合はgをつけglayoutにする
     $layout_sql='drop table if exists g'.$get_layout;
     putdata($layout_sql);
     $layout_sql='drop table if exists '.$get_layout;

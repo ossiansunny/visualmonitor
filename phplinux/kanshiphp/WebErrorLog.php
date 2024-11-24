@@ -27,71 +27,41 @@ if(!isset($_GET['param'])){
   print "<h3>最新 {$lineNum} 行</h3>";
   $vpathParam=array("vpath_weblog");
   $vpathArr=pathget($vpathParam);
-  $vpath_weblog=$vpathArr[0];
   if(count($vpathArr)==1){
+    $vpath_weblog=$vpathArr[0];
+    $now=new DateTime();
+    $ymd=$now->format("Ymd");
+    $currErrLog="error_".$ymd.".log";
     if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-      /// xampp apache      
-      $now=new DateTime();
-      $ymd=$now->format("Ymd");
-      $currErrLog="error_".$ymd.".log";
-      //$currErrLog="error.log";
-      $currPath = $vpath_weblog."\\".$currErrLog;      
-      if (file_exists($currPath)){
-        $contents = file($currPath , FILE_IGNORE_NEW_LINES);
-        $start_index = count($contents) - $lineNum;
-        if ( $start_index < 0) {
-          $start_index = 0;
-        }
-        for ( $i=$start_index; $i<count($contents); $i++ ) {
-          print $contents[$i] . '<br />';
-        }
-        print "^^^^^^^^^^^^^ 最終行 ^^^^^^^^^^^^^";
-        print '<form action="WebErrorLog.php" method="get">';
-        print "<input type='hidden' name='user' value={$uid} >";      
-        print '</form>';    
-        print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
-        print '</body></html>';
-      }else{
-        print "<h4>$currpath</h4>";
-        print "<h3>表示すべき上記ファイルがありません、エラーが無いか又はマニュアルを参照して下さい</h3>";
-        print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
-        print '</body></html>';
+      $currPath = $vpath_weblog."\\".$currErrLog;
+    }else{
+      $currPath = $vpath_weblog."/".$currErrLog;
+    }
+    print "<h4>{$currPath}</h4>";
+    if (file_exists($currPath)){
+      $contents = file($currPath , FILE_IGNORE_NEW_LINES);
+      $start_index = count($contents) - $lineNum;
+      if ( $start_index < 0) {
+        $start_index = 0;
       }
+      for ( $i=$start_index; $i<count($contents); $i++ ) {
+        print $contents[$i] . '<br />';
+      }
+      print "^^^^^^^^^^^^^ 最終行 ^^^^^^^^^^^^^";
+      print '<form action="WebErrorLog.php" method="get">';
+      print "<input type='hidden' name='user' value={$uid} >";      
+      print '</form>';    
       print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
       print '</body></html>';
-      
     }else{
-      /// Linux
-      $now=new DateTime();
-      $ymd=$now->format("Ymd");
-      $currErrLog="error_".$ymd.".log";
-      $currPath = $vpath_weblog."/".$currErrLog;
-      //var_dump($currPath); 
-      if (file_exists($currPath)){
-        $contents = file($currPath , FILE_IGNORE_NEW_LINES);
-        $start_index = count($contents) - $lineNum;
-        if ( $start_index < 0) {
-          $start_index = 0;
-        }
-        for ( $i=$start_index; $i<count($contents); $i++ ) {
-          print $contents[$i] . '<br />';
-        }
-        print "^^^^^^^^^^^^^ 最終行 ^^^^^^^^^^^^^";
-        print '<form action="WebErrorLog.php" method="get">';
-        print "<input type='hidden' name='user' value={$uid} >";      
-        print '</form>';    
-        print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
-        print '</body></html>';
-      }else{
-        print "<h4>$currpath</h4>";
-        print "<h3>表示すべき上記ファイルがありません、エラーが無いか又はマニュアルを参照して下さい</h3>";
-      }
-    }
+      print "<h4>$currpath</h4>";
+      print "<h3>表示すべき上記ファイルがありません、エラーが無いか又はマニュアルを参照して下さい</h3>";
+    }    
   }else{
     print "<h3>kanshiphp.iniにvpath_weblogがありません</h3>";
     print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
-    print '</body></html>';
   }
+  print '</body></html>';
 }
 ///
 ?>

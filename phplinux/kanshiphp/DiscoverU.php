@@ -12,7 +12,7 @@ print "<meta http-equiv='refresh' content={$interval}>";
 print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '</head>';
 print '<body>';
-print "<h4>Discover {$interval}sec </h4>";
+print "<h4>メールサーバ・ログ監視 {$interval}秒 </h4>";
 ///
 $osDirSep='';
 if (strtoupper(substr(PHP_OS,0,3))==='WIN') {

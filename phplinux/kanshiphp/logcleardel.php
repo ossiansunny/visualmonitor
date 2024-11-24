@@ -43,32 +43,30 @@ if (!isset($_GET['log'])){
 $logType = $_GET['log'];  /// 選択されたlog種類
 
 ///--- log削除処理 -----------
-//if($logType=='Web' && $osDirSep=="/"){
 if($logType=='Web'){
   $fileRows=glob($webLogDir.$osDirSep.'*_*.log');
   foreach($fileRows as $fileRowsRec){
     $filename=basename($fileRowsRec);
-    //echo $filename.'<br>';
     if (false === strpos($filename,$ymd)){
       unlink($webLogDir.$osDirSep.$filename);
-    } // end of if    
-  }  // end of for
+    }     
+  }  
 }elseif($logType=='監視'){
   $fileRows=glob($kanshiLogDir.$osDirSep.'kanshi_*.log');
   foreach($fileRows as $fileRowsRec){        
     $filename=basename($fileRowsRec);
     if(false === strpos($filename,$ymd)){
       unlink($kanshiLogDir.$osDirSep.$filename);
-    } // end of if
-  } // end of for
+    } 
+  } 
 }else{
   $fileRows=glob($plotLogDir.$osDirSep.'plot_*.log');
   foreach($fileRows as $fileRowsRec){        
     $filename=basename($fileRowsRec);
     if (false === strpos($filename,$ymd)){
       unlink($plotLogDir.$osDirSep.$filename);
-    }  // end of if
-  }  // end for
+    }  
+  }  
 }
 
 $msg="#notic#".$user."#".$logType."ログの削除が完了しました";

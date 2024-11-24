@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="css/MenuPageU1.css">
 <title>Welcome to My WebSite</title>
 <script language="JavaScript"><!--
-function changeFramemon(){ parent.sframe.location.href = "MonitorManager.php";}
+function changeFramemon(){ parent.sframe.location.href = "MonitorManagerU.php";}
 function changeFrameelog(){ parent.sframe.location.href = "EventLogPage.php";}
 function changeFrameememo(){ parent.sframe.location.href = "EventMemoPage.php";}
 function changeFramesnmpvalue(){ parent.sframe.location.href = "SnmpStatPage.php";}
@@ -17,11 +17,13 @@ function changeFramecmde(){ parent.sframe.location.href = "WebErrorLog.php";}
 function changeFrameman(){ parent.sframe.location.href = "ManualPageUphp.php";}
 // --></script>
 </head>
-///
 <body >
 <div id="body">
   <hr id="bar">
   <div class="sidebar" id="left">
+  <h2><img src="./header/alarm1mini.png">アラーム表示</h2>
+  <iframe id="mesg" src="Messages.php" width="170" height="60">message</iframe>
+  <hr id="bar">
   <h2>▼　表示メニュー</h2>
   <ul>
         <li><a href="javascript:changeFramemon()"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;監視モニター</span></a></li>

@@ -19,10 +19,8 @@ function snmptcpportget($host,$community) {
     if ($getvalue=="\"\""){					/// ""
       $rtnval="allok";      
     }else{
-      $rtnarr=explode(':',$getvalue);				//STRING: "80" 分離
-      $rtnvalsp=ltrim(rtrim(trim($rtnarr[1]),'"'),'"');         //"80"のDoubleQuoteを削除
-      //$rtnval=str_replace(' ',';',$rtnvalsp);                 //これは不要
-      
+      $rtnarr=explode(':',$getvalue);				///STRING: "80" 分離
+      $rtnvalsp=ltrim(rtrim(trim($rtnarr[1]),'"'),'"');         ///"80"のDoubleQuoteを削除      
     }
   }
   return $rtnval;  

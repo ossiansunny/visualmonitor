@@ -16,21 +16,23 @@ function hostncat($host,$port){
   /// WindowsとUNIXのncatコマンドは同じだが
   /// Windowsは先頭にcmd.exeが必要
   global $vpath_ncat, $vpathCount;
-  if ($vpathCounr==1){ 
+  if ($vpathCount==1){ 
     $output=null;
     $result=null;
     $cmd="";
     if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
       ///  Windows
-      $cmd='"'.$vpath_ncat.'/ncat.exe"'.' -zv -w 0.5 '.$host.' '.$port;
-      //$cmd='"'.$vpath_ncat.'" -zv -w 0.5 '.$host.' '.$port;
-      //$cmd='"c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port;
+      $cmd='"'.$vpath_ncat.'/ncat.exe"'.' -z -w 0.5 '.$host.' '.$port;
+      
+      ///$cmd='"'.$vpath_ncat.'" -zv -w 0.5 '.$host.' '.$port;
+      ///$cmd='"c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port;
       exec('cmd /s /c "'.$cmd.'"',$output,$result);
-      //exec('cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 192.168.1.22 443"',$output,$result);
-      //exec('cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port.'"',$output,$resu
+      ///exec('cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 192.168.1.22 443"',$output,$result);
+      ///exec('cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port.'"',$output,$resu
     }else{
       /// Unix/Linux
-      $cmd="ncat -zv -w 0.5 ".$host." ".$port;
+      $cmd="ncat -z -w 0.5 ".$host." ".$port;
+      
       exec($cmd,$output,$result);
     }
      
@@ -48,19 +50,17 @@ function winhostncat($host,$port){
    /// WindowsとUNIXのncatコマンドは同じだが
    /// Windowsは先頭にcmd.exeが必要
    /// vmsetup/kanshiphp,ini で vpath_ncat="ncat.exeのディレクトリ" 設定
-   //$vpath_ncat='c:/program files (x86)/nmap';
+   ///$vpath_ncat='c:/program files (x86)/nmap';
    $output=null;
    $result=null;
-   //echo '<br>'.$port;
    $cmd='"'.$vpath_ncat.'/ncat.exe"'.' -zv -w 0.5 '.$host.' '.$port;
-   //$cmd='"'.$vpath_ncat.'" -zv -w 0.5 '.$host.' '.$port;
-   //$cmd='"c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port;
-   //echo $cmd;
-   //$cmd="ncat.exe -zv -w 0.5 ".$host." ".$port;  // ncat.exeが見つからない？　PATH登録済
+   ///$cmd='"'.$vpath_ncat.'" -zv -w 0.5 '.$host.' '.$port;
+   ///$cmd='"c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port;
+   ///$cmd="ncat.exe -zv -w 0.5 ".$host." ".$port;  // ncat.exeが見つからない？　PATH登録済
    exec('cmd /s /c "'.$cmd.'"',$output,$result);
-   //exec('cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 192.168.1.22 443"',$output,$result);
-   //echo 'cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port.'"';
-   //exec('cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port.'"',$output,$result);
+   ///exec('cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 192.168.1.22 443"',$output,$result);
+   ///echo 'cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port.'"';
+   ///exec('cmd /s /c ""c:/program files (x86)/nmap/ncat.exe" -zv -w 0.5 '.$host.' '.$port.'"',$output,$result);
    echo '<br>return:'.strval($result).'<br>';
    return $result; 
 }
@@ -83,7 +83,6 @@ function hostnmap($host,$portlist){
      foreach ($output as $openRec){
        $openRecArr=explode('/',$openRec);
        if ($listRec == $openRecArr[0]){
-         //echo PHP_EOL.'match:'.$listRec;
          $matchsw=1;
          break;
        }
@@ -97,11 +96,10 @@ function hostnmap($host,$portlist){
    }else{
      $string=rtrim($string,";");
    }
-   //echo date("H:i:s");
    return $string;
 } 
 /*
-$rtn=hostncat('192.168.1.22','443');
+$rtn=hostncat('192.168.1.139','25');
 if ($rtn==0) {
   echo 'open';
 }else{

@@ -3,11 +3,7 @@ require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "mailsendevent.php";
 ///
-/*
-print '<html><head><meta>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
-print '</head><body>';
-*/
+
 $pgm = "eventlogupdeldb.php";
 $user = $_GET['user'];
 $checkRadio = $_GET['cradio'];    /// 選択されたボタン
@@ -35,7 +31,7 @@ $statType = "";
 $eventStamp = date('ymdHis');
 /// イベントデータ
 $eventLogArr=explode(',',$eventLogRow);
-$ev_host = $eventLogArr[0];  // host
+$ev_host = $eventLogArr[0];  /// host
 $ev_snmpType = $eventLogArr[3];
 $ev_snmpVal = $eventLogArr[4];
 $ev_cnfCls = $eventLogArr[7];
@@ -43,8 +39,7 @@ $ev_msg = $eventLogArr[9];
 ///
 /// ラヂオボタン処理
 ///
-  if ($checkRadio=='confirm'){     // 「障害確認」ボタン ---> statistics gtype=5 
-           // confclose=1         
+if ($checkRadio=='confirm'){ /// 「障害確認」ボタン ---> statistics gtype=5
   $statType = "5"; /// 確認
   /// あれば更新 
   $stat_sql="select gtype from statistics where host='".$ev_host."'";
@@ -70,7 +65,7 @@ $ev_msg = $eventLogArr[9];
     $nextpage="EventLogPage.php";
     branch($nextpage,$msg);
   }
-  $confClose = "2";          // confclose=2
+  $confClose = "2";          /// confclose=2
   mailsendevent($eventLogRow,$adminId,$cnfClsNum,$confClose,$memoMsg);
   $event_sql="delete from eventlog where host='".$ev_host."'";
   putdata($event_sql);
@@ -80,7 +75,7 @@ $ev_msg = $eventLogArr[9];
   $event_sql='insert into eventlog values("'.$ev_host.'","'.$eventStamp.'","'.$eventType.'","'.$stype.'","'.$svalue.'","'.$user.'","'.$cnfClsNum.'","'.$confClose.'","'.$mailOpt.'","'.$msg.'")';
   putdata($event_sql);
   writelogd($pgm,$event_sql);
-  // あれば更新
+  /// あれば更新
   $stat_sql="select gtype from statistics where host='".$ev_host."'";
   $statRows=getdata($stat_sql);
   if (isset($statRows)){
@@ -94,8 +89,8 @@ $ev_msg = $eventLogArr[9];
   putdata($memo_sql);
   writeloge($pgm,$memo_sql);
 
-}elseif ($checkRadio=='memo'){   // 「メモ保存」ボタン
-  $confClose="5";            // confclose=5
+}elseif ($checkRadio=='memo'){  /// 「メモ保存」ボタン
+  $confClose="5";               /// confclose=5
   $memo_sql='insert into eventmemo values("'.$eventStamp.'","'.$ev_host.'","'.$adminId.'","'.$cnfClsNum.'","'.$memoMsg.'")';
   putdata($memo_sql);
 }

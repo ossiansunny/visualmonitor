@@ -3,24 +3,23 @@ require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "serverimagedisplay.php";
 require_once "hostping.php";
-//require_once "winhostncat.php";
 require_once "phpsnmpprocessset.php";
 require_once "phpsnmptrapset.php";
 require_once "phpsnmptcpportset.php";
 require_once "phpsnmpactive.php";
 require_once "mailsendany.php";
+require_once "snmpagent.php";
 
 $pgm="hostupdel.php";
+$mailToAddr="";
+$mailFromAddr="";
 
 function writelogsendmail($_msg,$_host){
   global $pgm;
+  global $mailToAddr;
+  global $mailFromAddr;
   $body=$_msg.' host '.$_host;
   writelogd($pgm,$body);
-  $admin_sql='select * from admintb';
-  $adminRows=getdata($admin_sql);
-  $hostArr=explode(',',$adminRows[0]);
-  $mailToAddr=$hostArr[3];
-  $mailFromAddr=$hostArr[4];
   $subj='ホスト '.$_host.' 保守アラート';
   mailsendany('hostupdate',$mailFromAddr,$mailToAddr,$subj,$body);
 }
@@ -29,7 +28,7 @@ function snmpcheck($_host,$_ostype,$_comm){
   /// snmpactiveでロケーションデータをアクセス
   $status=0;  
   if ($_ostype=='0' || $_ostype=='1' || $_ostype=='2'){
-    $status=snmpactive($_host,$_comm); // phpsnmpactive.php
+    $status=snmpactive($_host,$_comm); /// phpsnmpactive.php
     if ($status==1){
       writelogsendmail('SNMP応答チェック無応答',$host);
     }
@@ -41,10 +40,10 @@ function cksemicolon($_data,$_host){
   $okData="";
   if (preg_match("/,/",$_data)){
     $okData=str_replace(',',';',$_data);
-    //writelogsendmail('PORT,PROCESS列区分をセミコロンへ変換',$_host);
+    
   }elseif (preg_match("/:/",$_data)){
     $okData=str_replace(':',';',$_data);
-    //writelogsendmail('PORT,PROCESS列区分をセミコロンへ変換',$_host);
+    
   }else{
     $okData=$_data;
   }
@@ -54,10 +53,10 @@ function ckcolon($_data,$_host){
   $okData="";
   if (preg_match("/,/",$_data)){
     $okData=str_replace(',',':',$_data);
-    //writelogsendmail('CPU,RAM,DISK制限値をコロンへ変換',$_host);
+    
   }elseif (preg_match("/;/",$_data)){
     $okData=str_replace(';',':',$_data);
-    //writelogsendmail('CPU,RAM,DISK制限値をコロンへ変換',$_host);
+    
   }else{
     $okData=$_data;
   }
@@ -84,7 +83,7 @@ function ckcnotype($_data){
   }
   return $okData;
 }
-/// 
+ 
 print '<html><head><meta>';
 print '<link rel="stylesheet" href="css/kanshi1.css">';
 print '<script type="text/javascript">';
@@ -98,11 +97,22 @@ print 'window.alert("キャンセルされました");';
 print 'return false;';
 print '}';
 print '}';
-print '// -->';
+print '// -->'; //## java script end
 print '</script>';
 
 print '</head><body>';
-
+///
+/// admintb データ取得 
+///
+$admin_sql="select * from admintb";
+$adminRows=getdata($admin_sql);
+$adminArr=explode(',',$adminRows[0]);
+$mailToAddr=$adminArr[3];
+$mailFromAddr=$adminArr[4];
+$snmpintval=$adminArr[8];
+///$standby=$adminArr[15];
+///$saveintval=$adminArr[16];
+///
 $user = $_GET['user'];
 ///------------------------------
 ///--ホストデータ削除処理--------
@@ -111,8 +121,6 @@ if (isset($_GET['delete'])){
   $host=$_GET['host'];
   $user=$_GET['user'];
   $updel=$_GET['delete']; 
-  //$hostRow=$_GET['fdata']; /// host table データ
-  //$hostArr=explode(',',$hostRow);
   /// delete host record
   $host_sql="delete from host where host='".$host."'";
   putdata($host_sql);
@@ -122,7 +130,7 @@ if (isset($_GET['delete'])){
   /// イベントに残す
   /// insert eventlog
   $eventTime = date('ymdHis');
-  $eventType='4'; //削除
+  $eventType='4'; ///削除
   $event_sql="insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$host."','".$eventTime."','".$eventType."','".$user."')";
   putdata($event_sql); 
   /// 実行通知　ホスト一覧の前に
@@ -137,8 +145,8 @@ if (isset($_GET['delete'])){
 }elseif (isset($_GET['update'])){
   $host=$_GET['host'];
   $user=$_GET['user'];
-  $updel=$_GET['update']; //update host record to host table
-  $hostRow=$_GET['fdata']; // host レコードデータ
+  $updel=$_GET['update']; ///update host record to host table
+  $hostRow=$_GET['fdata']; /// host レコードデータ
   $hostArr=explode(',',$hostRow);
   $groupName='notused';
   $osType=$_GET['ostype'];
@@ -174,24 +182,16 @@ if (isset($_GET['delete'])){
   /// 更新共通
   $viewName = $_GET['viewname'];
   $mailOpt=$_GET['mailopt'];
+  $eventLog=$_GET['eventlog'];
   $tcpPortb=cknotype($_GET['tcpport']);
   $tcpPort=cksemicolon($tcpPortb,$host);
-  //$trapswt = '0';
   /// TCP拡張機能チェック 
   if (substr($tcpPort,0,1) == '&'){
     if ($osType!='1'){
       $msg = "#error#".$user."#ホスト".$hostmei."のWindowsでは使えません";
       $nextpage = "NewHostPage.php";
       branch($nextpage,$msg);
-    }
-    //$trapswt = '1';
-  //}else if(substr($tcpPort,0,1) == '%'){
-    //if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-    //  $msg = "#error#".$user."#監視マネージャがWindowsでは使えません";
-    //  $nextpage = "NewHostPage.php";
-    //  branch($nextpage,$msg);
-    //}
-    //$trapswt = '2';
+    }    
   }
   $cpuLimb=ckcnotype($_GET['cpulim']);
   $cpuLim=ckcolon($cpuLimb,$host);
@@ -201,7 +201,6 @@ if (isset($_GET['delete'])){
   $diskLim=ckcolon($diskLimb,$host);
   $processb=cknotype($_GET['process']);
   $process=cksemicolon($processb,$host);
-  //$trapswp='0';
   /// プロセス拡張機能チェック
   if (substr($process,0,1) == '&'){
     if ($osType!='1'){
@@ -209,14 +208,13 @@ if (isset($_GET['delete'])){
       $nextpage = "NewHostPage.php";
       branch($nextpage,$msg);
     }
-    //$trapswp = '1';
+    
   }
   if (substr($process,0,1) == '%'){
     $msg = "#error#".$user."#この機能は使えません";
     $nextpage = "NewHostPage.php";
     branch($nextpage,$msg);
   }
-  //$trapswp = '2';
   ///
   $image=$_GET['image'];
   if ($image==''){
@@ -232,7 +230,7 @@ if (isset($_GET['delete'])){
   }
   ///
   /// Flag|列名|データの配列
-  $wtarray=array("","","","","","","","","","","","","","");
+  $wtarray=array("","","","","","","","","","","","","","","");
   $wtarray[0]='0|host|'.$host; 
   $wtarray[1]='0|groupname|'.$groupName; 
   $wtarray[2]='0|ostype|'.$osType; 
@@ -247,6 +245,7 @@ if (isset($_GET['delete'])){
   $wtarray[11]='0|process|'.$process;
   $wtarray[12]='0|image|'.$image;
   $wtarray[13]='0|snmpcomm|'.$comm;
+  $wtarray[14]='0|eventlog|'.$eventLog;
   /// 
   /// ホストデータの配列と更新データを比較、相違あれば更新のFlag列へ２をセット
   $cct=0;
@@ -263,10 +262,9 @@ if (isset($_GET['delete'])){
   $updatesw='0';
   foreach ($wtarray as $wtrec){
     $wtval = explode('|',$wtrec);
-    if ($wtval[0]=='2'){ //## update flag = 2
+    if ($wtval[0]=='2'){ /// update flag = 2
       /// 列名=値作成
       $svalue=$svalue.$wtval[1]. "='" .$wtval[2]. "',";
-      //writeloge($pgm,'temporary '.$svalue); /////////////////
       $updatesw='1'; /// 更新スイッチオン
       
     }
@@ -282,23 +280,22 @@ if (isset($_GET['delete'])){
   }
   /// sql完成
   $upsql=$upsql." where host='".$host."'";
-  //writeloge($pgm,$upsql);   /////////////////////////////
   if ($updatesw!='0'){
     /// ホスト更新実行　　
     putdata($upsql);
-    //------------------------------------------
-    // statisticsの削除と作成
-    //------------------------------------------ 
+    ///------------------------------------------
+    /// statisticsの削除と作成
+    ///------------------------------------------ 
     $stat_sql="delete from statistics where host='".$host."'";
     putdata($stat_sql);
     $stat_sql='insert into statistics (host,tstamp,gtype) values("'.$host.'","000000000000","9")';
     putdata($stat_sql);
     
-    //------------------------------------------
-    // イベントログ作成
-    //------------------------------------------ 
+    ///------------------------------------------
+    /// イベントログ作成
+    ///------------------------------------------ 
     $eventTime = date('ymdHis');
-    $eventType='6';  //内容修正
+    $eventType='6';  ///内容修正
     $snmpType="";
     $snmpVal="";
     $admin=$user;
@@ -322,7 +319,7 @@ if (isset($_GET['delete'])){
     } 
   }
   $procext=explode('|',$wtarray[11]);
-  if ($procext[0]=='2' and substr($process,0,1)=='&' and ($action=='2' or $action=='3')){ // &process
+  if ($procext[0]=='2' and substr($process,0,1)=='&' and ($action=='2' or $action=='3')){ /// &process
     $status=snmpprocessset($host,$comm,substr($process,1));
     if ($status==1){
       $msg = "#alert#".$user."#ホスト".$hostmei."へsnmpsetで拡張機能Process登録失敗しました";
@@ -330,24 +327,21 @@ if (isset($_GET['delete'])){
       branch($nextpage,$msg);
     } 
   }
-  /*
-  $trapext=explode('|',$wtarray[11]);
-  if ($procext[0]=='2' and substr($process,0,1)=='%' and ($action=='2' or $action=='3')){ // &process
-    $status=snmptrapset($host,$comm,substr($process,1));
-    if ($status==1){
-      $msg = "#alert#".$user."#ホスト".$hostmei."へsnmpsetでTrap拡張機能Process登録失敗しました";
-      $nextpage = "HostListPage.php";
-      branch($nextpage,$msg);
-    } 
-  }
-  */ 
-  ///
-  ///
+  ///----------------------------------------------------
+  /// 127.0.0.1, snmp Agent および admintb standbyセット
+  ///----------------------------------------------------
+  $stat_sql="update statistics set agent='sb' where host='127.0.0.1'";
+  $statRows=putdata($stat_sql);
+  putagent('127.0.0.1','private','sb');
+  ///$snmpInitTime=sprintf('%s',time());
+  ///$admin_sql="update admintb set kanripass='".$snmpInitTime."', snmpintval=30, standby='2', saveintval='".$snmpintval."'";
+  ///putdata($admin_sql);
+  /// 127.0.0.1の反映にはSnmpAutoScan -> MonitorCoreAuto -> MonitorManagerの順に行われ時間がかかります
   $msg = '#notic#'.$user.'#ホスト'.$host.'情報が正常に更新されました';
   $nextpage = "HostListPage.php";
   writelogd($pgm,$msg);
   branch($nextpage,$msg);
-
+ 
 }elseif (!isset($_GET['fradio'])){
   $msg = '#alert#'.$user.'#ホストを選択して下さい';
   $nextpage = "HostListPage.php";
@@ -358,8 +352,8 @@ if (isset($_GET['delete'])){
 ///-- ホストデータ表示処理 -------
 ///-------------------------------
   $hostRow = $_GET['fradio'];
-  $hostArr = explode(',',$hostRow);  // host fdata array
-  $host = $hostArr[0]; //host 
+  $hostArr = explode(',',$hostRow);  /// host fdata array
+  $host = $hostArr[0]; ///host 
   $groupName=$hostArr[1];
   $osType=$hostArr[2];
   $result=$hostArr[3];
@@ -375,6 +369,7 @@ if (isset($_GET['delete'])){
   $image=$hostArr[12];
   $comm=$hostArr[13];
   $agentHost=$hostArr[14];
+  $eventLog=$hostArr[15];
   ///
   print "<h2><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;▽　更新/削除 対象ホスト： {$host} 　▽</h2>";
   ///
@@ -427,24 +422,39 @@ if (isset($_GET['delete'])){
   print '</tr>';
   ///
   if (substr($host,0,3)!='127'){
-    print '<tr><th>TCPポート</th><th>CPU警告</th><th>メモリ警告</th><th>ディスク警告</th><th colspan="2">監視プロセス</th><th>SNMPコミュニティ名</th></tr>';
+    /// 127 以外
+    print '<tr><th>TCPポート</th><th>CPU警告</th><th>メモリ警告</th><th>ディスク警告</th><th>監視プロセス</th><th>イベントログ</th><th>SNMPコミュニティ名</th></tr>';
     print '<tr>';
     print "<td><input type=text name=tcpport value={$tcpPort}></td>";
     print "<td><input type=text name=cpulim size=10 value={$cpuLim}></td>";
     print "<td><input type=text name=ramlim size=8  value={$ramLim}></td>";
     print "<td><input type=text name=disklim size=10  value={$diskLim}></td>";
-    print "<td colspan='2'><input type=text name=process  size=30 value={$process}></td>";
+    print "<td><input type=text name=process  size=14 value={$process}></td>";
+    $selOptArr=array('','');
+    $selOptArr[intval($eventLog)]="selected";
+    print '<td><select name=eventlog>';
+    print "<option value='0'{$selOptArr[0]}>ログ出力</option>";
+    print "<option value='1'{$selOptArr[1]}>snmpログ抑止</option>";
+    print '</select></td>';
     print "<td><input type=text name=comm size=10 value={$comm}></td>";
   }else{
+    /// 127.0.0.x
     print '<tr><th colspan=2>監視他サイトホスト名</th><th>SNMPコミュニティ名</th><th colspan=4></th></tr>';
     print '<tr>';
     print "<td colspan=2><input type=text name=agenthost size=35 value={$agentHost}></td>";
     print "<td><input type=text name=comm size=10 value={$comm}></td>";
     print '<td colspan=4><input type=text name=dummy size=60 value=""></td>';
+    /// dummy
+    print "<td><input type=hidden name=tcpport value=''></td>";
+    print "<td><input type=hidden name=cpulim  value=''></td>";
+    print "<td><input type=hidden name=ramlim  value=''></td>";
+    print "<td><input type=hidden name=disklim value=''></td>";
+    print "<td><input type=hidden name=process value=''></td>";
+    print "<td><input type=hidden name=eventlog value='0'></td>";
   }  
   /// 
-  print "<input type=hidden name=fdata value={$data}>";    ##// all data
-  print "<input type=hidden name=oldaction value={$oldAction}>";    ##// old action
+  print "<input type=hidden name=fdata value={$hostRow}>";    /// all data
+  print "<input type=hidden name=oldaction value={$oldAction}>";    /// old action
   print '</tr>';
   print '</table>';
   ///
@@ -470,7 +480,7 @@ if (isset($_GET['delete'])){
   print '<form name="deletedb" type="get" action="hostupdel.php" onSubmit="return check(\''.$host.'\';">';
   print "<input type=hidden name=user value={$user}>";
   print "<input type=hidden name=host value={$host}>";
-  print "<td><input type=hidden name=fdata value={$data}></td>";  ##// all data
+  print "<td><input type=hidden name=fdata value={$hostRow}></td>";  /// all data
   print '&emsp;&emsp;&emsp;<input class=buttondel type="submit" name="delete" value="削除実行">';
   print '</form>';
   print '<br>';

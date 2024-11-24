@@ -9,7 +9,7 @@ require_once "snmpagent.php";
 ///
 
 date_default_timezone_set('Asia/Tokyo');
-$pgm = "login.php";
+$pgm = "loginU.php";  ///試験
 $user= "";
 $brcode="";
 $brmsg="";
@@ -44,7 +44,8 @@ function checkProcess($_admin){
       $rtnCd="1";
     }
   }
-  return $rtnCd;
+  return 0;
+  
 }
 
 function setSession($_sessvalue){
@@ -176,7 +177,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
           }else{ 
             /// ログインが一般操作員
             $rtn=checkProcess($userAuth); /// 管理者で実行されているかチェック
-            if ($rtn=="1"){ ///管理者で実行している
+            ///if ($rtn=="1"){ ///管理者で実行している
               /// 開始イベントログ作成
               $logName = "LOGIN_" . $user; 
               $evtLog_sql = "insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('".$logName."','" . $timeStamp . "','0','".$user."','')";
@@ -190,10 +191,10 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               /// MainIndexUphp.php呼び出し
               $nextPage="MainIndexUphp.html";
               branch($nextPage,"");
-            }else{  /// $rtn=="0" or $admin_Authority="0"
-              $msg="#2004#".$user."#●管理者監視が実行されていません、<br>しばらくしてからログインするか、管理者監視を確認して下さい";
-              branch($pgm,$msg);
-            }
+            ///}else{  /// $rtn=="0" or $admin_Authority="0"
+            ///  $msg="#2004#".$user."#●管理者監視が実行されていません、<br>しばらくしてからログインするか、管理者監視を確認して下さい";
+            ///  branch($pgm,$msg);
+            ///}
           }          
           print '</body></html>';
         }  
@@ -215,7 +216,7 @@ print '<body>';
 print '<div class="login">';
 print '<div class="login-triangle"></div>';
 print '<h2 class="login-header"><img src="header/php.jpg" width="70" height="70">&emsp;&emsp;監視ログイン</h2>';
-print '<form class="login-container" type="get" action="login.php">';
+print '<form class="login-container" type="get" action="loginU.php">';
 print '<p><input type="text" name="user" value="" placeholder="ユーザID" required></p>';
 print '<p><input type="password" name="passwd" placeholder="パスワード" required></p>';
 
