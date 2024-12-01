@@ -113,7 +113,7 @@ if (!(isset($_GET['param']) or isset($_GET['update']))){
       case "bgblack": $selBgColorArr[4]="selected"; break;
     }
     print '<html><head><meta>';
-    print '<link rel="stylesheet" href="css/kanshi1.css">';
+    print '<link rel="stylesheet" href="css/kanshi1_py.css">';
     print '</head><body>';
     print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　管理情報　▽</h2>';
     ///

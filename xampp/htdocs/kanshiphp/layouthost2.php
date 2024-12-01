@@ -2,7 +2,7 @@
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 
-$pgm="layouts.php";
+$pgm="layouthost2.php";
 $user="";
 $brcode="";
 $brmsg="";
@@ -38,7 +38,7 @@ $layout_sql = 'select * from '.$grpLayout.' order by gsequence';
 $layoutRows=getdata($layout_sql);
 if ($layoutRows[0]=='error'){
   $msg="#error".$user."#グループレイアウトがありません";
-  $nextpage="LayoutSphp.php";
+  $nextpage="LayoutHost1.php";
   branch($nextpage,$msg);
 } else {
   $groupCount=count($layoutRows);
@@ -46,7 +46,7 @@ if ($layoutRows[0]=='error'){
   print '☆グループ内のホスト配置入力するグループを１つ選択して「入力実行」を実行します、<br>';
   print '☆全てのグループのホスト配置欄が「入力済」の場合、情報修正になります<br></h4>';
 
-  print '<form name=myform action=layoutstp.php method=get>';
+  print '<form name=myform action=layouthost3.php method=get>';
   print '<table border=1>';
   print '<tr><th>選択</th><th>グループ名</th><th>配置順序</th><th>行ホスト数</th><th>段数</th><th>ホスト配置</th></tr>';
   print "<input type=hidden name=laynick value={$layoutNick}>";

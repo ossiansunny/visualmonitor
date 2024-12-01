@@ -32,7 +32,7 @@ for($cc=0;$cc<$grpCount;$cc++){
 }
 $layout_sql='update g'.$layout.' set dataflag="1" where gsequence='.$grpSeqInt;
 putdata($layout_sql);
-$backUrl='layouts.php?laynick='.$layoutNick;
+$backUrl='layouthost2.php?laynick='.$layoutNick;
 print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　ホストレイアウト作成　その４　▽</h2>';
 print "<h4>レイアウト名称： {$layoutNick} のグループ内ホスト情報を書き込みました<br>";
 print '☆別のホスト未入力グルーブを実行する場合は、「ホストレイアウト作成　その２へ 戻る」をクリック<br>';

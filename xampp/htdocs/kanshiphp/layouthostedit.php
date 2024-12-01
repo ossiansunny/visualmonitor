@@ -58,7 +58,7 @@ function screatearray($_hdata,$_garr){
 ///                    group  host   layout  user
 function layoutsupform($_garr,$_sarr,$_layout,$_user){
   $_maxGrp=count($_garr);                
-  print '<form name=myform action=layoutsupmapdb.php method=get>';
+  print '<form name=myform action=layouthosteditdb.php method=get>';
   for ($i=0;$i<$_maxGrp;$i++){     /// グループ数繰り返し
     $_maxSeg=intval($_garr[$i][3]); /// 1グループ内セグメント取得
     $groupNum=strval($i+1);        /// グループ番号取得
@@ -72,7 +72,7 @@ function layoutsupform($_garr,$_sarr,$_layout,$_user){
       print '<tr>'; 
       for ($k=0;$k<$maxHost;$k++){       /// ホスト数ループ
         $host=$_sarr[$i][$j][$k];  /// ホスト名取得
-        if ($host=='' or $host=='No Assign'){
+        if ($host==''){
           $host='NoAssign';
         }
         $dataG='g'.strval($i+1);   
@@ -94,7 +94,7 @@ function layoutsupform($_garr,$_sarr,$_layout,$_user){
   print '</form>';
 }
 ///
-$pgm='layoutsupmap.php';
+$pgm='layouthostedit.php';
 $layout=$_GET['terms'];
 $user=$_GET['user'];
 
@@ -114,6 +114,7 @@ $layout_sql='select * from '.$grpLayoutName.' order by gsequence';
 $grpRows=getdata($layout_sql);
 
 gcreatearray($grpRows,$grpArr); /// group layout data から group array table作成
+
 /// ホストテーブル作成
 $layout_sql='select * from '.$hostLayoutName. ' order by gshid';
 $hostRows=getdata($layout_sql);

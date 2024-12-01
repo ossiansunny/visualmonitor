@@ -22,7 +22,7 @@ $user=$_GET['user'];
 $groupNumberCount=intval($groupNum);
 
 print "<h4>レイアウト名称: {$layoutNick}　グループ数： {$groupNum}</h4>";
-print '<form method=get action=layoutgdb.php>';
+print '<form method=get action=layoutgroupdb.php>';
 print '<table border=1>';
 print '<tr><th>グループ名</th><th>配置順序</th><th>1段のホスト数</th><th>段数</th></tr>';
 print "<input type=hidden name=layout value={$layoutNick}>";

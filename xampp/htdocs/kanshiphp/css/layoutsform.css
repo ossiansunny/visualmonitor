@@ -1,5 +1,3 @@
-/*body { font-family: "メイリオ", meiryo, sans-serif; background: linear-gradient(45deg, #000000, #000000);
-	font-size: small; }}*/
 h1 { font-weight: bold; color: #3366ff; }
 h2 { font-weight: bold; color: gray; }
 h3 { font-weight: bold; color: #006DD9; }
@@ -7,10 +5,7 @@ h4 { font-size: small; color: #006DD9; }
 .wihi { width: 120; }
 th { font-size: 10px; color: #006DD9; border-radius: 10%;
         background-color: #f4a460; }
-/*td { font-size: 10px; color: black; border-radius: 12%;
-        background-color: #000000; }*/
 td.back { background-color: #000000;}
-/*td.host { font-size: 8px; font-weight: bold; background-color: #000000; }*/ /*配置ないホストの背景 */
 .tablelayout { layout-fixed; }
 .viewname { font-weight: bold; 	color: white; background-color: #3366ff; }
 .snmp { font-weight: bold; font-size: small; color: green; background-color: #000000; }
@@ -20,8 +15,6 @@ td.back { background-color: #000000;}
 .snorm {font-weight:bold font-size:small; color:white; background-color:green; }
 .swarn {font-weight:bold font-size:small; color:gray; background-color:yellow; }
 .scrit {font-weight:bold font-size:small; color:white; background-color:red; }
-/*.sunko {font-weight:bold font-size:small; color:#000000; background-color:#000000; }*/
-/*.sunko {font-weight:bold font-size:small; color:brown; background-color:brown; }*/
 .anorm {font-weight:bold font-size:small; color:white; background-color:green; }
 .aprob {font-weight:bold font-size:small; color:gray; background-color:yellow; }
 input.okcolor {background-color: green; color: white;}  

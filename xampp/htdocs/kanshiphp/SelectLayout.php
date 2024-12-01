@@ -24,7 +24,7 @@ if (!isset($_GET['param'])){
   ///
   $show_sql='show tables like "layout%"';
   $showRows=getdata($show_sql);
-  print '<br><table border=0 class="tablelayout"><form type=GET action="layoutsupmap.php">';
+  print '<br><table border=0 class="tablelayout"><form type=GET action="layouthostedit.php">';
   print '<tr><th align=center>レイアウト名</th></tr>';
   ///
   foreach ($showRows as $showRowsRec){ /// item ('layout',) itemlayout[0]='layout'

@@ -22,7 +22,7 @@ if (isset($_GET['radio'])) {
   $radio = $_GET['radio'];
 }else{
   $msg="#error#".$user."#".$layoutNick."/グループを選択して下さい";
-  $nextpage="layouts.php";
+  $nextpage="layouthost2.php";
   branch($nextpage,$msg);
 }
 $grpLayoutArr=explode(',',$radio);
@@ -36,7 +36,7 @@ if($finishFlag=='1'){
   $layout_sql="select * from layout_".$layoutNick." where gshid like '".$gid."'";
   $hostLayoutRows=getdata($layout_sql);
   $hostLayoutCount=count($hostLayoutRows);
-  print '<form name=myname action=layoutsdb.php method=get>';
+  print '<form name=myname action=layouthostdb.php method=get>';
   print "<input type=hidden name=laynick value={$layoutNick}>";
   print "<h4>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h4>";
   print '<table border=1>';
@@ -67,7 +67,7 @@ if($finishFlag=='1'){
 }else{
   $dn=intval($grpSegNum);
   $hs=intval($grpHostNum);
-  print '<form name=myname action=layoutsdb.php method=get>';
+  print '<form name=myname action=layouthostdb.php method=get>';
   print "<input type=hidden name=laynick value={$layoutNick}>";
   print "<h4>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h4>";
   print '<table border=1>';

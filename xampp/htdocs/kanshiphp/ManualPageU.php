@@ -1,7 +1,7 @@
 ﻿<?php
 require_once "BaseFunction.php";
 ///
-$pgm="ManualPageUphp.php";
+$pgm="ManualPageU.php";
 $user="";
 $brcode="";
 $brmsg="";

@@ -1,13 +1,14 @@
-body {
+/*body {
 	font-family: "メイリオ", meiryo, sans-serif;
 	background: linear-gradient(45deg, #FFCCFF, #14EFFF);
         font-size: small; 	}
+*/
 h4 {	font-weight: lighter;}
 
 div {	color: #006DD9;
         width: 600px;
         border-radius: 3%;
-        background-color: #F75D59;
+        /*background-color: #F75D59; レンガ色 */
 	/* background-color: #BBBBBB; */ 
 	background-image: url(b025.jpg);}
 ul li { margine-left: -2.5em;}
@@ -66,3 +67,14 @@ div.sidebar ul li a {
 }
 img.pysize { width:15; height: 15; }
 .bgc { background-color:yellow; font-weight:bold; }
+.dmy { font-color: gray; background-color:yellow; font-weight:bold; }
+.bgc { background-color:yellow; font-weight:bold; }
+.bgstand {font-weight:vold font-size:small; color:#00FFFF; background-color:#00FFFF; }
+.bgblack {font-weight:vold font-size:small; color:black; background-color:black; }
+.bgbrown {font-weight:vold font-size:small; color:brown; background-color:brown; }
+.bgindig {font-weight:vold font-size:small; color:indigo; background-color:indigo; }
+.bgpurpl {font-weight:vold font-size:small; color:purple; background-color:purple; }
+.bgdarks {font-weight:vold font-size:small; color:darkslategray; background-color:darkslategray; } 
+.iro1 {font-weight:bold ; color:black; background-color:yellow; }
+.iro0 {font-weight:bold ; color:white; background-color:green; }
+.iro2 {font-weight:bold ; color:white; background-color:red; }';

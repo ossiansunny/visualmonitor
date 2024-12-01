@@ -38,23 +38,26 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
     }else{
       /// 更新処理      
       $idx=intval($_GET['select']);
+echo 'update index:'.$_GET['select'].'<br>';
       $get_uid=$_GET['uid'];
       $get_upass=$_GET['upass'];
       $get_auth=$_GET['auth'];
       $get_uname=$_GET['uname'];
       $get_ucode=$_GET['ucode'];
-      ///$get_tstamp=$_GET['tstamp'];
+      $get_bgcolor=$_GET['bgcolor'];
+      echo 'update:'.$get_bgcolor[$idx].'<br>';
       $userId=$get_uid[$idx];
       $password=$get_upass[$idx]; 
       $authority=$get_auth[$idx];
       $userName=$get_uname[$idx];
       $userCode=$get_ucode[$idx];
       $timeStamp = date('ymdHis');  
-      $user_sql="update user set password='".$password."', authority='".$authority."' , username='".$userName."' , usercode='".$userCode."' , timestamp='".$timeStamp."' where userid='".$userId."'";  
+      $bgColor = $get_bgcolor[$idx];
+      $user_sql="update user set password='".$password."', authority='".$authority."' , username='".$userName."' , usercode='".$userCode."' , timestamp='".$timeStamp."' , bgcolor='".$bgColor."' where userid='".$userId."'";  
       putdata($user_sql);
       $alerMsg="#notic#".$user."#ユーザー".$uid."が更新されました";
       branch('UserPage.php',$alerMsg);
-      exit();
+      //exit();
     } 
 }elseif(isset($_GET['delete'])){
     $user=$_GET['user'];
@@ -78,13 +81,13 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
     $get_upass=$_GET['upass']; 
     $get_auth=$_GET['auth'];
     $get_uname=$_GET['uname']; 
+    $get_bgcolor=$_GET['bgcolor'];
     $userCode=getkanrino($get_auth);
     $timeStamp = date('ymdHis');
-    $user_sql='insert into user values("'.$get_uid.'","'.$get_upass.'","'.$get_auth.'","'.$get_uname.'","'.$userCode.'","'.$timeStamp.'")';  
+    $user_sql='insert into user values("'.$get_uid.'","'.$get_upass.'","'.$get_auth.'","'.$get_uname.'","'.$userCode.'","'.$timeStamp.'","'.$get_bgcolor.'")';  
     putdata($user_sql);
     $alerMsg="#notic#".$user."#ユーザー".$uid."が追加されました";
-    branch('UserPage.php','');
-  
+    branch('UserPage.php','');  
 }
   
   $value="";
@@ -92,7 +95,7 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
   $title2=' ▽　ユーザー管理　▽   ';
   $title=$title1 . $title2;
   print '<html><head>';
-  print '<link rel="stylesheet" href="css/kanshi1_py.css">';
+  print '<link rel="stylesheet" href="css/user.css">';
   print '<script language="JavaScript">';
   print 'function check(){';
   print '  if (document.rform.onbtn.value == "delete"){';
@@ -128,10 +131,11 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
   if (empty($userRows)){
     print '<h4><font color=red>表示すべきデータがありません</font></h4>';
   }else{
+    /// 変更削除データ表示
     print '<h3>「変更」または「削除」するものを１つ選択して下さい</h3>';
     print '&nbsp;&nbsp;<form method="get" action="UserPage.php" onsubmit="return check()">';
     print '<table class="nowrap">';
-    print '<tr><th>選択</th><th >ユーザーID</th><th>パスワード</th><th>権限</th><th>ユーザー名</th><th>コード</th><th>作成変更日</th></tr>';
+    print '<tr><th>選択</th><th >ユーザーID</th><th>パスワード</th><th>権限</th><th>ユーザー名</th><th>コード</th><th>作成変更日</th><th>背景色</th></tr>';
     $cssColor='';
     $idx=0;
     foreach ($userRows as $userRowsRec){
@@ -147,36 +151,56 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
       $userName=$userArr[3];
       $userCode=$userArr[4];
       $timeStamp=$userArr[5];
+      $bgColor=$userArr[6];
+      
+      $selBgColorArr=array('','','','','','');
+      switch($bgColor){
+        case "bgstand": $selBgColorArr[0]="selected"; break;
+        case "bgdarks": $selBgColorArr[1]="selected"; break;
+        case "bgbrown": $selBgColorArr[2]="selected"; break;
+        case "bgindig": $selBgColorArr[3]="selected"; break;
+        case "bgpurpl": $selBgColorArr[4]="selected"; break;
+        case "bgblack": $selBgColorArr[5]="selected"; break;
+      }
       print '<tr>';
-      print '<td class=vatop><input type=radio name=select value="'.strval($idx).'" ></td>';
-      print "<td class={$cssColor}><input type=text name=uid[] value={$userId} size=9 readonly></td>";
-      print "<td class={$cssColor}><input type=text name=upass[] value={$password} size=9 ></td>";
+      print '<td ><input class={$cssColor} type=radio name=select value="'.strval($idx).'" ></td>';
+      print "<td ><input class={$cssColor} type=text name=uid[] value={$userId} size=9 readonly></td>";
+      print "<td ><input class={$cssColor} type=text name=upass[] value={$password} size=9 ></td>";
       $selOptArr=array('','');
       $selOptArr[intval($authority)]="selected";
-      print "<td class={$cssColor}><select name=auth[] >";
+      print "<td ><select class={$cssColor} name=auth[] >";
       print "<option value='0'{$selOptArr[0]}>ユーザー</option>";
       print "<option value='1'{$selOptArr[1]}>管理者</option>";
       print '</select></td>';  
-      print "<td class={$cssColor}><input type=text name=uname[] value={$userName} size=19 ></td>";
-      print "<td class={$cssColor}><input type=text name=ucode[] value={$userCode} size=4 readonly></td>";
-      print "<td class={$cssColor}><input type=text name=tstamp[] value={$timeStamp} size=10 readonly></td>";
+      print "<td ><input class={$cssColor} type=text name=uname[] value={$userName} size=19 ></td>";
+      print "<td ><input class={$cssColor} type=text name=ucode[] value={$userCode} size=4 readonly></td>";
+      print "<td ><input class={$cssColor} type=text name=tstamp[] value={$timeStamp} size=10 readonly></td>";
+      print "<td><select class={$cssColor} name=bgcolor[]>";
+      print "<option value='bgdarks'{$selBgColorArr[0]}>標準</option>";
+      print "<option value='bgdarks'{$selBgColorArr[1]}>灰色</option>";
+      print "<option value='bgbrown'{$selBgColorArr[2]}>茶色</option>";
+      print "<option value='bgindig'{$selBgColorArr[3]}>青紫色</option>";
+      print "<option value='bgpurpl'{$selBgColorArr[4]}>紫色</option>";
+      print "<option value='bgblack'{$selBgColorArr[5]}>黒色</option>";
+      print '</select></td>';
       print '</tr>';
       $idx++;
     } ///end of for
     print '</table>';
     print "<input type=hidden name=user value={$user}>";
-    print '<br><input class=button type="submit" name="update" value="変更実行" >';
-    print '&nbsp;&nbsp;<input class=buttondel type="submit" name="delete" value="削除実行" onClick="set_val()">';
+    print "<br><input class='button' type='submit' name='update' value='変更実行' >";
+    print '&nbsp;&nbsp;<input class="buttondel" type="submit" name="delete" value="削除実行" onClick="set_val()">';
     print '<input type="hidden" name="onbtn">';
     print '</form>';
   }
+  /// 新規入力データ
   print '<hr>';
   $tstamp = date('ymdHis');
   print '<table>';
   print '<form name="iform" method="get" action="UserPage.php">';
   print '<h3>追加ユーザーを入力して「作成実行」をクリック</h3>';
   print '<table class="nowrap">';
-  print '<tr><th>ユーザーID</th><th>パスワード</th><th>権限</th><th>ユーザー名</th><th>コード</th><th>作成変更日</th></tr>';
+  print '<tr><th>ユーザーID</th><th>パスワード</th><th>権限</th><th>ユーザー名</th><th>コード</th><th>作成変更日</th><th>背景色</th></tr>';
   print '<tr>';
   print '<td> <input type="text" name="uid" size=9 value="" placeholder="MAX半角10桁"></td>';
   print '<td> <input type="text" name="upass" size=9 value="" placeholder="MAX半角10桁"></td>';
@@ -187,6 +211,14 @@ if (!(isset($_GET['param']) || isset($_GET['update']) || isset($_GET['delete']) 
   print '<td> <input type="text" name="uname" size=19 value="" placeholder="MAX全角10桁"></td>';
   print '<td> <input type="text" name="ucode" value="" size=4 placeholder="自動採番" readonly></td>';
   print "<td> <input type='text' name='tstamp' value={$tstamp} size=10 readonly></td>";
+  print '<td><select name="bgcolor">';
+  print "<option value='bgstand' selected>標準</option>";
+  print "<option value='bgdarks'>灰色</option>";
+  print "<option value='bgbrown'>茶色</option>";
+  print "<option value='bgindig'>青紫色</option>";
+  print "<option value='bgpurpl'>紫色</option>";
+  print "<option value='bgblack'>黒色</option>";
+  print '</select></td>';
   print '</tr>';
   print '</table>';
   print "<input type=hidden name=user value={$user}>";

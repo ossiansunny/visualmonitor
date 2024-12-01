@@ -51,14 +51,13 @@ $plotdisabled="";
 ///--- log存在チェック -----------
 /// Webログ
 $webdisabled='disabled';
-$fileRows=glob($webLogDir.$osDirSep.'*_*.log');
+$fileRows=glob($webLogDir.$osDirSep.'error_*.log');
 foreach($fileRows as $fileRowsRec){
   $filename=basename($fileRowsRec);
   if (false === strpos($filename,$ymd)){
-  echo $filename.'<br>';
     $webdisabled='';
-  } 
-}  
+  } /// end of if
+}  /// end of for
 /// 監視ログ
 $kanshidisabled='disabled';
 $fileRows=glob($kanshiLogDir.$osDirSep.'kanshi_*.log');
@@ -66,8 +65,8 @@ foreach($fileRows as $fileRowsRec){
   $filename=basename($fileRowsRec);
   if(false === strpos($filename,$ymd)){
     $kanshidisabled='';
-  } 
-} 
+  } /// end of if
+} /// end of for
 /// PLOTログ
 $plotdisabled='disabled';
 $fileRows=glob($plotLogDir.$osDirSep.'plot_*.log');
@@ -75,8 +74,8 @@ foreach($fileRows as $fileRowsRec){
   $filename=basename($fileRowsRec);
   if (false === strpos($filename,$ymd)){
     $plotdisabled='';
-  }  
-}  
+  }  /// end of if
+}  /// end for
 
 print '<html lang="ja">';
 print '<head>';

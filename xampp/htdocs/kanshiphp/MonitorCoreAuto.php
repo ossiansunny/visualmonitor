@@ -251,23 +251,20 @@ function viewscan(){
 ///
 
 if(!isset($_GET['param'])){ /// ユーザ取得依頼
-  
-  print '<!DOCTYPE html>';
-  print '<html lang="ja">';
-  print '<head>';
-  print '<meta charset="UTF-8">';
-  print '<link rel="stylesheet" href="css/kanshi1.css">';
-  print '</head>';
-  print '<body>';
-  print '<h4>しばらくお待ち下さい</h4>';
-  print '</body>';
-  print '</html>';
-  
+
+  print '<html>';
+  print "<body bgcolor=khaki>";
+  print '<h4><font color=gray>お待ち下さい....</font></h4>';
+  print "</body></html>";
 
   paramGet($pgm);
   ///
 }else{     
   paramSet();
+  ///
+  $user_sql='select bgcolor from user where userid="'.$user.'"';
+  $userRows=getdata($user_sql);
+  $bgcolor=$userRows[0];
   ///
   $admin_sql='select * from admintb';
   $adminRows=getdata($admin_sql);
@@ -287,10 +284,12 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   print '<html lang="ja">';
   print '<head>';
   print "<meta http-equiv='refresh' content={$coreStrVal}>";
-  print '<link rel="stylesheet" href="css/kanshi1.css">';
+  print '<link rel="stylesheet" href="css/CoreMenu.css">';
   print '</head>';
-  print '<body>';
-  print "<h4>Core Refresh {$coreStrVal}sec</h4>";
+  print "<body class={$bgcolor}>";
+  print '<div ><table><tr><td >';
+  print "<h4><font color=white>Core Refresh {$coreStrVal}sec</font></h4>";
+  print '</td></tr></table></div>';
   print '</body></html>';
   
   ///--------------------表示処理--------------
@@ -404,6 +403,15 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
   /// elaps time of Core
   if ($debug=="7"){
     $elapsCoreTime=time()-$startCoreTime;
+    $elapsCore='Host count='.strval($numberOfHost).' Core elaps time='.strval($elapsCoreTime).'sec';
+    writeloge($pgm,$elapsCore);
+  }
+  ///
+}
+?>
+
+
+;
     $elapsCore='Host count='.strval($numberOfHost).' Core elaps time='.strval($elapsCoreTime).'sec';
     writeloge($pgm,$elapsCore);
   }

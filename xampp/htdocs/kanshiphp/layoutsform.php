@@ -1,12 +1,15 @@
 ﻿<?php
 print '<html><head>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
+//print '<link rel="stylesheet" href="css/layoutsform.css">';
 print '</head><body>';
+/// global
+$bgcolor='';
 
 function jdgnwc($_jdgdata){
+  global $bgcolor;
   $jdgRtn="";
   if($_jdgdata==""){
-    $jdgRtn="sunko";
+    $jdgRtn=$bgcolor;
   }else{
     $jdgArr=explode(':',$_jdgdata);
     if($jdgArr[0]=="n"){
@@ -16,11 +19,26 @@ function jdgnwc($_jdgdata){
     }else if($jdgArr[0]=="c"){
       $jdgRtn="scrit";
     }else{
-      $jdgRtn="sunko";
+      $jdgRtn=$bgcolor;
     }
   }
   return $jdgRtn; 
 }
+function jdgnc($_jdgdata,$_hdata){ /// statistics data, host data
+  global $bgcolor;
+  $jdgRtn="";
+  if($_jdgdata=="" || $_jdgdata=="allok" || $_jdgdata=="empty"){ /// statistics process data が無い=>正常
+    if($_hdata!=""){ /// host process data はある、is not ""
+      $jdgRtn="snorm"; /// host dataにprocessまたはportあれば正常表示
+    }else{
+      $jdgRtn=$bgcolor; /// host dataにprocessまたはportなければ表示せず
+    }
+  }else{
+    $jdgRtn="scrit"; /// allok,empty以外ならば異常表示
+  }
+  return $jdgRtn;
+}
+/*
 function jdgnc($_jdgdata,$_hdata){ /// statistics data, host data
   $jdgRtn="";
   if($_jdgdata=="" || $_jdgdata=="allok" || $_jdgdata=="empty"){ /// statistics process data が無い=>正常
@@ -34,7 +52,7 @@ function jdgnc($_jdgdata,$_hdata){ /// statistics data, host data
   }
   return $jdgRtn;
 }
-
+*/
 function gethostinfo($_host){
 /*
   $host_sql='select * from host order by groupname';
@@ -67,7 +85,7 @@ function gethostinfo($_host){
 ///
 /// 監視ホスト配置
 ///
-function layoutsform($_user,$_userAuth,$_garr,$_sarr){
+function layoutsform($_user,$_userAuth,$_bgcolor,$_garr,$_sarr){
   /// $_garr=group array, $_sarr=host array
   ///　ホスト数の最大値をみつける
   $layout_sql='select * from glayout order by gsequence';
@@ -84,6 +102,8 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
   $wide=strval($old*100);
   $left='45px';
   $hostsw='0';
+  $charColor='';
+  $bgcolor=$_bgcolor;
   $admin_sql='select * from admintb';
   $adminRows=getdata($admin_sql);
   $adminArr=explode(',',$adminRows[0]);
@@ -91,9 +111,13 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
   $grpimg=$adminArr[14]; /// haikei
   ///$standby=$adminArr[15]; /// standby
   $bgImage='haikeiimg/'.$grpimg;
-  /// 管理者でホスト名表示の場合のみ
+  ///
+  /// 管理者でホスト名表示の場合、一般オペレータ画面はホスト名表示なし
   if($hostEnable=='1' and $_userAuth=='1'){
     $hostsw='1';
+    $charColor='#3366ff';
+  }else{
+    $charColor='white';
   }
   $hostinfo=array();
   $groupCount=count($_garr);  /// garrでもsarrでもグループ数は同じ
@@ -114,9 +138,9 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
           print '<tr>';
           for($hcc=0;$hcc<$hc;$hcc++){
             if($_sarr[$gcc][$dcc][$hcc][0]=='' or $_sarr[$gcc][$dcc][$hcc][0]=='NoAssign'){
-              print '<td  align="center" class="host">No Assign</td>';
+              print "<td  align='center' class='host'><font color={$charColor}>No Assign</font></td>";
             }else{
-              print "<td  align='center' class='host'>{$_sarr[$gcc][$dcc][$hcc][0]}</td>";  ///host
+              print "<td  align='center' class='host'><font color={$charColor}>{$_sarr[$gcc][$dcc][$hcc][0]}</font></td>";  ///host
               
             }  
           }        
@@ -216,7 +240,17 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
                     /// 以下、stat="" host="any" なら green表示
                     $cb4=jdgnc($statArr[7],$hostinfo[11]);  ///process
                     $cb5=jdgnc($statArr[8],$hostinfo[7]);  ///port            
-                    print "<td class=snmp align=center><table border=0><tr><td class={$cb1}>c</td><td class={$cb2}>r</td><td class={$cb3}>d</td><td class={$cb4}>p</td><td class={$cb5}>t</td></tr></table></td>";
+                    print "<td align=center>";
+                      print "<table border=0>";
+                        print "<tr>";
+                          print "<td class={$cb1}>c</td>";
+                          print "<td class={$cb2}>r</td>";
+                          print "<td class={$cb3}>d</td>";
+                          print "<td class={$cb4}>p</td>";
+                          print "<td class={$cb5}>t</td>";
+                        print "</tr>";
+                      print "</table>";
+                    print "</td>";
                   }
                 }else{ 
                   /// 127.0.0.x  Managerの処理 admintbのstandby=1,2 statisticsのsb
@@ -230,7 +264,7 @@ function layoutsform($_user,$_userAuth,$_garr,$_sarr){
                     $amsg='Problem ';
                     $agst='scrit';
                   }
-                  print "<td class=snmp align=center><table><tr><td align=center class={$agst}>{$amsg}</td></tr></table></td>";
+                  print "<td align=center><table><tr><td align=center class={$agst}>{$amsg}</td></tr></table></td>";
                 }
               }
             }else{

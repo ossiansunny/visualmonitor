@@ -6,6 +6,7 @@ require_once "mailsendany.php";
 
 $dirSep='';
 $vpath_kanshiphp="";
+$exists='0';
 ///
 function plotsvgck($_host){
   global $dirSep, $vpath_kanshiphp;
@@ -17,14 +18,6 @@ function plotsvgck($_host){
   }
 }
 ///
-if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-  /// windows xampp
-  $dirSep='\\';
-}else{
-  /// linux
-  $dirSep='/';
-}
-
 $user = "";
 $brcode="";
 $brmsg="";
@@ -42,7 +35,26 @@ if(!isset($_GET['param'])){
   $vpathParam=array("vpath_plothome");
   $rtnPath=pathget($vpathParam);
   $vpath_plothome=$rtnPath[0];
-  
+  ///
+  $plotBinPath='';
+  $vpathParam=array("vpath_gnuplotbin");
+  $rtnPath=pathget($vpathParam);
+  if(!count($rtnPath)==1){
+    $exists='1';
+  }else{
+    if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+      $osDirSep='\\';
+      $plotBinPath=$rtnPath[0].'\\gnuplot.exe';      
+    }else{
+      $osDirSep='/';
+      $plotBinPath=$rtnPath[0].'/gnuplot';      
+    }
+    if(! file_exists($plotBinPath)){      
+      print '<html><body>';
+      print '<h4><br>GnuPlotMrtgが見つかりません、インストール済か初期設定をチェックして下さい</h4>';
+      $exists='1';
+    }
+  }
   ///
   $title1='<img src="header/php.jpg" width="30" height="30">';
   $title2='　▽　プロットグラフホスト一覧　▽　';
@@ -57,59 +69,62 @@ if(!isset($_GET['param'])){
   if ($brcode=="error" or $brcode=="alert" or $brcode=="notic"){
     print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
   }
-  print "<h2>{$title}</h2>";
-  print "<h4>☆ホストを１つ選択して「グラフ表示／メール添付」をクリックする<br>";
-  print "☆グラフのメール添付には、ホストのメール「自動送信」が必要</h4>";
-  /// host[0] groupname[1] ostype[2] result[3] action[4] viewname[5] mailopt[6] ...
-  $layout_sql="select host from layout";
-  $layoutRows=getdata($layout_sql);
-  print '<form name="rform" method="get" action="viewgraphplot.php">';
-  print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
-  $submitSw=0;
-  $active="";
-  foreach ($layoutRows as $layoutRowsRec){
-    if (!($layoutRowsRec=='' or $layoutRowsRec=='NoAssign')){
-      $fileName=$vpath_plothome.$dirSep."plotimage".$dirSep.$layoutRowsRec.".svg";
-      if (file_exists($fileName)) {
-        $active="グラフ取得可能";
-        $dis="";
-        $color="colorgreen";
-        $host_sql="select * from host where host='".$layoutRowsRec."'";
-        $hostRows=getdata($host_sql);
-        if (isset($hostRows)){
-          $hostArr=explode(',',$hostRows[0]);
-          if (!($hostArr[8]=="" or $hostArr[9]=="" or $hostArr[10]=="")) { /// cpu ram disk あり
-            $graphType="";
-            if($hostArr[8]!=""){$graphType="CPU";}
-            if($hostArr[9]!=""){$graphType=$graphType . ";" . "RAM";}
-            if($hostArr[10]!=""){$graphType=$graphType . ";" . "Disk";}
-            $graphType=trim($graphType,';');
-            print "<tr><td><input type=radio name=fradio value={$hostRows[0]} {$dis}></td>";
-            print "<td><input type=text name=host value={$hostArr[0]}></td>";
-            print "<td><input type=text name=graphtype value={$graphType}></td>";
-            print "<td><input type=text name=viewname value={$hostArr[5]}></td>";
-            print "<td><input class={$color} type=text name=active value={$active}></td></tr>";
-            print "<input type=hidden name=user value={$user}>";
-            $submitSw=1;
-          }
-        } 
+  ///
+  if ($exists=='0'){
+    print "<h2>{$title}</h2>";
+    print "<h4>☆ホストを１つ選択して「グラフ表示／メール添付」をクリックする<br>";
+    print "☆グラフのメール添付には、ホストのメール「自動送信」が必要</h4>";
+    /// host[0] groupname[1] ostype[2] result[3] action[4] viewname[5] mailopt[6] ...
+    $layout_sql="select host from layout";
+    $layoutRows=getdata($layout_sql);
+    print '<form name="rform" method="get" action="viewgraphplot.php">';
+    print '<table><tr><th></th><th width=100>ホスト</th><th>グラフ種類</th><th>表示名</th><th>状態</th></tr>';
+    $submitSw=0;
+    $active="";
+    foreach ($layoutRows as $layoutRowsRec){
+      if (!($layoutRowsRec=='' or $layoutRowsRec=='NoAssign')){
+        $fileName=$vpath_plothome.$dirSep."plotimage".$dirSep.$layoutRowsRec.".svg";
+        if (file_exists($fileName)) {
+          $active="グラフ取得可能";
+          $dis="";
+          $color="colorgreen";
+          $host_sql="select * from host where host='".$layoutRowsRec."'";
+          $hostRows=getdata($host_sql);
+          if (isset($hostRows)){
+            $hostArr=explode(',',$hostRows[0]);
+            if (!($hostArr[8]=="" or $hostArr[9]=="" or $hostArr[10]=="")) { /// cpu ram disk あり
+              $graphType="";
+              if($hostArr[8]!=""){$graphType="CPU";}
+              if($hostArr[9]!=""){$graphType=$graphType . ";" . "RAM";}
+              if($hostArr[10]!=""){$graphType=$graphType . ";" . "Disk";}
+              $graphType=trim($graphType,';');
+              print "<tr><td><input type=radio name=fradio value={$hostRows[0]} {$dis}></td>";
+              print "<td><input type=text name=host value={$hostArr[0]}></td>";
+              print "<td><input type=text name=graphtype value={$graphType}></td>";
+              print "<td><input type=text name=viewname value={$hostArr[5]}></td>";
+              print "<td><input class={$color} type=text name=active value={$active}></td></tr>";
+              print "<input type=hidden name=user value={$user}>";
+              $submitSw=1;
+            }
+          } 
+        }
       }
     }
-  }
-  if ($submitSw==1){
-    print '<tr><td><br></td></tr>';
-    print '<tr><td colspan=2 align=center>&emsp;<input class=button type="submit" name="display" value="グラフ表示/メール添付" ></td></tr>';
-  }else{
-    $message="snmp監視対象ホストがありません";
-    $msg="#error#".$user."#".$message;
-    $nextpage=$pgm;    
-    print "<h4><span class=buttonyell>{$message}</h4><hr>";
-  }  
-  print "</table>";
-  print "</form>";
+    if ($submitSw==1){
+      print '<tr><td><br></td></tr>';
+      print '<tr><td colspan=2 align=center>&emsp;<input class=button type="submit" name="display" value="グラフ表示/メール添付" ></td></tr>';
+    }else{
+      $message="snmp監視対象ホストがありません";
+      $msg="#error#".$user."#".$message;
+      $nextpage=$pgm;    
+      print "<h4><span class=buttonyell>{$message}</h4><hr>";
+    }  
+    print '<h4>☆監視対象ホストはリソースグラフで作られる</h4>'; 
+    print "</table>";
+    print "</form>";
+  }     
+  print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell> 監視モニターへ戻る</span></a>";
+  print '</body></html>';
 }
-print '<h4>☆監視対象ホストはリソースグラフで作られる</h4>';    
-print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell> 監視モニターへ戻る</span></a>";
-print '</body></html>';
 ?>
 

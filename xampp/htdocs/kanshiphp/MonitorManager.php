@@ -75,6 +75,12 @@ if(!isset($_GET['param'])){
   }
   $nameImage=$adminStr[14];
   $titleImage='haikeiimg/'.$nameImage;
+  ///-------------------------------------
+  $user_sql='select authority,bgcolor from user where userid="'.$user.'"';
+  $userRows=getdata($user_sql);
+  $userArr=explode(',',$userRows[0]);
+  $userAuth=$userArr[0];
+  $bgcolor=$userArr[1];
   ///------------------------------------
   $header_sql="select * from header";
   $headerArr=getdata($header_sql);
@@ -82,15 +88,21 @@ if(!isset($_GET['param'])){
   $title="&ensp;&ensp;&ensp;".$headerStr[0]."(".$interval."秒間隔更新)";
   $subTitle="&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;".$headerStr[1];
   /// 
+  $charColor='';
+  if ($userAuth=='1'){
+    $charColor='#3366ff';
+  }else{
+    $charColor='white';
+  }
   print '<html><head>';
   print "<meta http-equiv='Refresh' content={$interval}>";
   print '<link rel="stylesheet" href="css/manager.css">';
-  print '</head><body>';
+  print "</head><body class='{$bgcolor}'>";
   print '<p style="position: relative;">';
   print "<img src={$titleImage} width='600' height='50' alt='Title' /><br />";
   print "<span style='position: absolute; top: 5px; left: 5px; width: 600px; color: white; font-size: 25px; font-weight: bold'>{$title}</span>";
   print '</p>';
-  print "<h2>{$subTitle}</h2>";
+  print "<h2><font color={$charColor}>{$subTitle}</font></h2>";
   $currTime=date('G:i:s');
   $viewUser="";
   $viewColor="";
@@ -101,13 +113,13 @@ if(!isset($_GET['param'])){
     $viewUser=$user;
     $viewColor='okcolor';
   }
-  print "<table><tr class=big><td>&ensp;&ensp;ユーザー&ensp;</td><td class={$viewColor}>{$viewUser}</td>";
-  print "<td>&ensp;&ensp;モニターコア&ensp;&ensp;</td><td class={$blinkColor}><span class={$blink}>{$runMsg}</span></td><td>&ensp;{$blinkMsg}</td></tr></table>";
+  print "<table><tr class=big><td>&ensp;&ensp;<font color={$charColor}>ユーザー</font>&ensp;</td><td class={$viewColor}>{$viewUser}</td>";
+  print "<td>&ensp;&ensp;<font color={$charColor}>モニターコア</font>&ensp;&ensp;</td><td class={$blinkColor}><span class={$blink}>{$runMsg}</span></td><td>&ensp;<font color={$charColor}>{$blinkMsg}</font></td></tr></table>";
   if ($user=='unknown'){
     print "<table><tr><td class={$vcolor}>&ensp;&ensp;ユーザが失われました、ログアウトし、新たなログインを実行して下さい</td></tr></table>";
   }
-  print "<br><table><tr class=big><td>&ensp;&ensp;監視時刻&ensp;</td><td class=okcolor>{$currTime}</td>";
-  print "<td>&ensp;&ensp;SNMPカウントダウン　</td><td class=okcolor>{$countdown}</td></tr></table>";
+  print "<br><table><tr class=big><td>&ensp;&ensp;<font color={$charColor}>監視時刻</font>&ensp;</td><td class=okcolor>{$currTime}</td>";
+  print "<td>&ensp;&ensp;<font color={$charColor}>SNMPカウントダウン　</font></td><td class=okcolor>{$countdown}</td></tr></table>";
   print '</form><br>';
   $groupArr = array(); /// group 配列テーブル
   
@@ -121,25 +133,22 @@ if(!isset($_GET['param'])){
   $layoutRows=getdata($layout_sql);
   hostCreateArray($layoutRows,$groupArr,$hostArr);
   ///　　
-  $user_sql='select authority from user where userid="'.$user.'"';
-  $userRows=getdata($user_sql);
-  if(!empty($userRows)) {
-    $userArr=explode(',',$userRows[0]);
-    $userAuth=$userArr[0];
     ///　　
     /// 監視ホスト配置　　
-    layoutsform($user,$userAuth,$groupArr,$hostArr);
+    layoutsform($user,$userAuth,$bgcolor,$groupArr,$hostArr);
     ///
     $timeStamp=date('ymdHis');
     if ($userAuth=='1'){
       $proc_sql='update processtb set monstamp='.$timeStamp;
       putdata($proc_sql);
     }
+  /*
   }else{
     $msg='ユーザーが見つかりません、ログアウトしてから再ログインして下さい';
     print "<h4>{$msg}</h4>";    
     writeloge($pgm,$msg);
   }
+  */
 }
 print '</body></html>';
 ?>

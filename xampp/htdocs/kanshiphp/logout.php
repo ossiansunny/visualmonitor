@@ -6,14 +6,14 @@ require_once "snmpagent.php";
 
 date_default_timezone_set('Asia/Tokyo');
 $pgm = "logout.php";
-$user="";
+$user=""; ///BaseFunctionでセットされる
 $brcode="";
 $brmsg="";
 ///
 if(!isset($_GET['param'])){
   paramGet($pgm);
 }else{
-  paramSet();  
+  paramSet();
   /// 終了メール
   $now=date('ymdHis');
   $timeStamp = $now;
@@ -34,10 +34,12 @@ if(!isset($_GET['param'])){
   $logName="LOGOUT ".$user;
   $subject=$logName;
   $rtn=mailsendany('loginlogout',$admin_Fromaddr,$admin_Toaddr,$subject,$message);
-  $user_sql='select authority from user where userid="'.$user.'"';
+  ///
+  $user_sql='select authority,bgcolor from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
   $userArr=explode(',',$userRows[0]);
   $user_Auth=$userArr[0];
+  $user_bgColor=$userArr[1];
   if ($user_Auth=='1'){ 
     /// 
     /// 2024/11/9 ログイン前にコア(SnmpAutoScan.php)が実行されるため 
@@ -49,15 +51,16 @@ if(!isset($_GET['param'])){
     ///$admin_sql="update admintb set authority='0', snmpintval=30, standby='2', saveintval='".$snmpintval."'";
     ///putdata($admin_sql);
     ///
+    
   }
   print '<!DOCTYPE html>';
   print '<html>';
   print '<head>';
   print '<meta charset="utf-8">';
   print '<title>サンプル</title>';
-  print '<link rel="stylesheet" href="css/login.css">';
+  print '<link rel="stylesheet" href="css/logout.css">';
   print '</head>';
-  print '<body>';
+  print '<body class="'.$user_bgColor.'">';
   print '<div class="login">';
   print '<div class="login-triangle"></div>';
   print '<h2 class="login-header"><img src="header/php.jpg" width="70" height="70">&emsp;&emsp;ログアウト</h2>';

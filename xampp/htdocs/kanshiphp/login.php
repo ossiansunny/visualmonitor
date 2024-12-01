@@ -25,7 +25,7 @@ function checkProcess($_admin){
   $coreTime=$procStr[4];  /// 60
   $coreStamp=$procStr[5]; /// 1702453795
   $diff=time() - intval($coreStamp); ///現在時刻からcore起動した時刻の差
-  $msg='coretime:'.$coreTime.' corestamp:'.$coreStamp.' diff:'.strval($diff);
+  $msg='coretime:'.$coreTime.' corestamp:'.$coreStamp.' diff:'.strval($diff).' auth:'.$_admin;
   writelogd($pgm,$msg);
   $rtnCd="";
   if ($_admin=='1'){ 
@@ -41,7 +41,7 @@ function checkProcess($_admin){
     if ($diff >= intval($coreTime)){ /// 差がcore起動間隔より大きいか等しいか
       $rtnCd='0'; /// Yes　監視が管理者より実行されていない
     }else{
-      $rtnCd="1";
+      $rtnCd="1";      
     }
   }
   return $rtnCd;
@@ -167,8 +167,9 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               */
               ///---------------------------------------------
               /// MainIindexphp呼び出し
-              $nextPage="MainIndexphp.html";
+              $nextPage="MainIndex.html";
               branch($nextPage,"");
+              ///
             }else{ /// auth=0
               $msg="#2003#".$user."#●既に管理者監視が実行されています、<br>確認してしばらくしてからログインして下さい";
               branch($pgm,$msg);
@@ -188,7 +189,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $mailBody=$user.' Logged in';
               mailsendany('loginlogout',$admin_Fromaddr,$admin_Toaddr,$mailSubject,$mailBody);
               /// MainIndexUphp.php呼び出し
-              $nextPage="MainIndexUphp.html";
+              $nextPage="MainIndexU.html";
               branch($nextPage,"");
             }else{  /// $rtn=="0" or $admin_Authority="0"
               $msg="#2004#".$user."#●管理者監視が実行されていません、<br>しばらくしてからログインするか、管理者監視を確認して下さい";
