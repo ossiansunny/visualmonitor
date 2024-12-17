@@ -1,7 +1,28 @@
-﻿<?php
-print '<html><head>';
-//print '<link rel="stylesheet" href="css/layoutsform.css">';
-print '</head><body>';
+﻿
+<html>
+<head>
+<meta http-equiv="Content-Type=" content="text/html;charset=utf-8">
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script type="text/javascript">
+<!--
+
+function viewPopup(data) {
+  swal.fire({
+    title: '',
+    width:300,
+    height:600,
+    html: data,
+    showConfirmButton: true,
+    confirmButtonText: 'クローズ',
+  });
+}
+-->
+</script>
+</head>
+<body>
+
+
+<?php
 /// global
 $bgcolor='';
 
@@ -53,6 +74,73 @@ function jdgnc($_jdgdata,$_hdata){ /// statistics data, host data
   return $jdgRtn;
 }
 */
+function popupdataget($_host){
+  $popupArr=array();
+  $popupData='';
+  $host_sql="select result,action from host where host='".$_host."'";
+  $hostRows=getdata($host_sql);
+  if (! empty($hostRows)){
+    $hostArr=explode(',',$hostRows[0]);
+    $action=$hostArr[1];
+    $result=$hostArr[0];
+    array_push($popupArr,'<p>'.$_host.'</p>');
+    array_push($popupArr,'<p>Action='.$action.'<br>');
+    array_push($popupArr,'Result='.$result.'</p>');
+    if($action=='2' or $action=='3'){
+      $stat_sql="select * from statistics where host='".$_host."'";
+      $statRows=getdata($stat_sql);
+      if (! empty($statRows)){
+        $statArr=explode(',',$statRows[0]);
+        if ($statArr[3]=='empty') {
+          $cpu='測定不能';
+        }else{
+          $cpu=$statArr[3].'%';
+        }
+        if ($statArr[4]=='empty') {
+          $ram='測定不能';
+        }else{
+          $ram=$statArr[4].'%';
+        }
+        if ($statArr[6]=='empty') {
+          $disk='測定不能';
+        }else{
+          $disk=$statArr[6].'%';
+        }
+        $proc=$statArr[7];
+        if($proc=='' or $proc=='allok'){
+          $proc='なし';
+        }elseif($proc=='unknown'){
+          $proc=='不明';
+        }          
+        $port=$statArr[8];
+        if ($port=='' or $port=='allok'){
+          $port='なし';
+        }elseif($port=='unknown'){
+          $port='不明';
+        }
+        array_push($popupArr,'<p>SNMP取得情報</p>');
+        array_push($popupArr,'<table border=1 align=center bgcolor=yellow>');
+        array_push($popupArr,'<tr><td align=center>Cpu Load:</td><td>'.$cpu.'</td></tr>');
+        array_push($popupArr,'<tr><td align=center>Ram Load:</td><td>'.$ram.'</td></tr>');
+        array_push($popupArr,'<tr><td align=center>Disk Load:</td><td>'.$disk.'</td></tr>');
+        array_push($popupArr,'<tr><td align=center>Dead Process:</td><td>'.$proc.'</td></tr>');
+        array_push($popupArr,'<tr><td align=center>Close TcpPort:</td><td>'.$port.'</td></tr>');
+        array_push($popupArr,'</table>');
+      }else{
+        array_push($popupArr,'<p>SNMP取得情報</p>');
+        array_push($popupArr,'<p>No data</p>');
+      }
+    }
+  }else{
+    array_push($popupArr,"<p>'".$_host."'</p>");
+    array_push($popupArr,"<p>エラー、ホストデータなし</p>");  
+  }
+  foreach ($popupArr as $popupRec){
+    $popupData=$popupData.$popupRec;
+  }
+  return $popupData;
+}
+
 function gethostinfo($_host){
 /*
   $host_sql='select * from host order by groupname';
@@ -69,7 +157,7 @@ function gethostinfo($_host){
     }
   }
   if($breakSw==0){
-    $rtnVal=',,,,,,,,,,,,';
+    $rtnVal=',,,,,,,,,,,,,,,'; /// 16項目
   }
   return $rtnVal;
 */
@@ -78,7 +166,7 @@ function gethostinfo($_host){
   if(isset($hostRows)){
     $rtnVal=$hostRows[0];
   }else{
-    $rtnVal=',,,,,,,,,,,,,,';
+    $rtnVal=',,,,,,,,,,,,,,,';
   }
   return $rtnVal;
 }
@@ -120,6 +208,7 @@ function layoutsform($_user,$_userAuth,$_bgcolor,$_garr,$_sarr){
     $charColor='white';
   }
   $hostinfo=array();
+  
   $groupCount=count($_garr);  /// garrでもsarrでもグループ数は同じ
   for($gcc=0;$gcc<$groupCount;$gcc++){
     if ($_garr[$gcc][4]=="1"){  /// garrのdataflagが"1"で入力済チェック
@@ -130,9 +219,9 @@ function layoutsform($_user,$_userAuth,$_bgcolor,$_garr,$_sarr){
       print "<span style='position: absolute; top: 5px; left: {$left}; width: 250px; color: white; font-weight: bold'>{$grpname}</span>";
       print '</p>';
       print '<table border="0" class="tablelayout">';
+      ///
       for($dcc=0;$dcc<$dc;$dcc++){ /// sarrのセグメントの繰り返し
         $hc=count($_sarr[$gcc][$dcc]);  /// 
-        
         /// host名表示 管理データのkanrihyoujiが'1'の時表示
         if($hostsw=='1'){
           print '<tr>';
@@ -173,6 +262,10 @@ function layoutsform($_user,$_userAuth,$_bgcolor,$_garr,$_sarr){
             $hostname=$_sarr[$gcc][$dcc][$hcc][0];
             $hostdata=gethostinfo($hostname);
             $hostinfo=explode(',',$hostdata);
+            /// hopup action and snmp information
+            //////////////////////////////////////////////////
+            $popupRtnData=popupdataget($hostname);
+            ////////////////////////////////////////////////// 
             $jumpphp="viewhostspec.php?host=".$hostname."&user=".$_user;
             if($hostinfo[12]==''){  /// image
               print "<td align=center class=host><a href={$jumpphp}></a></td>";
@@ -181,16 +274,21 @@ function layoutsform($_user,$_userAuth,$_bgcolor,$_garr,$_sarr){
               /// ここで画像を選択 
               if($hostinfo[4]=='0'){ /// action=0
                 $img='hostimage\\'.$imgsep[0].'0.'.$imgsep[1];
-                print "<td align=center class=unkown ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; 
+                $ipaddr='192.168.1.155';
+                 print '<td align=center class=unkown><a href="" onclick="viewPopup(\''.$popupRtnData.'\'); return false;"><img src="'.$img.'" width="70px" height="60px" ></a></td>'; 
+                //print "<td align=center class=unkown ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; 
               }else if($hostinfo[4]!='0' && $hostinfo[3]=='1'){ /// action=0以外 result=1 正常
                 $img='hostimage\\'.$imgsep[0].'1.'.$imgsep[1];
-                print "<td align=center class=normal ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; 
+                //print "<td align=center class=normal ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; 
+                print '<td align=center class=normal ><a href="" onclick="viewPopup(\''.$popupRtnData.'\'); return false;"><img src="'.$img.'" width="70px" height="60px" ></a></td>'; 
               }else if($hostinfo[4]!='0' && $hostinfo[3]=='2'){ /// action=0以外 result=2 異常
                 $img='hostimage\\'.$imgsep[0].'2.'.$imgsep[1];
-                print "<td align=center class=alarm ><scan class=blink><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></scan></td>"; 
+                //print "<td align=center class=alarm ><scan class=blink><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></scan></td>"; 
+                print '<td align=center class=alarm ><scan class=blink><a href="" onclick="viewPopup(\''.$popupRtnData.'\'); return false;"><img src="'.$img.'" width="70px" height="60px" ></a></scan></td>'; 
               }else{ /// action=0以外　result=3-9
                 $img='hostimage\\'.$imgsep[0].'2.'.$imgsep[1];
-                print "<td align=center class=alarm ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; 
+                //print "<td align=center class=alarm ><a href={$jumpphp}><img src={$img} width='70px' height='60px' ></a></td>"; 
+                print '<td align=center class=alarm ><a href="" onclick="viewPopup(\''.$popupRtnData.'\'); return false;"><img src="'.$img.'" width="70px" height="60px" ></a></td>'; 
               }             
             }
           }
