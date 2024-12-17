@@ -176,7 +176,7 @@ echo 'update index:'.$_GET['select'].'<br>';
       print "<td ><input class={$cssColor} type=text name=ucode[] value={$userCode} size=4 readonly></td>";
       print "<td ><input class={$cssColor} type=text name=tstamp[] value={$timeStamp} size=10 readonly></td>";
       print "<td><select class={$cssColor} name=bgcolor[]>";
-      print "<option value='bgdarks'{$selBgColorArr[0]}>標準</option>";
+      print "<option value='bgstand'{$selBgColorArr[0]}>標準</option>";
       print "<option value='bgdarks'{$selBgColorArr[1]}>灰色</option>";
       print "<option value='bgbrown'{$selBgColorArr[2]}>茶色</option>";
       print "<option value='bgindig'{$selBgColorArr[3]}>青紫色</option>";

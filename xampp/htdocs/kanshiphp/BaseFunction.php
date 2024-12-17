@@ -30,6 +30,7 @@ function paramGet($_pgm){
 function paramSet(){
   global $brcode, $user, $brmsg;
   $inform=$_GET['param'];
+  //var_dump($inform);
   if (substr($inform,0,1)=="#"){
     $branchArr=explode("#",ltrim($inform,"#"),4);
     $brcode=$branchArr[0];
