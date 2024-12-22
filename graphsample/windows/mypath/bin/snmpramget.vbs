@@ -1,13 +1,8 @@
-Dim argCount
-argCount=WScript.Arguments.Count
-If argCount <> 3 Then
-  WScript.Echo "引数にホスト、OSタイプ、コミュニティを設定して下さい"
-  WScript.Quit
-End If
 Dim host, ostype, comm
 host=WScript.Arguments(0)
 ostype=WScript.Arguments(1)
 comm=WScript.Arguments(2)
+
 Dim objShell,ramGet,line,ramArr,ramSize,ramUsed,ramPer
 Set objShell = CreateObject("WScript.Shell")
 If ostype = "windows" Then
@@ -22,12 +17,10 @@ line = objExec.Stdout.ReadLine
 ramarr = Split(line, ": ")
 If Not (Ubound(ramArr) = -1) Then
   ramSize = ramArr(1)
-  'WScript.Echo ramSize
   Set objExec = objShell.exec(ramUsed)
   line = objExec.Stdout.ReadLine
   ramArr = Split(line, ": ")
   ramUsed = ramArr(1)
-  'WScript.Echo ramUsed
   ramPer = Int(ramUsed * 100 / ramSize)
   WScript.echo ramPer
   WScript.echo 100

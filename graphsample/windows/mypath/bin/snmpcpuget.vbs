@@ -1,14 +1,8 @@
-Option Explicit
-Dim argCount
-argCount=WScript.Arguments.Count
-If argCount <> 3 Then
-  WScript.Echo "引数にホスト、OSタイプ、コミュニティを設定して下さい"
-  WScript.Quit
-End If
 Dim host, ostype, comm
 host=WScript.Arguments(0)
 ostype=WScript.Arguments(1)
 comm=WScript.Arguments(2)
+
 Dim objShell,objExec,cpuGet,cpuArr,maxCpu,line,errSw
 cpuGet=""
 Set objShell = CreateObject("WScript.Shell")
@@ -27,7 +21,7 @@ Do While objExec.StdOut.AtEndOfStream = false
     errSw=1
     Exit Do
   Else
-    If cpuArr(1) > maxCpu Then
+    If CInt(cpuArr(1)) > CInt(maxCpu) Then
       maxCpu=cpuArr(1)
     End If
   End If
