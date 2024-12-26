@@ -10,9 +10,10 @@ $vpath_kanshiphp="";
 $osDirSep='';
 $exists='0';
 ///
-$vpathParam=array("vpath_mrtgbase");
+$vpathParam=array("vpath_kanshiphp","vpath_mrtgbase");
 $rtnPath=pathget($vpathParam);
-$mrtgPath=$rtnPath[0];
+$vpath_kanshiphp=$rtnPath[0];
+$mrtgPath=$rtnPath[1];
 ///
 
 ///

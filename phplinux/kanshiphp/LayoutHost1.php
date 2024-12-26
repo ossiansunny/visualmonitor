@@ -27,7 +27,7 @@ if (!isset($_GET['param'])){
   print '<h4>☆グループにホストデータを配置します<br>';
   print '☆グループで作成したレイアウト略称を選択して下さい<br>';
   print '<br>';
-  print '<form name=myform action=layouts.php method=get>'; 
+  print '<form name=myform action=layouthost2.php method=get>'; 
   print '<table border=1>';
   print '<tr><th>レイアウト名称</th></tr>';
    

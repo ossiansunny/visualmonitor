@@ -37,7 +37,7 @@ if(isset($_GET['delete'])){
 }
 /// グラフ作成
 if(isset($_GET['create'])){
-  $nextpage = "graphcreateGf.php";
+  $nextpage = "graphcreate.php";
   $alerMsg = "#param#".$user."#".$_GET['fradio'];
   branch($nextpage,$alerMsg);  
 }
