@@ -15,6 +15,10 @@ if(!isset($_GET['param'])){
 
   $user_sql='select bgcolor from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
   $bgcolor=$userRows[0];
   print '<html lang="ja">';
   print '<head>';

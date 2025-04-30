@@ -5,26 +5,23 @@ require_once "mysqlkanshi.php";
 require_once "varread.php";
 ///
 $pgm = "graphcreate.php";
-$vpath_mrtgbase="";
+$vpath_mrtghome="";
 $vpath_kanshiphp="";
-$vpath_base="";
+$vpath_ubin="";
 $user="";
-$osDirSep='';
 $getExt='';
 
-if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-  $osDirSep='\\';
+if (strtoupper(substr(PHP_OS,0,3))==='WIN') {  
   $getExt='get.exe';
-}else{
-  $osDirSep='/';
+}else{  
   $getExt='get.sh';
 }
 ///
 
 function cfgtemplate($_ip,$_comm,$_gtype,$_os,$_title){
-    global $pgm, $vpath_base, $vpath_kanshiphp, $osDirSep, $getExt;
-    $fname=$vpath_kanshiphp.$osDirSep.'mrtgcfg'.$osDirSep.$_ip.'.'.$_gtype.'.cfg';  ///windowsは\\,Unixは/がセパレータ
-    $snmpget=$vpath_base.$osDirSep.'ubin'.$osDirSep.'snmp'.$_gtype.$getExt.' '.$_ip.' '.$_os.' '.$_comm;
+    global $pgm, $vpath_ubin, $vpath_kanshiphp, $getExt;
+    $fname=$vpath_kanshiphp.'/mrtgcfg/'.$_ip.'.'.$_gtype.'.cfg';  ///windowsは\\,Unixは/がセパレータ
+    $snmpget=$vpath_ubin.'/snmp'.$_gtype.$getExt.' '.$_ip.' '.$_os.' '.$_comm;
     $fp = fopen($fname,'w');
     $data = array();
     $data[0]='Target['.$_ip.'.'.$_gtype.']: `'.$snmpget.'`';
@@ -64,22 +61,22 @@ if ($osType == '0'){
 } else {
   $osType = 'unix';
 } 
-$vpathParam=array("vpath_mrtgbase","vpath_kanshiphp","vpath_base");
+$vpathParam=array("vpath_mrtghome","vpath_kanshiphp","vpath_ubin");
 $rtnPath=pathget($vpathParam);
 if(count($rtnPath)==3){
-  $vpath_mrtgbase=$rtnPath[0];
+  $vpath_mrtghome=$rtnPath[0];
   $vpath_kanshiphp=$rtnPath[1];
-  $vpath_base=$rtnPath[2];
+  $vpath_ubin=$rtnPath[2];
 }else{
-  writeloge($pgm,"vpath_mrtgbase,vpath_kanshiphp,vpath_base変数のパスが取得できません");
-  $msg = "#error#".$user."#vpath_mrtgbase,vpath_kanshiphp,vpath_base変数のパスが取得出来ません";
+  writeloge($pgm,"vpath_mrtghome,vpath_kanshiphp,vpath_ubin変数のパスが取得できません");
+  $msg = "#error#".$user."#vpath_mrtghome,vpath_kanshiphp,vpath_ubin変数のパスが取得出来ません";
   $nextpage = "GraphListPage.php";
   branch($nextpage,$msg);
 }
 ///
-$zerofile=$vpath_kanshiphp.$osDirSep.'mrtgcfg'.$osDirSep.'0.0.0.0.cfg'; 
+$zerofile=$vpath_kanshiphp.'/mrtgcfg/0.0.0.0.cfg'; 
 if(!file_exists($zerofile)){
-  $msg = "#error#".$user."#mrtgcfg".$osDirSep."0.0.0.0.cfgがありません";
+  $msg = "#error#".$user."#mrtgcfg/0.0.0.0.cfgがありません";
   $nextpage = "GraphListPage.php";
   branch($nextpage,$msg);  
 }
@@ -95,12 +92,12 @@ if (isset($hostArr[10])){
 }
 /// mrtgcfgからnewmrtg.cfgを作る
 $it = new AppendIterator();
-foreach(glob($vpath_kanshiphp.$osDirSep.'mrtgcfg'.$osDirSep.'*.cfg') as $filename){
-  echo $filename.'<br>';
+foreach(glob($vpath_kanshiphp.'/mrtgcfg/*.cfg') as $filename){
+  //echo $filename.'<br>';
   $it->append(new SplFileObject($filename, "r"));
 }
-unlink($vpath_mrtgbase.$osDirSep.'newmrtg.cfg');
-$file = new SplFileObject($vpath_mrtgbase.$osDirSep.'newmrtg.cfg', 'w');
+unlink($vpath_mrtghome.'/newmrtg.cfg');
+$file = new SplFileObject($vpath_mrtghome.'/newmrtg.cfg', 'w');
 foreach($it as $line) {
   if(! is_null($line)) {
     $file->fwrite($line);
@@ -109,7 +106,4 @@ foreach($it as $line) {
 $msg = "#notic#".$user."#ホスト".$host."のグラフ作成登録を完了しました";
 $nextpage = "GraphListPage.php";
 branch($nextpage,$msg);
-/*
-print '</body></html>';
-*/
 ?>

@@ -1,7 +1,7 @@
 ﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-require_once "mailsendevent.php";
+require_once "mailsend.php";
 ///
 
 $pgm = "eventlogupdeldb.php";
@@ -44,15 +44,15 @@ if ($checkRadio=='confirm'){ /// 「障害確認」ボタン ---> statistics gty
   /// あれば更新 
   $stat_sql="select gtype from statistics where host='".$ev_host."'";
   $statRows=getdata($stat_sql);
-  if (isset($statRows)){ 
+  if (!(empty($statRows))){ 
     $stat_sql='update statistics set gtype="'.$statType.'" where host="'.$ev_host.'"';
     putdata($stat_sql);
     writelogd($pgm,$stat_sql);
   }
   $eventType="3"; ///監視管理
   $confClose = "1"; ///確認
-  $mailOpt="0";
-  $event_sql='insert into eventlog values("'.$ev_host.'","'.$eventStamp.'","'.$eventType.'","'.$ev_snmpType.'","'.$ev_snmpVal.'","'.$adminId.'","'.$cnfClsNum.'","'.$confClose.'","'.$mailOpt.'","'.$msg.'")';
+  $mailSend="0";
+  $event_sql='insert into eventlog values("'.$ev_host.'","'.$eventStamp.'","3","'.$ev_snmpType.'","'.$ev_snmpVal.'","'.$adminId.'","'.$cnfClsNum.'","1","'.$mailSend.'","'.$msg.'")';
   putdata($event_sql);
   writeloge($pgm,$event_sql);
   $host_sql='update host set result="8" where host="'.$ev_host.'"';
@@ -65,29 +65,36 @@ if ($checkRadio=='confirm'){ /// 「障害確認」ボタン ---> statistics gty
     $nextpage="EventLogPage.php";
     branch($nextpage,$msg);
   }
-  $confClose = "2";          /// confclose=2
-  mailsendevent($eventLogRow,$adminId,$cnfClsNum,$confClose,$memoMsg);
+  /// 関連ホストのログ削除
   $event_sql="delete from eventlog where host='".$ev_host."'";
   putdata($event_sql);
+  /// クローズログ作成
   $eventType="3"; ///監視管理
   $confClose = "3";  /// クローズ  
-  $mailOpt = "1";
-  $event_sql='insert into eventlog values("'.$ev_host.'","'.$eventStamp.'","'.$eventType.'","'.$stype.'","'.$svalue.'","'.$user.'","'.$cnfClsNum.'","'.$confClose.'","'.$mailOpt.'","'.$msg.'")';
+  $mailSend = "1";
+  $event_sql='insert into eventlog values("'.$ev_host.'","'.$eventStamp.'","3","'.$ev_snmpType.'","'.$ev_snmpVal.'","'.$adminId.'","'.$cnfClsNum.'","3","'.$mailSend.'","'.$msg.'")';
+  //$event_sql='insert into eventlog values("'.$ev_host.'","'.$eventStamp.'","'.$eventType.'","'.$ev_snmpType.'","'.$ev_snmpVal.'","'.$adminId.'","'.$cnfClsNum.'","'.$confClose.'","'.$mailSend.'","'.$msg.'")';
   putdata($event_sql);
   writelogd($pgm,$event_sql);
-  /// あれば更新
+  /// statistics更新
   $stat_sql="select gtype from statistics where host='".$ev_host."'";
   $statRows=getdata($stat_sql);
-  if (isset($statRows)){
+  if (!(empty($statRows))){
     $stat_sql="delete from statistics where host='".$ev_host."'";
     putdata($stat_sql);
     $stat_sql='insert into statistics (host,tstamp,gtype) values("'.$ev_host.'","000000000000","9")';
     putdata($stat_sql);
-    writelogd($pgm,$stat_sql);
-  }   
+    writeloge($pgm,$stat_sql);
+  }
+  /// イベントメモ作成　　   
   $memo_sql='insert into eventmemo values("'.$eventStamp.'","'.$ev_host.'","'.$adminId.'","'.$cnfClsNum.'","'.$memoMsg.'")';
   putdata($memo_sql);
   writeloge($pgm,$memo_sql);
+  /// 障害対応終了メール送信
+  $hostSql="select host,groupname,ostype,result,action,viewname,mailopt,tcpport,cpulim,ramlim,disklim,process,image,snmpcomm,agenthost,eventlog,standby from host where host='".$ev_host."'";
+  $hostRows=getdata($hostSql);
+  $hostArr=explode(',',$hostRows[0]);
+  mailsend($hostArr,$user,'9','障害処理終了',$adminId,$cnfClsNum,$memMsg);  
 
 }elseif ($checkRadio=='memo'){  /// 「メモ保存」ボタン
   $confClose="5";               /// confclose=5

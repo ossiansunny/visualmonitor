@@ -1,80 +1,91 @@
-/*body {
-	font-family: "メイリオ", meiryo, sans-serif;
-	background: linear-gradient(45deg, #FFCCFF, #14EFFF);
-        font-size: small; 	}
-*/
+
 h4 {	font-weight: lighter;}
 
 div {	color: #006DD9;
         width: 600px;
         border-radius: 3%;
-        /*background-color: #F75D59; レンガ色 */
-	/* background-color: #BBBBBB; */ 
 	background-image: url(b025.jpg);}
+
 ul li { margine-left: -2.5em;}
 
 div.sidebar h2 {
-  /* margin:0 0 -3px 0;
-  border-top:groove 2px #666666;
-  border-bottom:groove 2px #cccccc;
-  padding: 0.1em 1em 0.1em 1em;
-  color:#ffffff;
-  background-color:#666666;
-  font-size:small; */
-margin:0px 0px 5px 0px;
-padding:8px 5px 6px 20px;
-font-size:12px;
-color:#444;
-line-height:100%;
-background:url("../header/hbg_top.gif") no-repeat left top;
-background-color:#cfcfcf;
-border-top:1px solid #AAA;
-border-bottom:1px solid #DDE;
-}
+  margin:0px 0px 5px 0px;
+  padding:8px 5px 6px 20px;
+  font-size:12px;
+  color:#444;
+  line-height:100%;
+  background:url("../header/hbg_top.gif") no-repeat left top;
+  background-color:#cfcfcf;
+  border-top:1px solid #AAA;
+  border-bottom:1px solid #DDE; }
+
 div.sidebar ul {
   margin:0;
   padding:0;
   list-style-type:none;
-  /* background-color:#cfcfcf; */
-  clear:both;
-  /* font-size:small; */
-}
+  clear:both; }
+
 div#left {
   float:left;
   border-right:1px solid #666666;
-  border-bottom:1px solid #666666;
-}
+  border-bottom:1px solid #666666; }
 
 div.sidebar ul li {
-/*  padding: 0.5em 1em; */
-background-color: #F75D59;
-font-size:11px;
-border-top: dotted 2px #666666;
-margin:0px 20px 4px 20px;
-padding:3px;
-text-indent:10px;
-border-top:1px solid #ccc;
-border-left:1px solid #ccc;
-border-bottom:1px solid #888;
-border-right:1px solid #888;
-background:url("../header/libg.gif") repeat 0px -1px #fff; /* sankaku */
-}
+  background-color: #F75D59;
+  font-size:11px;
+  border-top: dotted 2px #666666;
+  margin:0px 20px 4px 20px;
+  padding:3px;
+  text-indent:10px;
+  border-top:1px solid #ccc;
+  border-left:1px solid #ccc;
+  border-bottom:1px solid #888;
+  border-right:1px solid #888;
+  background:url("../header/libg.gif") repeat 0px -1px #fff; }
+
 div.sidebar ul li:first-child {
-  border-top: none;  
-}
+  border-top: none; }
+
 div.sidebar ul li a {
-  text-decoration:none;  
-}
+  text-decoration:none; }
+
 img.pysize { width:15; height: 15; }
+
 .bgc { background-color:yellow; font-weight:bold; }
 .dmy { font-color: gray; background-color:yellow; font-weight:bold; }
 .bgc { background-color:yellow; font-weight:bold; }
-.bgstand {font-weight:vold font-size:small; color:#00FFFF; background-color:#00FFFF; }
+.bgstand {font-weight:vold font-size:small; color:#00FFFF; background-color:blue; }
 .bgblack {font-weight:vold font-size:small; color:black; background-color:black; }
 .bgbrown {font-weight:vold font-size:small; color:brown; background-color:brown; }
 .bgindig {font-weight:vold font-size:small; color:indigo; background-color:indigo; }
 .bgpurpl {font-weight:vold font-size:small; color:purple; background-color:purple; }
 .bgdarks {font-weight:vold font-size:small; color:darkslategray; background-color:darkslategray; } 
+
+/* iro0,1,2があるとその下の指定が効かなくなる これはMessages.phpが使用していた
+
 .iro1 {font-weight:bold ; color:black; background-color:yellow; }
 .iro0 {font-weight:bold ; color:white; background-color:green; }
-.iro2 {font-weight:bold ; color:white; background-color:red; }';
+.iro2 {font-weight:bold ; color:white; background-color:red; }
+*/
+
+.bgimage1{  
+  background: url('../header/bgimage1.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage2{  
+  background: url('../header/bgimage2.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage3{  
+  background: url('../header/bgimage3.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage4{  
+  background: url('../header/bgimage4.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+

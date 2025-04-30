@@ -2,7 +2,7 @@
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 print '<html><head><meta>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
+print '<link rel="stylesheet" href="css/kanshi1_py.css">';
 print '</head><body>';
 $pgm = "viewhistorylog.php";
 $user="";

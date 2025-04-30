@@ -13,21 +13,32 @@ if (!isset($_GET['param'])){
   ///
 }else{
   paramSet();
+  $user_sql="select authority,bgcolor from user where userid='".$user."'";
+  $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
+  $userArr=explode(',',$userRows[0]);
+  $authority=$userArr[0];
+  $bgColor=$userArr[1];
   ///
   print '<html><head><meta>';
-  print '<link rel="stylesheet" href="css/kanshi1.css">';
-  print '</head><body>';
+  print '<link rel="stylesheet" href="css/kanshi1_py.css">';
+  print "</head><body class={$bgColor}>";
   if ($brcode=='error' or $brcode=='notic' or $brcode=='alert'){
     print "<h4 class={$brcode}>{$brmsg}</h4><hr>";
   }
   print '<h2><img src="header/php.jpg" width="30" height="30">▽　サーバー画像管理　▽</h2>';
-  print '<h3>☆画像名はpngファイルのみ許容します、詳細はマニュアル参照<br>';
-  print '☆画像名の重複は出来ません<br>';
-  print '☆削除と追加は一緒に出来ません</h3>';
+  print '<h3>モニターマネージャで表示するサーバ画像の登録、削除</h3>';
+  print '<h4>☆画像名はpngファイルのみ許容、詳細はマニュアル参照<br>';
+  print '☆画像名の重複は不可<br>';
+  print '☆画像名、サーバー名の変更は不可、削除して新たなメニューで登録する</h4>';
   /// ホスト画像表示
   hostimagelist();
   print '<br>';
   ///
+  print '<h4>削除を選択して、<span class=trred>「削除実行」</span>をクリック</h4>';
   print '<form  type="get" action="serverimageinsdeldb.php">';
   print '<table border=1>';
   print '<tr><th>削除</th><th width="150">画像名</th><th width="248">サーバー名</th></tr>';
@@ -61,7 +72,7 @@ if (!isset($_GET['param'])){
   }
   print '<br>';
   print '</form><hr>';
-
+  print '<h4>新たに登録するサーバー画像の画像名、サーバー名を入力し<span class=trblk>「登録実行」</span>をクリック</h4>';
   print '<form type="get" action="serverimageinsdeldb.php">';
   print '<table border=1>';
   print '<tr><th>画像名</th><th>サーバー名</th></tr>';

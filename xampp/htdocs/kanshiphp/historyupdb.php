@@ -1,18 +1,14 @@
 ﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-/*
-print '<html><head><meta>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
-print '</head><body>';
-print '</body></html>';
-*/
+
 $pgm="historyupdb.php";
 $user=$_GET['user'];  
 $logType=$_GET["logtype"];
 $logTime=$_GET["logtime"];
 $logSubject=$_GET["logsubj"];
 $logContents=$_GET["logcont"];
+
 $webLogSubject=htmlspecialchars($logSubject,ENT_QUOTES);
 $webLogContents=htmlspecialchars($logContents,ENT_QUOTES);
   

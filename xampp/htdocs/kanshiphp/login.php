@@ -2,10 +2,6 @@
 error_reporting(E_ALL & ~E_NOTICE);
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-require_once "hostping.php";
-require_once "mailsendany.php";
-require_once "alarmwindow.php";
-require_once "snmpagent.php";
 ///
 
 date_default_timezone_set('Asia/Tokyo');
@@ -22,15 +18,15 @@ function checkProcess($_admin){
   $proc_sql='select * from processtb';
   $procArr=getdata($proc_sql);
   $procStr=explode(',',$procArr[0]);
-  $coreTime=$procStr[4];  /// 60
-  $coreStamp=$procStr[5]; /// 1702453795
+  $coreTime=$procStr[4];  /// 60 60
+  $coreStamp=$procStr[5]; /// 1702453795 1647169256 
   $diff=time() - intval($coreStamp); ///現在時刻からcore起動した時刻の差
   $msg='coretime:'.$coreTime.' corestamp:'.$coreStamp.' diff:'.strval($diff).' auth:'.$_admin;
-  writelogd($pgm,$msg);
+  writeloge($pgm,$msg);
   $rtnCd="";
   if ($_admin=='1'){ 
     ///管理者
-    if ($diff < intval($coreTime)){ /// 差がcore起動間隔より小さいか
+    if (intval($diff) < intval($coreTime)*2){ /// 差がcoreitimex2より小さいか
     ///   x             60
       $rtnCd='1'; /// Yes 監視が管理者により実行されている
     }else{
@@ -38,7 +34,7 @@ function checkProcess($_admin){
     }
   }else{  
     ///一般ユーザ
-    if ($diff >= intval($coreTime)){ /// 差がcore起動間隔より大きいか等しいか
+    if (intval($diff) >= intval($coreTime)){ /// 差がcore起動間隔より大きいか等しいか
       $rtnCd='0'; /// Yes　監視が管理者より実行されていない
     }else{
       $rtnCd="1";      
@@ -83,16 +79,15 @@ $firstSw=0;  /// 初回=0 param有り=1
 $ercde="0"; /// "1":no mailserer
 $errSw=0;
 /// get admin data
-$admin_sql='select * from admintb';
+$admin_sql='select authority,receiver,sender,subject,snmpintval from admintb';
 $adminRows=getdata($admin_sql);
 $adminArr=explode(',',$adminRows[0]);
-$admin_Authority=$adminArr[2];/// 管理者がログイン済であると、authority=1になる
-$admin_Toaddr=$adminArr[3];
-$admin_Fromaddr=$adminArr[4];
-$admin_Subject=$adminArr[5];
-$admin_snmpintval=$adminArr[8];
-///$admin_standby=$adminArr[15];
-///$admin_saveintval=$adminArr[16];
+$admin_Authority=$adminArr[0];/// 管理者がログイン済であると、authority=1になる
+$admin_Toaddr=$adminArr[1];
+$admin_Fromaddr=$adminArr[2];
+$admin_Subject=$adminArr[3];
+$admin_snmpintval=$adminArr[4];
+
 /// 
 if (isset($_GET['param'])){   /// branchで戻った時の処理
   paramSet();
@@ -108,11 +103,9 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
     $userCode="";
     $userAuth="";
     $userName="";
-    $user_sql='select * from user where userId="'.$user.'"';
+    $user_sql='select userid,password,authority,username,usercode,timestamp,bgcolor,audio from user where userId="'.$user.'"';
     $userRows=getdata($user_sql);
-    
-    if (count($userRows)==0){ 
-      /// userなし
+    if(empty($userRows)){
       $msg="#2002#".$user."#●入力したユーザー".$user."がありません、<br>ログイン出来るユーザーでログインして下さい";
       writeloge($pgm,$msg);
       branch($pgm,$msg);
@@ -150,13 +143,10 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $msg = $logName . " Eventlog Insert sql: " . $evtLog_sql;
               writelogd($pgm,$msg);  
             
-              /// 開始メール送信 
-              $mailSubject=$logName;
-              $mailBody=$user.' Logged in';
-              mailsendany('loginlogout',$admin_Fromaddr,$admin_Toaddr,$mailSubject,$mailBody);
-              
+              /// 開始メール送信 ログインメールはメールサーバのチェックをするDiscover.phpが送信
+              /// logoutはlogout.phpで'1'、HeaderPage.phpがリフレッシュさせるため、login.phpで'0'にする
               $snmpInitTime=sprintf('%s',time());
-              $admin_sql='update admintb set kanriname="'.$userId.'",authority="'.$admin_Authority.'",kanrino="'.$userCode.'",kanripass="'.$snmpInitTime.'"';
+              $admin_sql='update admintb set kanriname="'.$userId.'",authority="'.$admin_Authority.'",kanrino="'.$userCode.'",kanripass="'.$snmpInitTime.'",logout="0",loginstamp="'.$nowDate.'"';
               putdata($admin_sql);
               /*
               ///--------------------------------------------- 
@@ -167,7 +157,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               */
               ///---------------------------------------------
               /// MainIindexphp呼び出し
-              $nextPage="MainIndex.html";
+              $nextPage="MainIndex.php";
               branch($nextPage,"");
               ///
             }else{ /// auth=0
@@ -185,9 +175,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $msg = $logName . " Eventlog Insert sql: " . $insql;
               writelogd($pgm,$msg);  
               /// 開始メール送信               
-              $MailSubject=$logName;
-              $mailBody=$user.' Logged in';
-              mailsendany('loginlogout',$admin_Fromaddr,$admin_Toaddr,$mailSubject,$mailBody);
+              //mailsend($hostArr,$user,'6','一般ユーザーログイン',$user,'','');
               /// MainIndexUphp.php呼び出し
               $nextPage="MainIndexU.html";
               branch($nextPage,"");
@@ -205,21 +193,21 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
 }
 /// 最初の処理
 ///
+$random=rand(1,5);
+$bodyColor='bgimage'.strval($random);
 print '<!DOCTYPE html>';
 print '<html>';
 print '<head>';
 print '<meta charset="utf-8">';
-print '<title>サンプル</title>';
+print '<title>監視アプリ</title>';
 print '<link rel="stylesheet" href="css/login.css">';
 print '</head>';
-print '<body>';
+print "<body class={$bodyColor}>";
 print '<div class="login">';
-print '<div class="login-triangle"></div>';
-print '<h2 class="login-header"><img src="header/php.jpg" width="70" height="70">&emsp;&emsp;監視ログイン</h2>';
+print '<h2 class="login-header"><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;監視ログイン</h2>';
 print '<form class="login-container" type="get" action="login.php">';
 print '<p><input type="text" name="user" value="" placeholder="ユーザID" required></p>';
 print '<p><input type="password" name="passwd" placeholder="パスワード" required></p>';
-
 print "<input type='hidden' name='brcode' value={$ercde}>";
 print '<p><input type="submit" name="login" value="ログイン"></p>';
 print '</form>';

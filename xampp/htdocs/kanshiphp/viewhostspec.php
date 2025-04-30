@@ -2,7 +2,7 @@
 print '<html><head>';
 print '<link rel="stylesheet" href="css/kanshi1_py.css">';
 print '<title>ホストデータの表示</title>';
-print '</head><body>';
+
 
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
@@ -53,8 +53,18 @@ $get_host = $_GET['host'];
 $host = $get_host;
 $get_user = $_GET['user'];
 $user = $get_user;
-$host_sql="select * from host where host='".$host."'";
+$user_sql="select authority,bgcolor from user where userid='".$user."'";
+$userRows=getdata($user_sql);
+if(empty($userRows)){
+  $msg="#error#unkown#ユーザを見失いました";
+  branch('logout.php',$msg);
+}
+$userArr=explode(',',$userRows[0]);
+$authority=$userArr[0];
+$bgColor=$userArr[1];
+$host_sql="select host,groupname,ostype,result,action,viewname,mailopt,tcpport,cpulim,ramlim,disklim,process,image,snmpcomm,agenthost,eventlog,standby  from host where host='".$host."'";
 $hostRows = getdata($host_sql);
+print "</head><body class={$bgColor}>";
 if(empty($hostRows)){
   print "ホストデータがありません<br>";
 }else{
@@ -132,7 +142,7 @@ if(empty($hostRows)){
   }
   print '<br><br>';
   if($hostArr[4]=="2" or $hostArr[4]=="3" or $hostArr[4]=="4"){
-    $statis_sql="select * from statistics where host='".$host."'";
+    $statis_sql="select host,tstamp,gtype,cpuval,ramval,agent,diskval,process,tcpport from statistics where host='".$host."'";
     $statisRows=getdata($statis_sql);
     if($statisRows[0]=="error"){
       $msg=$host . " getstatushost error return";

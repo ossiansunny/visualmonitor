@@ -1,6 +1,7 @@
 ﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
+
 $pgm = "eventmemodeldb.php";
 $user = $_GET['user'];
 if (!isset($_GET['fckbox'])){

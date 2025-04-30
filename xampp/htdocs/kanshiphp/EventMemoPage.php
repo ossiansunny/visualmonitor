@@ -27,13 +27,18 @@ if (!isset($_GET['param'])){
   paramGet($pgm);
 }else{
   paramSet();
-  $user_sql="select authority from user where userid='".$user."'";
+  $user_sql="select authority,bgcolor from user where userid='".$user."'";
   $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
   $userArr=explode(',',$userRows[0]);
   $authority=$userArr[0];
+  $bgColor=$userArr[1];
   print '<html><head><meta>';
   print '<link rel="stylesheet" href="css/kanshi1_py.css">';
-  print '</head><body>';
+  print "</head><body class={$bgColor}>";
   ///
   if ($brcode!=""){
     print "<h3 class={$brcode}>{$brmsg}</h3><hr>";

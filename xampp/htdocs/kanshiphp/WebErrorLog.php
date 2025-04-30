@@ -15,16 +15,22 @@ if(!isset($_GET['param'])){
 }else{
   paramSet();
   ///
-  $user_sql='select authority from user where userid="'.$user.'"';
+  $user_sql='select authority,bgcolor from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
   $userArr=explode(',',$userRows[0]);
   $userAuth=$userArr[0];
-  print '<html><head><meta>';
+  $bgColor=$userArr[1];
+  print '<html><head>';
+  print '<meta http-equiv="Refresh" content="120">';
   print '<link rel="stylesheet" href="css/kanshi1_py.css">';
-  print '</head><body>';
+  print "</head><body class={$bgColor}>";
   print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　Webエラーログ　▽</h2>';
   $lineNum = 20;   /// 表示する行数
-  print "<h3>最新 {$lineNum} 行</h3>";
+  print "<h3>リフレッシュ 120秒　最新 {$lineNum} 行表示</h3>";
   $vpathParam=array("vpath_weblog");
   $vpathArr=pathget($vpathParam);
   if(count($vpathArr)==1){
@@ -32,12 +38,8 @@ if(!isset($_GET['param'])){
     $now=new DateTime();
     $ymd=$now->format("Ymd");
     $currErrLog="error_".$ymd.".log";
-    if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-      $currPath = $vpath_weblog."\\".$currErrLog;
-    }else{
-      $currPath = $vpath_weblog."/".$currErrLog;
-    }
-    print "<h4>{$currPath}</h4>";
+    $currPath = $vpath_weblog."/".$currErrLog;
+    print "<h3>{$currPath}</h3>";
     if (file_exists($currPath)){
       $contents = file($currPath , FILE_IGNORE_NEW_LINES);
       $start_index = count($contents) - $lineNum;
@@ -45,7 +47,9 @@ if(!isset($_GET['param'])){
         $start_index = 0;
       }
       for ( $i=$start_index; $i<count($contents); $i++ ) {
-        print $contents[$i] . '<br />';
+        $utf8_contents=mb_convert_encoding($contents[$i],"utf-8","sjis-win");
+        //print '<font color=white>'.$contents[$i] . '</font><br />';  ///////// windows only???
+        print '<font color=white>'.$utf8_contents . '</font><br />';
       }
       print "^^^^^^^^^^^^^ 最終行 ^^^^^^^^^^^^^";
       print '<form action="WebErrorLog.php" method="get">';
@@ -56,7 +60,9 @@ if(!isset($_GET['param'])){
     }else{
       print "<h4>$currpath</h4>";
       print "<h3>表示すべき上記ファイルがありません、エラーが無いか又はマニュアルを参照して下さい</h3>";
-    }    
+      
+    }
+    
   }else{
     print "<h3>kanshiphp.iniにvpath_weblogがありません</h3>";
     print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";

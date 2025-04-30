@@ -13,9 +13,10 @@ th { font-size: 10px; color: #006DD9; border-radius: 10%;
 .trylw { font-size: small; color: black; border-rafius: 15%; background-color: yellow; font-weight: bold;}
 .trgry { font-size: small; color: black; border-rafius: 15%; background-color: gray; font-weight: bold;}
 .trpnk { font-size: small; color: black; border-rafius: 15%; background-color: pink; font-weight: bold;}
-.bgstand {font-weight:vold font-size:small; color:#00FFFF; background-color:#00FFFF; }
+.bgstand {font-weight:vold font-size:small; color:#00FFFF; background-color:blue; }
 .bgblack {font-weight:vold font-size:small; color:black; background-color:black; }
 .bgbrown {font-weight:vold font-size:small; color:brown; background-color:brown; }
 .bgindig {font-weight:vold font-size:small; color:indigo; background-color:indigo; }
 .bgpurpl {font-weight:vold font-size:small; color:purple; background-color:purple; }
 .bgdarks {font-weight:vold font-size:small; color:darkslategray; background-color:darkslategray; } 
+

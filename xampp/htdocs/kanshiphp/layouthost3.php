@@ -2,21 +2,29 @@
 require_once 'BaseFunction.php';
 require_once 'mysqlkanshi.php';
 error_reporting(E_ALL & ~E_NOTICE);
-
+$user=$_GET['user'];
+$user_sql="select authority,bgcolor from user where userid='".$user."'";
+$userRows=getdata($user_sql);
+if(empty($userRows)){
+  $msg="#error#unkown#ユーザを見失いました";
+  branch('logout.php',$msg);
+}
+$userArr=explode(',',$userRows[0]);
+$authority=$userArr[0];
+$bgColor=$userArr[1];
 print '<html>';
 print '<body><head>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
-print '</head><body>';
+print '<link rel="stylesheet" href="css/kanshi1_py.css">';
+print "</head><body class={$bgColor}>";
 print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　ホストレイアウト作成　その３　▽</h2>';
-print '<h4>ホスト配置情報入力</h4>';
-print '<h4>☆各々のホスト名下欄に<b>IPアドレス</b>または名前解決できる<b>ホスト名</b>を入力する<br>';
-print '&ensp;&ensp;入力の無い場合は空欄でレイアウトします</h4><br>';
+print '<h3>ホスト配置情報入力</h3>';
+print '<h3>☆各々のホスト名下欄に<b>IPアドレス</b>または名前解決できる<b>ホスト名</b>を入力する<br>';
+print '&ensp;&ensp;入力の無い場合は空欄でレイアウトします</h3><br>';
 
 $radio="";
 $grp = array();
 $seg = array();
 $hst = array();
-$user=$_GET['user'];
 $layoutNick=$_GET['laynick'];
 if (isset($_GET['radio'])) {
   $radio = $_GET['radio'];
@@ -38,7 +46,7 @@ if($finishFlag=='1'){
   $hostLayoutCount=count($hostLayoutRows);
   print '<form name=myname action=layouthostdb.php method=get>';
   print "<input type=hidden name=laynick value={$layoutNick}>";
-  print "<h4>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h4>";
+  print "<h3>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h3>";
   print '<table border=1>';
   print '<tr>';
   $dn=intval($grpSegNum);
@@ -69,7 +77,7 @@ if($finishFlag=='1'){
   $hs=intval($grpHostNum);
   print '<form name=myname action=layouthostdb.php method=get>';
   print "<input type=hidden name=laynick value={$layoutNick}>";
-  print "<h4>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h4>";
+  print "<h3>グループ名：{$grpName}<input type=hidden name=gseq value={$grpSeq}></h3>";
   print '<table border=1>';
   print '<tr>';
   for($hsc=0;$hsc<$hs;$hsc++){

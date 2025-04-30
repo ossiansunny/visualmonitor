@@ -7,18 +7,18 @@ $user=""; /// ユーザID
 $brmsg=""; ///メッセージ $user = "";
 $pgm="GraphListPage.php";
 $vpath_kanshiphp="";
-$osDirSep='';
 $exists='0';
 ///
-$vpathParam=array("vpath_mrtgbase");
+$vpathParam=array("vpath_kanshiphp","vpath_mrtg");
 $rtnPath=pathget($vpathParam);
-$mrtgPath=$rtnPath[0];
+$vpath_kanshiphp=$rtnPath[0];
+$vpath_mrtg=$rtnPath[1];
 ///
 
 ///
 function mrtgcfgck($_host){
-  global $vpath_kanshiphp, $osDirSep;
-  $files = glob($vpath_kanshiphp.$osDirSep."mrtgcfg".$osDirSep.$_host.".*");
+  global $vpath_kanshiphp;
+  $files = glob($vpath_kanshiphp."/mrtgcfg/".$_host.".*");
   if (empty($files)){
     return 1;
   }else{
@@ -32,19 +32,19 @@ if(!isset($_GET['param'])){
 }else{
   paramSet();
   ///
-  $mrtgBinPath='';
-  if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-    $osDirSep='\\';
-    $mrtgBinPath=$mrtgPath.'\\bin\\mrtg';
-    //echo $mrtgBinPath.'<br>';
-  }else{
-    $osDirSep='/';
-    $mrtgBinPath='/usr/bin/mrtg';
-    //echo $mrtgBinPath.'<br>';
+  $user_sql='select authority,bgcolor from user where userid="'.$user.'"';
+  $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
   }
-  if(! file_exists($mrtgBinPath)){
+  $userArr=explode(',',$userRows[0]);
+  $authority=$userArr[0];
+  $bgColor=$userArr[1];
+    
+  if(! file_exists($vpath_mrtg)){
     //echo 'not found<br>';
-    print '<html><body>';
+    print "<html><body class={$bgColor}>";
     print '<h4><br>Mrtgが見つかりません、インストール済か初期設定をチェックして下さい</h4>';
     $exists='1';
     
@@ -61,7 +61,7 @@ if(!isset($_GET['param'])){
   print '<link rel="stylesheet" href="css/kanshi1_py.css">';
   print '<title>Host List</title>';
   print '</head>';
-  print '<body>';
+  print "<body class={$bgColor}>";
   ///
   if ($brcode=="error" or $brcode=="alert" or $brcode=="notic"){
     print "<h3 class={$brcde}>{$brmsg}</h3><hr>";
@@ -72,8 +72,8 @@ if(!isset($_GET['param'])){
     ///
     ///---SNMP監視対象一覧を表示---
     ///
-    print "<h4>☆ホストを１つ選択して「グラフ表示/メール添付」「グラフ登録」「グラフ削除」のいずれかをクリックする<br>";
-    print "☆グラフのメール添付には、ホストのメール「自動送信」が必要です</h4>";
+    print "<h3>☆ホストを１つ選択して<span class=trblk>「グラフ表示/メール添付」</span>&nbsp;&nbsp;<span class=trylw>「グラフ登録」</span>&nbsp;&nbsp;<span class=trred>「グラフ削除」</span>のいずれかをクリックする<br>";
+    print "☆グラフのメール添付には、ホストのメール「自動送信」が必要です</h3>";
     ///
     $layout_sql="select host from layout";
     $layoutRows=getdata($layout_sql);
@@ -84,9 +84,10 @@ if(!isset($_GET['param'])){
     $disable="";
     foreach ($layoutRows as $layoutRowsRec){
       if (!($layoutRowsRec=='' or $layoutRowsRec=='NoAssign')){
-        $host_sql="select * from host where host='".$layoutRowsRec."'";
+        $host_sql="select host,groupname,ostype,result,action,viewname,mailopt,tcpport,cpulim,ramlim,disklim,process,image,snmpcomm,agenthost,eventlog,standby from host where host='".$layoutRowsRec."'";
+        #$host_sql="select * from host where host='".$layoutRowsRec."'";
         $hostRows=getdata($host_sql);
-        if (isset($hostRows)){
+        if (!(empty($hostRows))){
           $hostArr=explode(',',$hostRows[0]);
           if($hostArr[4]=="2" or $hostArr[4]=="3"){ /// snmp監視 snmp監視通知なし
             $color="colorred"; 
@@ -113,17 +114,8 @@ if(!isset($_GET['param'])){
       }
     }
 
-
     if ($exeSw==1){    
-      $user_sql='select authority from user where userid="'.$user.'"';
-      $userRows=getdata($user_sql);
-      if(empty($userRows)){
-        $msg="#error#"."NonUser"."#ユーザがありません、再ログインして下さい";
-        $nextpage=$pgm;    
-        branch($nextpage,$msg);
-      }
-      $userArr=explode(',',$userRows[0]);
-      $authority=$userArr[0];
+      
       print '<tr><td><br></td></tr>';
       ///
       print '<input type="submit" style="display:none">';

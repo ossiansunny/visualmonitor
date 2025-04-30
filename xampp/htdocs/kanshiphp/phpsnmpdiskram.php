@@ -100,7 +100,16 @@ function unixramload($host,$community,&$data) {
   $data=intval($ramr);
   return 0;
 }
-
+/*
+//
+$check="";
+$ip='192.168.1.21';
+$comm='public';
+$rtn=unixdiskload($ip,$comm,$check);
+var_dump($check);
+echo $rtn;
+//
+*/
 ?>
 
 

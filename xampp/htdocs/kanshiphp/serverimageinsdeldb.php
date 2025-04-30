@@ -23,10 +23,6 @@ function nullcheck($data){
 $pgm="serverimageinsdeldb.php";
 $user="";
 ///
-print '<html><head><meta>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
-print '</head><body>';
-
 $user=$_GET['user'];
 ///
 /// DELETE
@@ -62,6 +58,5 @@ if (isset($_GET['del'])){
 $nextpage="MonitorManager.php";
 branch($nextpage,$user);
 
-print '</body></html>';
 ?>
 

@@ -1,12 +1,12 @@
 <?php
-require_once "mysqlkanshi.php";
 require_once "phpsnmptcpopen6.php";
 require_once "phpsnmpprocess.php";
 require_once "phpsnmpdiskram.php";
 require_once "phpsnmpcpuload.php";
 require_once "hostncat.php";
-require_once "phpsnmpprocessset.php";
-require_once "phpsnmptcpportset.php";
+require_once "mysqlkanshi.php";
+
+
 ///
 $pgm="snmpdataget.php";
 ///
@@ -14,18 +14,7 @@ function deldqt($target){
   $rtnval=rtrim(ltrim($target,'"'),'"');
   return $rtnval;
 }
-/*
-function snmptrapget($host){
-  $sql="select host,process from trapstatistics where host='".$host."'";
-  $rows=getdata($sql);
-  $traprecord = explode(',',$rows[0]);
-  $rtndd = $traprecord[1];
-  if ($rtndd=='allok'){
-      $rtndd='';
-  }
-  return $rtndd;
-}
-*/
+
 /// snmptcpport ncat拡張機能  
 function snmptcpgetext($host,$portlist){
   $portArr=explode(';',$portlist);
@@ -89,7 +78,9 @@ function snmpprocget($host,$comm){
   return $rtnval;  
 }
 
-function snmpdataget($hostArr){ 
+function snmpdataget($hostArr){
+  global $pgm; 
+//var_dump($hostArr);
   /// $hostArr ホストレコード
   $host=$hostArr[0];
   $ostype=$hostArr[2];
@@ -101,6 +92,7 @@ function snmpdataget($hostArr){
     $osname='other';
   }
   $tcpport=$hostArr[7];
+  //var_dump($tcpport);
   $cpulim=$hostArr[8];
   $ramlim=$hostArr[9];
   $disklim=$hostArr[10];
@@ -109,13 +101,18 @@ function snmpdataget($hostArr){
   if ($hostArr[13]=='' || is_null($hostArr[13])){
     $community='public';
   }
+  ////
   $snmparray = array('','','','','','');
+  //// 該当欄空白は空白を返す
+  ////
   $snmparray[0]=$host;
-  if ($ostype == "0" || $ostype == "1"){ 
+  if ($ostype == "0" or $ostype == "1"){ 
     ///------------------------------------------------------------------
     /// ostype=1はWindows ostype=2はUnix
     ///------------------------------------------------------------------
-    if ($cpulim != ''){  
+    if ($cpulim == ''){
+      $snmparray[1]='empty';
+    }else{    
       ///-------------------------------------------------
       /// -------windows / unix cpu 同じ処理--------
       ///-------------------------------------------------
@@ -130,7 +127,7 @@ function snmpdataget($hostArr){
         $rtn=wincpuload($host,$community,$data);
       }else{
         $rtn=unixcpuload($host,$community,$data);
-      }      
+      } 
       if ($rtn==1){
         $snmparray[1]="unknown";
       }else{
@@ -149,13 +146,15 @@ function snmpdataget($hostArr){
       }             
     }
 
-    if ($ramlim != ''){ 
+    if ($ramlim == ''){
+      $snmparray[2]='empty';
+    }else{   
       ///-------------------------------------------------
       /// ------windows / unix ram 同じ処理---------
       ///-------------------------------------------------
       $ramwc = explode(':',$ramlim);
       $ramc = count($ramwc);
-      if ($ramc==1 || $ramwc[1]==""){
+      if ($ramc==1 or $ramwc[1]==""){
          $ramwc[1]=$ramwc[0];
       }
       $data="";
@@ -181,14 +180,15 @@ function snmpdataget($hostArr){
         }
       }
     }
-
-    if ($disklim != ''){ 
+    if ($disklim == ''){
+      $snmparray[3]='empty';
+    }else{   
       ///--------------------------------------------------
       /// ------windows / unix disk　同じ処理----------
       ///--------------------------------------------------
       $diskwc = explode(':',$disklim);
       $diskc = count($diskwc);
-      if ($diskc==1 || $diskwc[1]==""){
+      if ($diskc==1 or $diskwc[1]==""){
         $diskwc[1]=$diskwc[0];
       }
       $data="";      
@@ -217,13 +217,15 @@ function snmpdataget($hostArr){
         }
       }
     }	
-
-    if ($process != ''){ 
+//var_dump($tcpport);
+    if ($process == ''){
+      $snmparray[4]='empty';
+    }else{   
       ///----------------------------------------------------
       /// ------windows / unix process　同じ処理---------
       ///----------------------------------------------------
       $string="";
-      if ($ostype=='1' && substr($process,0,1)=='&'){
+      if ($ostype=='1' and substr($process,0,1)=='&'){
         /// 拡張プロセスチェック unix ostype=1 && processtop=&
         $rtntb=snmpprocget($host,$community);
         if ($rtntb=='error'){
@@ -238,28 +240,29 @@ function snmpdataget($hostArr){
           $string=$rtntb;
         }
         writelogd($pgm,$host."snmpprocget return extend process ".$string);
-      /*
-      }else if ($ostype=='1' && substr($process,0,1)=='%'){
-        /// tラッププロセスチェック unix ostype=1 && processtop=%
-        $traprtntb=snmptrapget($host);
-        $string=$traprtntb;
-        writelogd($pgm,$host."snmptrapget return trapped process ".$string);
-      */  
-      }else{        
+      }else{   
+      //var_dump($tcpport);     
         /// 基本プロセスチェック　snmp応答プロセスとチェックプロセス配列(reqlist)比較
         $reqlist=explode(';',$process);
         $rtntb=phpsnmpprocess($host,$ostype,$community,$reqlist);
+        //var_dump($tcpport);
         if ($rtntb=='error'){
           $string='unknown';
         }else{
           $string=$rtntb;
         }
+        //var_dump($tcpport);
         writelogd($pgm,$host."phpsnmpprocess return normal process ".$string);
+        //var_dump($tcpport);
       }
       $snmparray[4]=$string;      
     }
-
-    if ($tcpport != ''){ 
+    //echo 'tcpport';
+//var_dump($tcpport);
+    if ($tcpport == ''){
+      $snmparray[5]='empty';
+    }else{   
+    //var_dump($tcpport);
       ///-------------------------------------------------
       /// --------windows / unix port　同じ処理-------
       ///-------------------------------------------------
@@ -287,6 +290,8 @@ function snmpdataget($hostArr){
         $reqlist=explode(';',$tcpport);
         if ($ostype=='0'){ /// windows tcpport get
           $rtntb=phpsnmptcpopenwin($host,$community,$reqlist);
+          //echo 'win-tcpport'.PHP_EOL;
+          //var_dump($reqlist);
         } else {           /// unix/linux tcpport get
           $rtntb=phpsnmptcpopen($host,$community,$reqlist);
         }      
@@ -298,13 +303,31 @@ function snmpdataget($hostArr){
         }
       }
       $snmparray[5] = $string;
+      //echo 'result'.$snmparray[5];
     }
   }else{
+    // ostype 0,1 以外
     $msg=$host . " $ostype:" . $ostype . " Unknow OStype?? ";
     writeloge($pgm,$msg);
+    $snmparray[1]='unknown';
+    $snmparray[2]='unknown';
+    $snmparray[3]='unknown';
+    $snmparray[4]='unknown';
+    $snmparray[5]='unknown';
   }
+  //echo 'last';
+  //var_dump($snmparray);
   return $snmparray;
-}  
+}
+//// return value $snmparray
+//// 	'empty' 	ホストに指定なし
+//// 	'unkown' 	エラー
+//// 	string 		正常応答  
+//$hostArr=array('192.168.1.139','notused','1','1','2','MailServer','1','80;443','80:90','80:90','80:90','httpd','server.png','public','','1','0');
+//$snmpNewValue=array();
+//$snmpNewValue=snmpdataget($hostArr);
+//echo 'return';
+//var_dump($snmpNewValue);
 ?>
 
 

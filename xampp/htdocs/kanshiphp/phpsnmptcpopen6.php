@@ -18,7 +18,7 @@ function phpsnmptcpopenwin($host,$community,&$data) {
     foreach ($keyv4 as $v4data){
       $ar2=explode('"',$v4data);
       if ($ar2[1] == '0.0.0.0'){   
-        $ar3=explode('.',$ar2[2]);
+        $ar3=explode('.',$ar2[2]); 
         $v4port=$ar3[1];
         $v4item[$cnt]=$v4port;
         $cnt++;

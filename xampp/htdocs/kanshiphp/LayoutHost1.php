@@ -11,23 +11,32 @@ if (!isset($_GET['param'])){
   
 }else{  
   /// 引数情報の分解  param=#<code>#<user>#<message>　または param=<user>
-  paramSet();  
+  paramSet(); 
+  $user_sql="select authority,bgcolor from user where userid='".$user."'";
+  $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
+  $userArr=explode(',',$userRows[0]);
+  $authority=$userArr[0];
+  $bgColor=$userArr[1]; 
   ///
   print '<html lang="ja">';
   print '<head>';
   print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
-  print '<link rel="stylesheet" href="css/kanshi1.css">';
-  print '</head><body>';
+  print '<link rel="stylesheet" href="css/kanshi1_py.css">';
+  print "</head><body class={$bgColor}>";
   ///
   if ($brcode=='error' or $brcode=='notic' or $brcode=='alert'){
     print "<h4 class={$brcode}>{$brmsg}</h4><hr>";
   }
   ///
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　ホストレイアウト作成　その１　▽</h2>';
-  print '<h4>☆グループにホストデータを配置します<br>';
-  print '☆グループで作成したレイアウト略称を選択して下さい<br>';
+  print '<h3>☆新たなレイアウトにホストデータを配置<br>';
+  print '☆グループで作成したレイアウト略称を選択し<span class="trblk">「選択実行」</span>をクリック</h3>';
   print '<br>';
-  print '<form name=myform action=layouts.php method=get>'; 
+  print '<form name=myform action=layouthost2.php method=get>'; 
   print '<table border=1>';
   print '<tr><th>レイアウト名称</th></tr>';
    
@@ -45,7 +54,7 @@ if (!isset($_GET['param'])){
   print '</table>';
   print "<input type=hidden name=user value={$user}>";
   print '<br>';
-  print '&ensp;<input class=button type=submit name=exe value=実行>';
+  print '&ensp;<input class=button type=submit name=exe value=選択実行>';
   print '</form>'; 
   print '<br><br>';
 }

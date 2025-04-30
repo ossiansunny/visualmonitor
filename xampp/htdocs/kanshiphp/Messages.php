@@ -48,14 +48,21 @@ if(!isset($_GET['param'])){
   }
   $user_sql='select authority,bgcolor from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
   $userArr=explode(',',$userRows[0]);
   $user_Auth=$userArr[0];
   $user_bgColor=$userArr[1];
-  
+  $admin_sql='select logout from admintb';
+  $adminRows=getdata($admin_sql);
   print '<html lang="ja">';
   print '<head>';
   print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
-  print '<meta http-equiv="refresh" content="10">';
+  if($adminRows[0]=='0'){
+    print '<meta http-equiv="refresh" content="10">';
+  }
   print '<link rel="stylesheet" href="css/MsgMenu.css">';
   print '</head>';
   print '<body class="'.$user_bgColor.'">';

@@ -1,36 +1,60 @@
 <?php
 $path_kanshiphp=__DIR__;
-$path_kanshiphpini=$path_kanshiphp."\\vmsetup\\kanshiphp.ini";
+$path_base=array();
+$path_kanshiphpini="";
+/// Windowsのkannshiphpアプリは、...xampp/htdocs/kanshiphpであり htdocsで分けると
+/// [0]...xampp と[1]kanshiphpになる、vmsetupはxamppの下にあるので
+/// [0]/vmsetup　になる
+if (strtoupper(substr(PHP_OS,0,3))==="WIN") {
+  /// windows xampp
+  //var_dump($path_kanshiphp);
+  $path_base=explode("\htdocs",$path_kanshiphp);
+  $path_kanshiphpini=$path_base[0]."\\vmsetup\\kanshiphp.ini"; 
+  
+}else{
+/// unix linuxのkanshiphpアプリは、...html/kanshiphpであり、 kanshiphpで分ければ
+/// [0]htmlになり、vmsetupはhtmlの下にあるので、[0]/vmsetupとなる 
+  $path_base=explode("/kanshiphp",$path_kanshiphp);
+  $path_kanshiphpini=$path_base[0]."/vmsetup/kanshiphp.ini";
+}
 ///
-function pathget($vpathParam){
+/// vmsetup内のinit-varread.phpとは相違するのでコピーして使えない
+///
+function pathget($path){
   global $path_kanshiphpini;
-  $rtnVpath=array();
-  foreach($vpathParam as $vpath){
+  $rtnarr=array();
+  foreach($path as $arg){
     $fp = fopen($path_kanshiphpini,"r");
     while ($line = fgets($fp)) {
-      $item=explode("=",$line);
-      $key=trim($item[0]);
-      $value=trim($item[1]);
-      $value=str_replace('"','',$value);
-      if($vpath==$key){
-        array_push($rtnVpath,$value);
-        break;
+      if(! (substr($line,0,2)=="//" or empty(trim($line)))){ //skip comment line
+        $item=explode("=",$line);
+        $key=trim($item[0]);
+        $value=trim($item[1]);
+        $value=str_replace("\"","",$value);
+        if($arg==$key){
+          //echo 'key:'.$key.' value:'.$value.' arg:'.$arg.PHP_EOL;
+          //echo 'matched'.PHP_EOL;
+          array_push($rtnarr,$value);
+          break;
+        }
       }
     }
     fclose($fp);
-  }  
-  return $rtnVpath;
+  }
+  return $rtnarr;
 }
+
 /*
 /// 配列にキー文字列を指定、その順にパスが配列で返る
 /// 取得の判定は、配列の要素数で行い、通常は要求した要素数でチェックする
-$pathParam=array("vpath_mrtgbase");
-$rtnPath=pathget($pathParam);
-if(count($rtnPath)==1){
-  print '<br>\r\nreturn ok:'.$rtnPath[0].PHP_EOL;
+$patharr=array("vpath_mrtghome","vpath_weblog");
+$pathfile=pathget($patharr);
+echo count($pathfile);
+if(count($pathfile)==2){
+  var_dump($pathfile);
+  echo 'ok';
 }else{
-  var_dump($rtnPath);
+  echo 'ng';
 }
 */
 ?>
-

@@ -6,17 +6,10 @@ require_once 'BaseFunction.php';
 function mrtgck(){
   $exists='0';
   $mrtgBinPath='';
-  $vpathParam=array("vpath_mrtgbase");
+  $vpathParam=array("vpath_mrtg");
   $rtnPath=pathget($vpathParam);
   $mrtgPath=$rtnPath[0];
-  if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-    $osDirSep='\\';
-    $mrtgBinPath=$mrtgPath.'\\bin\\mrtg';    
-  }else{
-    $osDirSep='/';
-    $mrtgBinPath='/usr/bin/mrtg';    
-  }
-  if(! file_exists($mrtgBinPath)){
+  if(! file_exists($mrtgPath)){
     $exists='1';    
   }
   return $exists;
@@ -24,19 +17,12 @@ function mrtgck(){
 function plotck(){
   $exists='0';
   $plotBinPath='';
-  $vpathParam=array("vpath_gnuplotbin");
+  $vpathParam=array("vpath_gnuplot");
   $rtnPath=pathget($vpathParam);
   if(!count($rtnPath)==1){
     $exists='1';
   }else{
-    if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-      $osDirSep='\\';
-      $plotBinPath=$rtnPath[0].'\\gnuplot.exe';      
-    }else{
-      $osDirSep='/';
-      $plotBinPath=$rtnPath[0].'/gnuplot';      
-    }
-    if(! file_exists($plotBinPath)){      
+    if(! file_exists($rtnPath[0])){      
       $exists='1';
     }
   }
@@ -44,20 +30,14 @@ function plotck(){
 }
 function mailck(){
   $exists='0';
-  $vendorPath='';
+  $srcPath='';
   $vpathParam=array("vpath_phpmailer");
   $rtnPath=pathget($vpathParam);
   if(!count($rtnPath)==1){
     $exists='1';
   }else{
-    if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-      $osDirSep='\\';
-      $vendorPath=$rtnPath[0].'\\vendor\\phpmailer\\phpmailer\\src\\PHPMailer.php';      
-    }else{
-      $osDirSep='/';
-      $vendorPath=$rtnPath[0].'/vendor/phpmailer/phpmailer/src/PHPMailer.php';      
-    }
-    if(! file_exists($vendorPath)){      
+    $srcPath=$rtnPath[0].'/src';      
+    if(! file_exists($srcPath)){    
       $exists='1';
     }
   }
@@ -76,19 +56,25 @@ if(!isset($_GET['param'])){
   ///
   $user_sql='select authority,bgcolor from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
   $userArr=explode(',',$userRows[0]);
   $auth=$userArr[0];
   $bgColor=$userArr[1];
 
-  print '<html lang="ja">';
+  print '<html>';
   print '<head>';
+  print "<meta http-equiv='Refresh' content=30>";
   print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
   print '<link rel="stylesheet" href="css/MenuPage.css">';
-  print '<title>Welcome to My WebSite</title>';
   print '</head>';
   print "<body class='".$bgColor."'>";
   print '<div id="body">';
   print '<hr id="bar">';
+  //print '<body class=bgtower>';
+  //print '<div><hr>';
   print '<div class="sidebar" id="left">';
   print '<h2><img src="./header/alerm1mini.png"> アラート表示</h2>';
   print '<iframe id="mesg" src="Messages.php" width="170" height="60">message</iframe>';
@@ -122,10 +108,10 @@ if(!isset($_GET['param'])){
   print '</ul>';
   print '<h2>▼　レイアウトメニュー</h2>';
   print '<ul >';
-         print '<li><a href="SelectLayout.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ホストレイアウト変更</span></a></li>';
-         print '<li><a href="ShowLayout.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;レイアウト取替</span></a></li>';
-         print '<li><a href="LayoutGroup1.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;グループレイアウト作成</span></a></li>';
-         print '<li><a href="LayoutHost1.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ホストレイアウト作成</span></a></li>';
+         print '<li><a href="SelectLayout.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ホスト変更</span></a></li>';
+         print '<li><a href="ShowLayout.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;保存・読み込み・削除</span></a></li>';
+         print '<li><a href="LayoutGroup1.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;グループ作成</span></a></li>';
+         print '<li><a href="LayoutHost1.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ホスト作成</span></a></li>';
   print '</ul>';
   print '<h2>▼　サポートメニュー</h2>';
   print '<ul >';
@@ -138,7 +124,12 @@ if(!isset($_GET['param'])){
            print '<li><a><img src="header/php.jpg" class="pysize"><span class="dmy">&ensp;メール設定・送信</a></li>';
          }
          print '<li><a href="WebErrorLog.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;Webエラーログ</a></li>';
-         print '<li><a href="PlotLog.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;プロットログ</a></li>';
+         $isplot=plotck();
+         if ($isplot=='0'){        
+           print '<li><a href="PlotLog.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;プロットログ</a></li>';
+         }else{
+           print '<li><a><img src="header/php.jpg" class="pysize"><span class="dmy">&ensp;プロットログ</a></li>';
+         }
          print '<li><a href="LogClear.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ログ削除</a></li>';
          print '<li><a href="ManualPage.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;マニュアル</a></li>';
          print '<li><a href="UserPage.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ユーザー管理</a></li>';

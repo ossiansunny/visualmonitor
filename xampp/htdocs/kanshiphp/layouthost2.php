@@ -6,34 +6,53 @@ $pgm="layouthost2.php";
 $user="";
 $brcode="";
 $brmsg="";
+$layoutNick="";
 $grp = array();
 $seg = array();
 $hst = array();
 $gh = array($grp,$seg,$hst);
 ///
 if (isset($_GET['param'])){
-  paramSet();
-  /// $brmsg format: #error#<user>#<laynick>/<messages>
-  $msgarr=explode('/',$brmsg); 
-  $brmsg=$msgarr[1];
-  $layoutNick=$msgarr[0];
+  $paramVal=$_GET['param'];
+  if(substr($paramVal,0,1)=='_'){
+    /// layouthostdb.php return format: _notic_<user>_<laynick>
+    $paramArr=explode('_',$paramVal);
+    $brcode=$paramArr[1];
+    $user=$paramArr[2];
+    $layoutNick=$paramArr[3];
+  }else{
+    paramSet();
+    /// $brmsg format: #error#<user>#<laynick>/<messages>
+    $msgarr=explode('/',$brmsg); 
+    $brmsg=$msgarr[1];
+    $layoutNick=$msgarr[0];
+  }
 }else{
   $user=$_GET['user'];
   $layoutNick=$_GET['laynick'];
 }
+$user_sql="select authority,bgcolor from user where userid='".$user."'";
+$userRows=getdata($user_sql);
+if(empty($userRows)){
+  $msg="#error#unkown#ユーザを見失いました";
+  //branch('logout.php',$msg);
+}
+$userArr=explode(',',$userRows[0]);
+$authority=$userArr[0];
+$bgColor=$userArr[1];
 $grpLayout='glayout_'.$layoutNick;
 ///
 print '<html><head>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
-print '</head><body>';
+print '<link rel="stylesheet" href="css/kanshi1_py.css">';
+print "</head><body class={$bgColor}>";
 ///
 if ($brcode=='error' or $brcode=='notic' or $brcode=='alert'){
   print "<h4 class={$brcode}>{$brmsg}</h4><hr>";
 }
 ///
 print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　ホストレイアウト作成　その２　▽</h2>';
-print '<h4>ホスト配置情報入力グループ選択</h2>';
-print '<h4>レイアウト名称： '.$layoutNick.'</h4>';
+print '<h3>ホスト配置情報入力グループ選択</h3>';
+print '<h3>レイアウト名称： '.$layoutNick.'</h3>';
 $layout_sql = 'select * from '.$grpLayout.' order by gsequence';
 $layoutRows=getdata($layout_sql);
 if ($layoutRows[0]=='error'){
@@ -42,9 +61,9 @@ if ($layoutRows[0]=='error'){
   branch($nextpage,$msg);
 } else {
   $groupCount=count($layoutRows);
-  print '<h4>☆下記のグループ情報が入力されています<br>';
+  print '<h3>☆下記のグループ情報が入力されています<br>';
   print '☆グループ内のホスト配置入力するグループを１つ選択して「入力実行」を実行します、<br>';
-  print '☆全てのグループのホスト配置欄が「入力済」の場合、情報修正になります<br></h4>';
+  print '☆全てのグループのホスト配置欄が「入力済」の場合、情報修正になります<br></h3>';
 
   print '<form name=myform action=layouthost3.php method=get>';
   print '<table border=1>';

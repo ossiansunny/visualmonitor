@@ -4,25 +4,16 @@ require_once "mysqlkanshi.php";
 require_once "varread.php";
 ///
 $webLogDir='';
-$plotLogDir='';
-$kanshiLogDir='';
-$osDirSep='';
+$plotHomeDir='';
+$kanshiphpDir='';
 $vpathParam=array("vpath_weblog","vpath_plothome","vpath_kanshiphp");
 $rtnPath=pathget($vpathParam);
 if(count($rtnPath)==3){
-  if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-    $webLogDir=$rtnPath[0];
-    $plotLogDir=$rtnPath[1]."\\logs";
-    $kanshiLogDir=$rtnPath[2]."\\logs";
-    $osDirSep="\\";
-  }else{
-    $webLogDir=$rtnPath[0];
-    $plotLogDir=$rtnPath[1]."/logs";
-    $kanshiLogDir=$rtnPath[2]."/logs";
-    $osDirSep="/";
-  }
+  $webLogDir=$rtnPath[0];
+  $plotHomeDir=$rtnPath[1];
+  $kanshiphpDir=$rtnPath[2];
 }else{
-  $msg="#error#".$user."#vpath_weblog,vpath_base,vpath_kanshiphpが不正です";
+  $msg="#error#".$user."#vpath_weblog,vpath_plothome,vpath_kanshiphpが不正です";
   $nextpage='LogClear.php';
   branch($nextpage,$msg);
 }
@@ -41,34 +32,50 @@ if (!isset($_GET['log'])){
 }
 
 $logType = $_GET['log'];  /// 選択されたlog種類
-
+var_dump($logType);
 ///--- log削除処理 -----------
 if($logType=='Web'){
-  $fileRows=glob($webLogDir.$osDirSep.'error_*.log');
+  $fileRows=glob($webLogDir.'/error_*.log');
   foreach($fileRows as $fileRowsRec){
     $filename=basename($fileRowsRec);
+    //echo 'target file:'.$filename.'<br>';
     if (false === strpos($filename,$ymd)){
-      unlink($webLogDir.$osDirSep.$filename);
+      //chmod($fileRowsRec,0666);
+      //$fp = fopen($fileRowsRec,'w');
+      //fclose($fp);
+      $rtcd=unlink($fileRowsRec);
+      //if($rtcd){
+      //  echo 'file:'.$filename.' delete success<br>';
+      //}else{
+      //  echo 'file:'.$filename.' delete failed<br>';
+      //} 
     } /// end of if    
   }  /// end of for
 }elseif($logType=='監視'){
-  $fileRows=glob($kanshiLogDir.$osDirSep.'kanshi_*.log');
+  $fileRows=glob($kanshiphpDir.'/logs/kanshi_*.log');
   foreach($fileRows as $fileRowsRec){        
     $filename=basename($fileRowsRec);
     if(false === strpos($filename,$ymd)){
-      unlink($kanshiLogDir.$osDirSep.$filename);
+      unlink($fileRowsRec);
     } /// end of if
   } /// end of for
-}else{
-  $fileRows=glob($plotLogDir.$osDirSep.'plot_*.log');
+}elseif($logType=='プロット'){
+  $fileRows=glob($plotHomeDir.'/logs/plot_*.log');
   foreach($fileRows as $fileRowsRec){        
     $filename=basename($fileRowsRec);
     if (false === strpos($filename,$ymd)){
-      unlink($plotLogDir.$osDirSep.$filename);
+      unlink($fileRowsRec);
     }  /// end of if
   }  /// end for
+}elseif($logType=='イベント'){
+  $cDate=date('ymd').'000000';
+  $eventSql="delete from eventlog where eventtime < {$cDate}";
+  putdata($eventSql);
+}else{
+  $msg="#error#".$user."#".$logType."ログのタイプが不正です、システムエラー";
+  $nextpage="LogClear.php";
+  branch($nextpage,$msg);
 }
-
 $msg="#notic#".$user."#".$logType."ログの削除が完了しました";
 $nextpage="LogClear.php";
 branch($nextpage,$msg);

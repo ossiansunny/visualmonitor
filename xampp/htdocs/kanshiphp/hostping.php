@@ -53,6 +53,8 @@ function hostping($_host){
       return 1;
    }
 } 
-
-
+/*
+$rtcd=hostping('192.168.1.21');
+var_dump($rtcd);
+*/
 ?>

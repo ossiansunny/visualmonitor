@@ -20,7 +20,8 @@ function snmptcpportget($host,$community) {
       $rtnval="allok";      
     }else{
       $rtnarr=explode(':',$getvalue);				///STRING: "80" 分離
-      $rtnvalsp=ltrim(rtrim(trim($rtnarr[1]),'"'),'"');         ///"80"のDoubleQuoteを削除      
+      $rtnvalsp=ltrim(rtrim(trim($rtnarr[1]),'"'),'"');         ///"80"のDoubleQuoteを削除
+      
     }
   }
   return $rtnval;  

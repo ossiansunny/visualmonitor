@@ -6,17 +6,10 @@ require_once 'BaseFunction.php';
 function mrtgck(){
   $exists='0';
   $mrtgBinPath='';
-  $vpathParam=array("vpath_mrtgbase");
+  $vpathParam=array("vpath_mrtg");
   $rtnPath=pathget($vpathParam);
   $mrtgPath=$rtnPath[0];
-  if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-    $osDirSep='\\';
-    $mrtgBinPath=$mrtgPath.'\\bin\\mrtg';    
-  }else{
-    $osDirSep='/';
-    $mrtgBinPath='/usr/bin/mrtg';    
-  }
-  if(! file_exists($mrtgBinPath)){
+  if(! file_exists($mrtgPath)){
     $exists='1';    
   }
   return $exists;
@@ -24,19 +17,12 @@ function mrtgck(){
 function plotck(){
   $exists='0';
   $plotBinPath='';
-  $vpathParam=array("vpath_gnuplotbin");
+  $vpathParam=array("vpath_gnuplot");
   $rtnPath=pathget($vpathParam);
   if(!count($rtnPath)==1){
     $exists='1';
   }else{
-    if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-      $osDirSep='\\';
-      $plotBinPath=$rtnPath[0].'\\gnuplot.exe';      
-    }else{
-      $osDirSep='/';
-      $plotBinPath=$rtnPath[0].'/gnuplot';      
-    }
-    if(! file_exists($plotBinPath)){      
+    if(! file_exists($rtnPath[0])){      
       $exists='1';
     }
   }
@@ -44,20 +30,14 @@ function plotck(){
 }
 function mailck(){
   $exists='0';
-  $vendorPath='';
+  $srcPath='';
   $vpathParam=array("vpath_phpmailer");
   $rtnPath=pathget($vpathParam);
   if(!count($rtnPath)==1){
     $exists='1';
   }else{
-    if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-      $osDirSep='\\';
-      $vendorPath=$rtnPath[0].'\\vendor\\phpmailer\\phpmailer\\src\\PHPMailer.php';      
-    }else{
-      $osDirSep='/';
-      $vendorPath=$rtnPath[0].'/vendor/phpmailer/phpmailer/src/PHPMailer.php';      
-    }
-    if(! file_exists($vendorPath)){      
+    $srcPath=$rtnPath[0].'/src';
+    if(! file_exists($srcPath)){      
       $exists='1';
     }
   }
@@ -77,12 +57,17 @@ if(!isset($_GET['param'])){
 
 $user_sql='select authority,bgcolor from user where userid="'.$user.'"';
 $userRows=getdata($user_sql);
+if(empty($userRows)){
+  $msg="#error#unkown#ユーザを見失いました";
+  branch('logout.php',$msg);
+}
 $userArr=explode(',',$userRows[0]);
 $auth=$userArr[0];
 $bgColor=$userArr[1];
 
 print '<html lang="ja">';
 print '<head>';
+print "<meta http-equiv='Refresh' content=30>";
 print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
 print '<link rel="stylesheet" href="css/MenuPage.css">';
 print '<title>Welcome to My WebSite</title>';
@@ -123,7 +108,11 @@ print '<div id="body">';
            print '<li><a><img src="header/php.jpg" class="pysize"><span class="dmy">&ensp;メール設定・送信</a></li>';
          }
          print '<li><a href="WebErrorLog.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;Webエラーログ</a></li>';
-         print '<li><a href="PlotLog.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;プロットログ</a></li>';
+         if ($isplot=='0'){        
+           print '<li><a href="PlotLog.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;プロットログ</a></li>';
+         }else{
+           print '<li><a><img src="header/php.jpg" class="pysize"><span class="dmy">&ensp;プロットログ</a></li>';
+         } 
          print '<li><a href="ManualPageU.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;マニュアル</a></li>';
          print '<li><a href="UserPageU.php" target="sframe"><img src="header/php.jpg" class="pysize"><span class="bgc">&ensp;ユーザー管理</a></li>';
   print '</ul>';

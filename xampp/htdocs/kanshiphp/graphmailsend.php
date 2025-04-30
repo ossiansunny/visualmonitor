@@ -5,48 +5,44 @@ require_once 'BaseFunction.php';
 require_once 'phpsendmailAt.php';
 $pgm = "graphmailsend.php";
 ///
-function bodyformat($_from,$_status,$_msg,&$bodyStr){
-  $_body = array();
-  $dte=date('Y-m-d H:i:s');
-  $_body[0]='***** VisualMonitor *****';
-  $_body[1]='From: ' . $_from;
-  $_body[2]='Date: ' .$dte;
-  $_body[3]='State: ' .$_status;  
-  $_body[4]='Messages:';
-  $_body[5]=$_msg; /// message
-  $bodyStr='';
-  foreach ($_body as $_bodyRec){
-    $bodyStr=$bodyStr.$_bodyRec."\r\n";
-  }
-}
 ///
 $graphStr=$_GET['graph'];
 $graphArr=explode(',',$graphStr); /// xxxxx.png,yyyyy.svg
 $host=$_GET['host'];
 $user=$_GET['user'];
-
+$hostSql="select host,groupname,ostype,result,action,viewname from host where host='".$host."'";
+$hostRows=getdata($hostSql);
+$hostArr=explode(',',$hostRows[0]);
+$viewname=$hostArr[5];
+$event='グラフ添付メール';
 ///
-$bodyStr = "";
-$header_sql='select * from header';
-$headerRows=getdata($header_sql);
-$headerArr=explode(',',$headerRows[0]);
-$header=$headerArr[0];
-$subj1='Email'; 
-$subj2='Attachment';
-$subj3='Graph';
-$title='*** グラフ添付メール ***';
-$msg='Host '.$host;
+$timeStamp=date('Y-m-d H:i:s');
+$body = array();
+$headerSql="select title,subtitle from header";
+$headerRows=getdata($headerSql);
+$headArr=explode(',',$headerRows[0]);
+$headTitle=$headArr[0];
+$headSubTitle=$headArr[1];
+$body[0]='***** VisualMonitor (通知) *****';
+$body[1]='From: ' .$headTitle.' '.$headSubTitle.' '.$user;
+$body[2]='Date: ' .$timeStamp;
+$body[3]='Event: '.$event;
+$body[4]='Origin: '.'snmplog'.'CPU,Ram,Disk使用率';
+$body[5]='Source: ' .$viewName.' '.$host;
+$body[6]='Additional Info:';
+$body[7]=$graphStr;    
+$bodyStr="";
+foreach($body as $item){
+  $bodyStr=$bodyStr.$item.PHP_EOL;
+}
 ///
-bodyformat($user,$title,$msg,$bodyStr);
-writelogd($pgm,"トレースログ\r\n".$bodystr);
-///
-$admin_sql="select * from admintb";
+$admin_sql="select receiver,sender from admintb";
 $adminRows=getdata($admin_sql);
 $adminArr=explode(',',$adminRows[0]);
-$mailToAddr=$adminArr[3]; /// mail to addr
-$mailFromAddr=$adminArr[4]; /// mail from addr
+$mailToAddr=$adminArr[0]; /// mail to addr
+$mailFromAddr=$adminArr[1]; /// mail from addr
 ///
-$mailFlag=phpsendmailat("", "", $mailFromAddr, $mailToAddr, $title, $bodyStr,$graphArr);
+$mailFlag=phpsendmailat("", "", $mailFromAddr, $mailToAddr, $event, $bodyStr,$graphArr);
 ///
 if (strpos($graphArr[0],'.svg') !== false){
   $nextpage='GraphListPlotPage.php';
@@ -69,6 +65,6 @@ if($mailFlag==0){
   writeloge($pgm,$mmsg);
   $msg="#error#".$user."#ホスト".$host."のグラフ添付メール送信失敗";
   branch($nextpage,$msg);
-
+}
 ?>
 

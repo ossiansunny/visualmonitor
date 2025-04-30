@@ -1,4 +1,5 @@
 <?php
+//require_once "mysqlkanshi.php";
 error_reporting(E_ALL & ~E_WARNING);
 ///----------------------------------------------------
 ///----------------Windowsエージェント用---------------
@@ -30,8 +31,9 @@ return 0;
 ///----------------- Linuxエージェント用----------
 ///----------------------------------------------
 function unixcpuload($host,$community,&$data) {
-/// １分、５分、１０分の最大値を取得
-$snmparray = snmpwalk($host,$community, ".1.3.6.1.4.1.2021.10.1.5");
+/// 全CPU coreでの最大値取得
+//$snmparray = snmpwalk($host,$community, ".1.3.6.1.4.1.2021.10.1.5");
+$snmparray = snmp2_walk($host, $community, ".1.3.6.1.2.1.25.3.3.1.2",1000000,1);
 if(!$snmparray){
   $data='0';
   return 1;
@@ -51,5 +53,12 @@ $data = strval($load);
 return 0;
 }
 ///
+/*
+$resultdata="";
+$rtn=wincpuload('192.168.1.155','public',$resultdata);
+var_dump($rtn);
+var_dump($resultdata);
+*/
+
 ?>
 

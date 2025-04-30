@@ -85,11 +85,20 @@ if (isset($_GET['delete'])){
     branch($nextpage,$alertMsg);    
   }
 }
+$user_sql="select authority,bgcolor from user where userid='".$user."'";
+$userRows=getdata($user_sql);
+$userArr=explode(',',$userRows[0]);
+if(empty($userRows)){
+  $msg="#error#unkown#ユーザを見失いました";
+  branch('logout.php',$msg);
+}
+$authority=$userArr[0];
+$bgColor=$userArr[1];
 print '<html><head><meta>';
 print '<link rel="stylesheet" href="css/kanshi1_py.css">';
-print '</head><body>';
+print "</head><body class={$bgColor}>";
 print '<h2><img src="header/php.jpg" width="30" height="30">&nbsp;&nbsp;▽　ログデータの表示と処理　▽</h2>';
-print '<h4>選択したデータに下記の「必要な処理」をします</h4>';
+print '<h4>選択したデータに下記の「必要な処理」をする</h4>';
 ///---- 画面表示処理 ---
 print '<table border="1">';
 print '<tr><th>対象ホスト</th><th>イベント種類</th><th>snmp結果</th><th>snmp状態</th><th>管理者</th><th>障害管理番号</th><th>確認</th><th>メール送信</th><th>メッセージ</th></tr>';
@@ -211,30 +220,30 @@ print '</tr>';
 print '</table>';
 
 if ($auth=='1'){
-  print '<h4>　必要な処理<br>';
-  print '　注：障害確認、障害解決は、対象ホスト単位で行われます<br>';
+  print '<h3>　必要な処理<br>';
+  print '　注：障害確認、障害解決は、対象ホスト単位で行う<br>';
   print '　　●障害確認（コンファーム）　障害発生を確認したときの処理<br>';
   print '　　　イベントログに確認を表示<br>';
   print '　　●障害解決（クローズ）　　　障害処置を完了したときの処理<br>';
   print '　　　対象ホストイベント全データを削除、メモに障害情報を保存<br>';
   print '　　●メモを保存　　　　　　　　メモを残すときの処理<br>';
   print '　　　任意の情報をメモに保存';
-  print '</h4>';
+  print '</h3>';
 
   print '<form name="logdbupform" method="get" action="eventlogupdeldb.php">';
   print "<input type='hidden' name='fckbox' value={$eventRow} />";
   print "<input type='hidden' name='user' value={$user} />";
   print '<hr>';
-  print '<h4>☆　障害確認は、<span class=trylw>「障害確認」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';  
+  print '<h3>☆　障害確認は、<span class=trylw>「障害確認」〇</span>を選択し、<span class=trblk>「実行」</span>をクリック</h3>';  
   print '<hr>';
-  print '<h4>☆　障害解決は、障害種類、障害管理番号、メモメッセージを入力し、<span class=trylw>「処置完了」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';
-  print '<h4>☆　メモを残したい場合は、障害種類、障害管理番号、メモメッセージを入力し、<span class=trylw>「メモ保存」〇</span>を選択し、<span class=trblk>「実行」</span>をクリックします</h4>';
+  print '<h3>☆　障害解決は、障害種類、障害管理番号、メモメッセージを入力し、<span class=trylw>「処置完了」〇</span>を選択し、<span class=trblk>「実行」</span>をクリック</h3>';
+  print '<h3>☆　メモを残したい場合は、障害種類、障害管理番号、メモメッセージを入力し、<span class=trylw>「メモ保存」〇</span>を選択し、<span class=trblk>「実行」</span>をクリック</h3>';
   print '&emsp;障害種類：<input type="text" name="kanrimei" size="8" maxlength="8" value="" placeholder="例：無応答"/>';
   print "&emsp;障害管理番号：<input type='text' name='kanrino' size='12' maxlength='12' placeholder='例：2310260001'/><br>";
   print '&emsp;メモメッセージ：<br>';
   print '&emsp;<textarea name="memomsg" maxlength="200" placeholder="半角200、全角100文字以内、改行可能" cols="101"></textarea><br>';
   print '<hr>';
-  print '<h4>☆　処置選択</h4>';
+  print '<h3>☆　処置選択</h3>';
   print '&emsp;<span class=trylw>障害確認</span><input type="radio" name="cradio" value="confirm" />';
   print '&emsp;<span class=trylw>処置完了</span><input type="radio" name="cradio" value="close" />';
   print '&emsp;<span class=trylw>メモ保存</span><input type="radio" name="cradio" value="memo" /> ';

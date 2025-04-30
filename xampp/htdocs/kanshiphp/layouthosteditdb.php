@@ -13,8 +13,17 @@ $hostArr=$_GET['data'];
 $gshKey=$_GET['key'];
 $layout=$_GET['type'];
 $user=$_GET['user'];
-
+$user_sql="select authority,bgcolor from user where userid='".$user."'";
+$userRows=getdata($user_sql);
+if(empty($userRows)){
+  $msg="#error#unkown#ユーザを見失いました";
+  branch('logout.php',$msg);
+}
+$userArr=explode(',',$userRows[0]);
+$authority=$userArr[0];
+$bgColor=$userArr[1];
 $grpCount=count($groupNum);
+///
 for ($i=0;$i<$grpCount;$i++){  
   $gkey=$groupNum[$i];
   $gvalue=$groupName[$i];
@@ -37,8 +46,8 @@ for ($i=0;$i<$keyMax;$i++){
 dataflagreset($layout);
 
 print '<html><head><meta>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
-print '</head><body>';
+print '<link rel="stylesheet" href="css/kanshi1_py.css">';
+print "</head><body class={$bgColor}>";
 print '<h4>変更処理が終わりました、「監視モニターへ戻る」をクリックして下さい</h4>';
 print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
 print '</body></html>';

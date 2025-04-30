@@ -2,7 +2,7 @@
 require_once 'mysqlkanshi.php';
 
 function hostimagelist(){  
-  print '<h3>▽　ホスト画像　▽</h3>';
+  print '<h3>▽　登録済ホスト画像　▽</h3>';
   $svrImage=array();
   $svrViewName=array();
   $image_sql='select * from serverimage order by image';

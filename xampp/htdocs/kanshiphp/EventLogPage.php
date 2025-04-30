@@ -25,45 +25,49 @@ $authority="";
 /// セッション情報のユーザーを取得
 if(!isset($_GET['param'])){  
   paramGet($pgm);
-}else{                       
+}else{
 /// ユーザ取得後処理
   paramSet(); 
   ///
-  $user_sql="select authority from user where userid='".$user."'";
+  $user_sql="select authority,bgcolor from user where userid='".$user."'";
   $userRows=getdata($user_sql);
   if(empty($userRows)){
-    $msg="#error#admin#ユーザが存在しません、再ログインして下さい";
-    branch($pgm,$msg);
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
   }
   $userArr=explode(',',$userRows[0]);
   $authority=$userArr[0];
+  $bgColor=$userArr[1];
   ///
-  $admin_sql="select * from admintb";
+  $admin_sql="select monintval,logout from admintb";
   $adminRows=getdata($admin_sql);
   $adminArr=explode(',',$adminRows[0]);
-  $interval=strval(intval(intval($adminArr[7])/2));
+  $adminMonintval=$adminArr[0];
+  $adminLogout=$adminArr[1];
+  $interval=$adminMonintval;
   $title1='<img src="header/php.jpg" width="30" height="30">';
   $title2='　▽　イベントログ　▽　';
   $title3=$interval . '　秒間隔更新';
-  $title=$title1 . $title2 . $title3;
+  $title='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$title1 . '&nbsp;&nbsp;'. $title2 . $title3;
   print '<html><head>';
-  print "<meta http-equiv='Refresh'  content={$interval}>";
+  if($adminLogout=='0'){
+    print "<meta http-equiv='Refresh'  content={$interval}>";
+  }
   print '<link rel="stylesheet" href="css/kanshi1_py.css">';
-  print '</head><body>';
+  print "</head><body class={$bgColor}>";
   ///
   if ($brcode=="alert" || $brcode=="error" || $brcode=="notic"){
     print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
   }
   ///
-  print "<h2>{$title}</h2>";
+  print "<h2>{$title}<h2>";
   ///
   /// 画面表示処理-
   ///
-  print '<h3>ログは、最新のものから出力されます</h3>';
-  print '<h3>☆障害確認する場合は、<span class=trred>赤色背景行「監視異常」</span>又は<span class=trpnk>レンガ色背景行「監視注意」</span>を選択し、<span class=trblk>「選択実行」</span>をクリックします<br>';
-  print '☆障害クローズをする場合は、<span class=trylw>黄色背景行確認欄「障害確認済」</span>を選択し、<span class=trblk>「選択実行」</span>をクリックします<br>';
-  print '☆単一ログを削除する場合は、〇を選択し<span class=trred>「選択削除実行」</span>をクリックします<br>';
-  print '☆ログの範囲を削除する場合は、範囲yy-mm-ddを入力して<span class=trred>「範囲削除実行」</span>をクリックします</h4>'; 
+  print '<h3>ログは、最新のものから出力</h3>';
+  print '<h3>☆障害確認する場合は、<span class=trred>赤色背景行「監視異常」</span>又は<span class=trpnk>レンガ色背景行「監視注意」</span>を選択し、<span class=trblk>「選択実行」</span>をクリック<br>';
+  print '☆障害クローズをする場合は、<span class=trylw>黄色背景行確認欄「障害確認済」</span>を選択し、<span class=trblk>「選択実行」</span>をクリック<br>';
+  print '☆ログの範囲を削除する場合は、範囲yy-mm-ddを入力して<span class=trred>「範囲削除実行」</span>をクリック</h3>'; 
   print '<table class="nowrap">';
   print '<tr><th >日付:時刻</th><th>ホスト</th><th>イベント種類</th><th>snmp監視</th><th>snmp状態</th><th>管理者</th><th>障害管理番号</th><th>確認</th><th>処置メール</th></tr>';
 
@@ -92,18 +96,21 @@ if(!isset($_GET['param'])){
     $bgColor="";
 
     if ($event_type=='1' and $event_snmpVal=='') {  
+      /// 監視正常 and snmp測定値なし  
       continue;
     } else {
-      if (!(is_null($event_snmpVal) or $event_snmpVal=='')){ ///snmpValViewe
+      if (!(empty($event_snmpVal))){ ///snmpValViewe
+        /// 測定値あり
         $snmpValView=$event_snmpVal;
         if ($snmpValView=='allok'){
+          /// allokをなしと表示 閉鎖なし　未稼働なし　とするため
           $snmpValView='なし';
         }
       } /// endif
-      if (!(is_null($eventArr[5]) or $eventArr[5]=='')){ ///管理者
+      if (!(empty($eventArr[5]))){ ///管理者
         $adminName=$eventArr[5];
       } /// endiff
-      if (!(is_null($eventArr[6]) or $eventArr[6]=='')){ ///管理#
+      if (!(empty($eventArr[6]))){ ///管理#
         $cnfClsNum=$eventArr[6];
       } 
       if ($event_type=='1'){ ///eventtype
@@ -148,11 +155,12 @@ if(!isset($_GET['param'])){
         $mailTypView="";
       }else{ 
         /// event type=0(ログイン) 1(監視正常) 2(監視異常) 3(監視管理) 7(監視開始) 9(ログアウト) a(DB異常)
-        if (!(is_null($snmpValView) or $snmpValView=='')){
+        if (!(empty($snmpValView))){
+          /// snmp測定値あり
           $nwc=explode(':',$snmpValView);
-          if ($event_snmpTyp=='0' or $event_snmpTyp=='1'){  /// ping/snmp監視
+          if ($event_snmpTyp=='0' or $event_snmpType=='1'){  /// ping/snmp監視
             $snmpTypView='';
-          }elseif ($event_snmpTyp=='2'){ /// snmp cpu監視
+          }elseif ($event_snmpTyp=='2'){ /// snmp監視
             
             if ($event_type=='7' and $nwc[0]=='n'){ ///監視開始+n
               $snmpTypView='CPU負荷%';
@@ -194,8 +202,19 @@ if(!isset($_GET['param'])){
           }else{
             $snmpTypView='';
           }
+        }else{
+          /// snmp測定値なし
+          if($event_type=='2'){ 
+            /// 監視異常
+            if($event_snmpTyp=='0'){
+              $snmpTypView='Ping監視';
+            }elseif($event_snmpTyp=='1'){
+              $snmpTypView='Snmp監視';
+            }
+          }
         } /// endif A
-        if ($snmpValView=='' or !isset($snmpValView)){
+        /// snmpValueが空のsnmpType2,3,4,5,6はデータロスト
+        if (empty($snmpValView)){
           if ($event_snmpTyp=='2' or $event_snmpTyp=='3' or $event_snmpTyp=='4' or $event_snmpTyp=='5' or $event_snmpTyp=='6'){
             $snmpValView='データロスト';
           }
@@ -204,6 +223,11 @@ if(!isset($_GET['param'])){
           $snmpValView='クローズ待ち';
         }
         if($event_snmpTyp=='5' and $snmpValView=='empty'){
+          $snmpValView='指定なし';
+          $eventTypView='監視正常';
+          $bgColor = "trblk";
+        } 
+        if($event_snmpTyp=='6' and $snmpValView=='empty'){
           $snmpValView='指定なし';
           $eventTypView='監視正常';
           $bgColor = "trblk";
@@ -241,8 +265,7 @@ if(!isset($_GET['param'])){
       if ($eventTypView=='監視注意' and $event_cnfCls!='1'){
         $bgColor= 'trpnk';
       }
-   
-      
+         
       print "<tr class={$bgColor}><td class={$bgColor}><input type='radio' name='evdata' value={$eventRowsRec} >{$dte}</td>";
       print "<td class={$bgColor} width=200> &nbsp;{$event_host}</td>";
       print "<td class={$bgColor}> &nbsp;{$eventTypView}</td>";

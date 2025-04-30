@@ -23,7 +23,8 @@ function getmailstatus(){
     }
     $key=$statArr[$pointer+($pointer-1)];
     $val=$statArr[$pointer+($pointer-1)+1];
-    if (empty($val) || $val==" " || is_null($val)){
+    if (empty($val) or $val==" " or is_null($val)){
+      $cnt++;
       continue;
     }else{
       if ($val=='Mail Server Active'){
@@ -92,7 +93,8 @@ Function ptrstatus($_poniter){
   
   /// 0       1    2    3    4    5    6    7    8    9    10 
   /// pointer key1 val1 key2 val2 key3 val3 key4 val4 key5 val5
-
+ 
+  
 /// 各種情報保存
 function setstatus($_key,$_val){
   /// key ..表示色 
@@ -115,6 +117,7 @@ function setstatus($_key,$_val){
       /// mark#,msg# は cntと同じ
       $stat_sql="update status set mark".strval($cnt)."='".$_key."',msg".strval($cnt)."='".$_val."'";
       putdata($stat_sql);      
+      //echo $stat_sql.'<br>'.PHP_EOL;
       $rtnCde=0;
       break;
     }
@@ -140,4 +143,8 @@ function delstatus($_val){
   }
   return $rtnCde; /// deleted=0 , not found=1
 }
+/*
+$rtncde=getmailstatus();
+var_dump($rtncde);
+*/
 ?>

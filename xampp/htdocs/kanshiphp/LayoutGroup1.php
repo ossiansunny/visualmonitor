@@ -11,16 +11,25 @@ if (!isset($_GET['param'])){
 }else{  
   /// 引数情報の分解  param=#<code>#<user>#<message>　または param=<user>
   paramSet();
+  $user_sql="select authority,bgcolor from user where userid='".$user."'";
+  $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
+  $userArr=explode(',',$userRows[0]);
+  $authority=$userArr[0];
+  $bgColor=$userArr[1];
   ///
   print '<html lang="ja">';
   print '<head>';
   print '<meta http-equiv="content-type" content="text/html;charset=utf-8">';
-  print '<link rel="stylesheet" href="css/kanshi1.css">';
+  print '<link rel="stylesheet" href="css/kanshi1_py.css">';
   print '</head>';
-  print '<body>';
+  print "<body class={$bgColor}>";
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　グループレイアウト作成　その１　▽</h2>';
-  print '<h4>☆作成するレイアウト名称（半角英数8文字以内）およびグループの数を入力して下さい</h4>';
-
+  print '<h3>☆新たに作成するレイアウト名称（半角英数8文字以内）およびグループの数を入力し<span class=trblk>「実行」</span>をクリック<br>';
+  print '<span class="trred">現存するレイアウト名称との重複は不可</span></h3>';
   print '<form name=myform action=layoutgroup2.php method=get>'; 
   print '<table border=1>';
   print '<tr><th>レイアウト名称</th><th>グループ数</th></tr>';

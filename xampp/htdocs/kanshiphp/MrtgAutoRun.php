@@ -1,4 +1,11 @@
 ﻿<?php
+///////////////////////////////////////////////////////////////
+///
+/// /// 変更履歴 ///　最終更新日 2025/4/21	
+/// 2025/4   /usr/bin/mrtgrun /usr/bin/plotgraph パス指定へ変更
+///
+///
+//////////////////////////////////////////////////////////////
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "varread.php";
@@ -21,14 +28,23 @@ if(!isset($_GET['param'])){
   
   $user_sql='select bgcolor from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+ }
   $bgcolor=$userRows[0];
   ///
-  $admin_sql='select monintval from admintb';
+  $admin_sql='select monintval,debug,logout from admintb';
   $adminRows=getdata($admin_sql);
-  $monitorInterval=$adminRows[0];
+  $adminArr=explode(',',$adminRows[0]);
+  $monitorInterval=$adminArr[0];
+  $debug=$adminArr[1];
+  $logout=$adminArr[2];
   print '<html lang="ja">';
   print '<head>';
-  print "<meta http-equiv='refresh' content={$monitorInterval}>";
+  if ($logout=='0'){
+    print "<meta http-equiv='refresh' content={$monitorInterval}>";
+  }
   print '<link rel="stylesheet" href="css/CoreMenu.css">';
   print '</head>';
   print "<body class={$bgcolor}>";
@@ -40,50 +56,55 @@ if(!isset($_GET['param'])){
   $currentTimeStamp=date('ymdHis');
   $diffTime=intval($currentTimeStamp) - intval($mrtgTimeStamp);
   if ($diffTime > intval($monitorInterval)*3){
-    print "<h4><font color=white>MRTG Refresh {$monitorInterval}sec</font></h4>";
+    print "<h5><font color=white>MRTG Refresh {$monitorInterval}sec</font></h5>";
     print '</td></tr></table></div>';
     date_default_timezone_set('Asia/Tokyo');
     if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
       /// windows xampp
-      $vpath_mrtgbase="";
-      $vpath_plothome="";
-      $vpath_base="";
-      $vpathParam=array("vpath_mrtgbase","vpath_plothome","vpath_base","vpath_perlbin");
+      $vpathParam=array("vpath_mrtg","vpath_mrtghome","vpath_plothome","vpath_base","vpath_perl","vpath_ubin");
       $rtnPath=pathget($vpathParam);
-      if(count($rtnPath)==4){
-        $vpath_mrtgbase=$rtnPath[0];
-        $vpath_plothome=$rtnPath[1];
-        $vpath_base=$rtnPath[2]; 
-        $vpath_perlbin=$rtnPath[3];
-        /// 
-        $cmdMrtgRun=$vpath_perlbin."\\perl ".$vpath_mrtgbase."\\bin\\mrtg ".$vpath_mrtgbase."\\newmrtg.cfg";
-        $out2 = shell_exec($cmdMrtgRun);
+      if(count($rtnPath)==6){
+        $vpath_mrtg=$rtnPath[0];
+        $vpath_mrtghome=$rtnPath[1];
+        $vpath_plothome=$rtnPath[2];
+        $vpath_base=$rtnPath[3];
+        $vpath_perl=$rtnPath[4];
+        $vpath_ubin=$rtnPath[5];
+        /// mrtg
+        $cmdMrtgRun=$vpath_perl." ".$vpath_mrtg." ".$vpath_mrtghome."/newmrtg.cfg";
+        $mrtgRtn = shell_exec($cmdMrtgRun);
         writelogd($pgm,"call ".$cmdMrtgRun);
-        $cmdPlotGraph="cscript ".$vpath_base.'\\ubin\\plotgraph.vbs '.$vpath_base; /// 
-        $out3 = shell_exec($cmdPlotGraph);
+        /// plot
+        $cmdPlotGraph=$vpath_ubin.'/plotgraph.exe '.$vpath_base. ' '. $debug;  
+        //$cmdPlotGraph="cscript ".$vpath_base.'\\ubin\\plotgraph.vbs '.$vpath_base; /// 
+        $plotRtn = shell_exec($cmdPlotGraph);
         writelogd($pgm,"call ".$cmdPlotGraph);
         ///
       }else{
         $msg="Invalid path , Check kanshiphp.ini";
-        writeloge($pgm,$msg);
+        writelogd($pgm,$msg);
         print "<h4>{$msg}</h4>";
       }
     }else{
       /// Linux
-      $vpathParam=array("vpath_htdocs","vpath_kanshibin");
+      $vpathParam=array("vpath_base","vpath_ubin","vpath_gnuplot","vpath_mrtg");
       $rtnPath=pathget($vpathParam);
-      if(count($rtnPath)==2){
-        $htdocs=$rtnPath[0];
-        $kanshibin=$rtnPath[1];
-        $cmd1=$kanshibin.'/mrtgrun.sh '.$htdocs;
-        $out1 = shell_exec($cmd1);
-        writelogd($pgm,'shell_exec '.$cmd1);
-        $cmd2=$kanshibin.'/plotgraph.sh '.$htdocs;
-        $out2 = shell_exec($cmd2);
-        writelogd($pgm,'shell_exec '.$cmd2);
+      if(count($rtnPath)==4){
+        $vpath_base=$rtnPath[0];
+        $vpath_ubin=$rtnPath[1];
+        $vpath_gnuplot=$rtnPath[2];
+        $vpath_mrtg=$rtnPath[3];
+        /// mrtg 2025/4/20 $vpath_mrtg 追加
+        $cmdMrtgRun=$vpath_ubin.'/mrtgrun.sh '.$vpath_base.' '.$vpath_mrtg;
+        $mrtgRtn = shell_exec($cmdMrtgRun);
+        writelogd($pgm,'shell_exec '.$cmdMrtgRun);
+        /// plot 2025/4/18 $vpath_gnuplot 追加
+        $cmdPlotGraph=$vpath_ubin.'/plotgraph.sh '.$vpath_base.' '.$vpath_gnuplot; 
+        $plotRtn = shell_exec($cmdPlotGraph);
+        writelogd($pgm,'shell_exec '.$cmdPlotGraph);
       }else{
         $msg="Invalid path , Check kanshiphp.ini";
-        writeloge($pgm,$msg);
+        writelogd($pgm,$msg);
         print "<h4>{$msg}</h4>";
       }
     }

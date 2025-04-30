@@ -25,6 +25,15 @@ function openconnect(){
   }
   
 }  
+///
+/*
+function default_str(String $raw_str = null, String $default = "") : String{
+  if(isset($raw_str) === true){
+      return $raw_str;
+  }     
+  return $default;
+}
+*/
 ///-----------------------------------------------------
 /// readlog関数
 ///-----------------------------------------------------
@@ -80,40 +89,90 @@ function writelog($_pgm,$_msg) {
 ///---------------------------------------
 ///----- sql selectでデータを読む---------
 ///---------------------------------------
-function getdata($_sql) {
-  $dbg = debug_backtrace();
-  $pgm = $dbg[0]["file"];
-  $rtable = array();
-  $dbc=openconnect();
-  if(!$dbc){
-    $msg="mysql db connection error";
-    writeloge($pgm,$msg);
-    $rtable[0]="error";
-    return $rtable;
-  }
-  $res = mysqli_query($dbc,$_sql);
-  if (mysqli_error($dbc)) {
-    $msg="mysql query error: ".$sql;
-    writeloge($pgm,$msg);
-    $rtable[0] = "error";
-    return $rtable;
-  }
-  $c = 0;
-  while ($row = mysqli_fetch_row($res)) {
-    $cc=0;
-    $rc=count($row);
-    $rtables="";
-    for($cc=0;$cc<$rc;$cc++){
-      $rtables = $rtables . "," . $row[$cc];  
+function getdata2($_sql) {
+  try{
+    $dbg = debug_backtrace();
+    $pgm = $dbg[0]["file"];
+    $rtable = array();
+    $dbc=openconnect();
+    if(!$dbc){
+      $msg="mysql db connection error";
+      writeloge($pgm,$msg);
+      //$rtable[0]="error";
+      return null;
     }
-    $rtablex=substr($rtables,1);
-    $rtable[$c]=$rtablex;
-    $c++;
-  }
-  mysqli_close($dbc);
-  return $rtable;
+    $res = mysqli_query($dbc,$_sql);
+    if (mysqli_error($dbc)) {
+      $msg="mysql query error: ".$_sql;
+      writeloge($pgm,$msg);
+      //$rtable[0] = "error";
+      return null;
+    }
+    $c = 0;
+    while ($row = mysqli_fetch_row($res)) {
+      $cc=0;
+      $rc=count($row);
+      $rtables="";
+      for($cc=0;$cc<$rc;$cc++){
+        $rtables = $rtables . "," . $row[$cc];  
+      }
+      $rtablex=substr($rtables,1);
+      $rtable[$c]=$rtablex;
+      $c++;
+    }
+    mysqli_close($dbc);
+    return $rtable;
+  }catch(Exception $e){
+    writeloge("mysqlkanshi.php","Exception:".$_sql);
+    return null;
+  }  
 }
-
+function getdata($_sql) {
+  try{
+    $dbg = debug_backtrace();
+    $pgm = $dbg[0]["file"];
+    $rtable = array();
+    $dbc=openconnect();
+    if(!$dbc){
+      $msg="mysql db connection error";
+      writeloge($pgm,$msg);
+      //$rtable[0]="error";
+      return null;
+    }
+    mysqli_query($dbc,'begin');
+    $sqltop=explode(' ',$_sql);
+    if($sqltop[0]=='select'){
+      $res = mysqli_query($dbc,$_sql.' for update');
+    }else{
+      $res = mysqli_query($dbc,$_sql);
+    }
+    if (mysqli_error($dbc)) {
+      $msg="mysql query error: ".$_sql;
+      writeloge($pgm,$msg);
+      //$rtable[0] = "error";
+      return null;
+    }
+    $c = 0;
+    while ($row = mysqli_fetch_row($res)) {
+      $cc=0;
+      $rc=count($row);
+      $rtables="";
+      for($cc=0;$cc<$rc;$cc++){
+        $rtables = $rtables . "," . $row[$cc];  
+      }
+      $rtablex=substr($rtables,1);
+      $rtable[$c]=$rtablex;
+      $c++;
+    }
+    mysqli_query($dbc,'commit');
+    mysqli_close($dbc);
+    
+    return $rtable;
+  }catch(Exception $e){
+    writeloge("mysqlkanshi.php","Exception:".$_sql);
+    return null;
+  }  
+}
 /// ----------------------------------------
 /// -----SQL insert, update, deleteを実行---
 ///-----------------------------------------
@@ -127,27 +186,31 @@ function putdata($_sql) {
     writeloge($pgm,$msg);
     $rtn=-1;
   }else{
+    mysqli_query($dbc,'begin');
     $res = mysqli_query($dbc,$_sql);
     if (mysqli_error($dbc)) {
-      $msg="mysql query parse error: ".$sql; ///文法の間違い rtn=-1
+      $msg="mysql query parse error: ".$_sql; ///文法の間違い rtn=-1
       writeloge($pgm,$msg);
       $rtn = -1;
     } else {
       $msg="mysql debug: ".$_sql;
-      writelogd($pgm,$msg);
+      if(substr($_sql,0,15)=='insert into host'){
+        writeloge($pgm,$msg);
+      }
+      mysqli_query($dbc,'commit');
       mysqli_close($dbc);
     }
   }
   return $rtn; /// whereの該当なしも 0で帰る
 }
 ///-------------------------------------------------------------------
-///--  Writelogなしのcreate table,insert, update, delete を実行---
+///---  Writelogなしのcreate table,insert, update, delete を実行---
 ///--------------------------------------------------------------------
 function create($_sql) {
   $dbc=openconnect();
   $rtn=0;
   if(!$dbc){
-    $msg="mysql db connection error"; 
+    $msg="mysql db connection error"; /// rtn=-1
     $rtn=-1;
   }else{
     $res = mysqli_query($dbc,$_sql);
@@ -157,17 +220,24 @@ function create($_sql) {
       mysqli_close($dbc);
     }
   }
-  return $rtn; /// whereの該当なしも 0で帰る
+  return $rtn; /// whereの該当なしも 0で返る
 }
-
 /*
-$pgm='mysqlkanshi.php';
-$sql="select * from user where userid='aadmin'";
-$rtn=getdata($sql);
-writeloge($pgm,"mysql pgm test ".$sql);
+$sql="insert into host (host,groupname,ostype,result,action,viewname,mailopt,tcpport,cpulim,ramlim,disklim,process,image,snmpcomm,agenthost,eventlog,standby) values('192.168.1.22','unkown','1','0','2','Rocky9522','0','','80:90','80:90','80:90','','server.png','public','','0','1')";
+$rtn=putdata($sql);
 var_dump($rtn);
-if (empty($rtn)){
-  echo 'none';
+$sql="select * from host where host='192.168.1.22'";
+$rtn=getdata($sql);
+var_dump($rtn);
+*/
+/*
+$sql="show tables";
+$rtn=getdata($sql);
+var_dump($rtn);
+if(empty($rtn)){
+echo "empty";
+}else{
+echo "not empty";
 }
 */
 ?>

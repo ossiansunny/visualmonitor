@@ -27,10 +27,8 @@ function snmptrapget($host) {
   return $rtnval;  
 }
 */
-/*
-snmptrapset("192.168.1.21","remote","httpd oracle master sshd");
-$rtn=snmptrapget("192.168.1.18");
-var_dump($rtn);
-*/
+///snmptrapset("192.168.1.21","remote","httpd oracle master sshd");
+///$rtn=snmptrapget("192.168.1.18");
+///var_dump($rtn);
 ?>
 

@@ -40,5 +40,11 @@ function putagent($host,$community,$value) {
     return false;
   }
 }
+/*
+$rtn=getagent('127.0.0.1','private');
+var_dump($rtn);
+$rtn=putagent('127.0.0.1','private','sb');
+var_dump($rtn);
+*/
 ?>
 

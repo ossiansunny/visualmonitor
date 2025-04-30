@@ -7,6 +7,7 @@ $pgm="ReadLogPage.php";
 $user="";
 $brcode="";
 $brmsg="";
+$kanshiDir="";
 /// vpath_kanshiphpパス取得
 $vpathParam=array("vpath_kanshiphp");
 $vpathArr=pathget($vpathParam);
@@ -22,12 +23,7 @@ if(count($vpathArr)==1){
 /// 
 $timeStamp = date("ymdHis");
 $ymd=substr($timeStamp,0,6);
-$currLog='';
-if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-  $currLog=$kanshiDir.'\\logs\\kanshi_'.$ymd.'.log';
-}else{
-  $currLog=$kanshiDir.'/logs/kanshi_'.$ymd.'.log';
-}
+$currLog=$kanshiDir.'/logs/kanshi_'.$ymd.'.log';
 /// ログ削除
 if(isset($_GET['remove'])){
   $user = $_GET['user'];
@@ -55,6 +51,15 @@ if(isset($_GET['remove'])){
 ///
 } else {
   paramSet();
+  $user_sql="select authority,bgcolor from user where userid='".$user."'";
+  $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
+  $userArr=explode(',',$userRows[0]);
+  $authority=$userArr[0];
+  $bgColor=$userArr[1];
 /// ログ表示
   $interval="60";
   $title1='<img src="header/php.jpg" width="30" height="30">';
@@ -64,15 +69,16 @@ if(isset($_GET['remove'])){
   print '<html>';
   print '<head>';
   print "<meta http-equiv='Refresh'  content={$interval}>";
+  //echo 'user:'.$user.' bgColor:' .$bgColor;
   print '<link rel="stylesheet" href="css/kanshi1_py.css">';  
-  print '</head><body>';
+  print "</head><body class={$bgColor}>";
   if ($brcode=='error'){
-    print "<h4 class={$brcode}>{$brmsg}</h4><hr>";
+    print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
   }
   print "<h2>{$title}</h2>";
 
   print "<table>";
-  print "<h4>{$currLog}</h4>";  
+  print "<h3>{$currLog}</h3>";  
   if(file_exists($currLog)){
     $fpLog = fopen($currLog,"r");
     $isSw=0;
@@ -85,20 +91,12 @@ if(isset($_GET['remove'])){
       fclose($fpLog);
     }
     if($isSw==0){
-      print "ログファイルにデータがありません<br>";
+      print "<h3>ログファイルにデータがありません</h3><br>";
     }
   }else{
-    print "ログファイルがありません<br>";
+    print "<h3>ログファイルがありません</h3><br>";
   }
-  ///
-  $user_sql='select authority from user where userid="'.$user.'"';
-  $userRows=getdata($user_sql);
-  if (empty($userRows)){
-    $msg="#error#admin#ユーザがありません、再ログインして下さい";
-    branch($pgm,$msg);
-  }  
-  $userArr=explode(',',$userRows[0]);
-  $authority=$userArr[0];
+  
   print "</table>";
   print '<form action="ReadLogPage.php" method="get">';
   print "<input type='hidden' name='user' value={$user} >";

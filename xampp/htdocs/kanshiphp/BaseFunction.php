@@ -36,6 +36,11 @@ function paramSet(){
     $brcode=$branchArr[0];
     $user=$branchArr[1];
     $brmsg=$branchArr[2];
+  }elseif(substr($inform,0,1)=="_"){
+    $branchArr=explode("_",ltrim($inform,"_"),4);
+    $brcode=$branchArr[0];
+    $user=$branchArr[1];
+    $brmsg=$branchArr[2];
   }else{
     $user=$inform;
   }

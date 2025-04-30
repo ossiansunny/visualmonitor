@@ -6,45 +6,55 @@ use PHPMailer\PHPMailer\Exception;
 ///
 ini_set('display_errors', 'Off');
 mb_internal_encoding("UTF-8");
-if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-  ///
-  /// Windows xampp
-  ///
-  $kanshiDir=__DIR__;
-  $baseDir=explode('htdocs',$kanshiDir);
-  $autoDir=$baseDir[0] . "vendor\autoload.php";
-  $langDir=$baseDir[0] . "vendor\phpmailer\phpmailer\language\phpmailer.lang-ja.php";
-  require_once $autoDir;
-  require_once $langDir;
-
+$pgm='phpsendmail.php';
+///
+require_once 'mysqlkanshi.php';
+require_once 'varread.php';
+require_once 'alarmwindow.php';
+$vpatharr=array("vpath_phpmailer");
+$rtnv=pathget($vpatharr);
+if(count($rtnv)!=1){
+  $msg="Invalid vpath_phpmailer, check kanshiphp.ini";
+  writeloge($pgm,$msg);
+  return 1;
 }else{
-  ///
-  /// Unix/Linux
-  ///
-  require_once 'varread.php';
-  $vpatharr=array("vpath_phpmailer");
-  $rtnv=pathget($vpatharr);
-  $srcdir=$rtnv[0]."/vendor/phpmailer/phpmailer";
-  $except=$srcdir . "/src/Exception.php";
-  $mailer=$srcdir . "/src/PHPMailer.php";
-  $smtp=$srcdir . "/src/SMTP.php";
-  $lang=$srcdir . "/language/phpmailer.lang-ja.php";
-  require_once $except;
-  require_once $mailer;
-  require_once $smtp;
-  require_once $lang;
+  $srcdir=$rtnv[0];
+  //writeloge($pgm,$srcdir);
+  if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
+    ///
+    /// Windows xampp
+    ///
+    $except=$srcdir . "/src/Exception.php";
+    $mailer=$srcdir . "/src/PHPMailer.php";
+    $smtp=$srcdir . "/src/SMTP.php";
+    $lang=$srcdir . "/language/phpmailer.lang-ja.php";
+    require_once $except;
+    require_once $mailer;
+    require_once $smtp;
+    require_once $lang;
+
+  }else{
+    ///
+    /// Unix/Linux
+    ///
+    $except=$srcdir . "/src/Exception.php";
+    $mailer=$srcdir . "/src/PHPMailer.php";
+    $smtp=$srcdir . "/src/SMTP.php";
+    $lang=$srcdir . "/language/phpmailer.lang-ja.php";
+    require_once $except;
+    require_once $mailer;
+    require_once $smtp;
+    require_once $lang;
+  }
 }
 ///
 /// common
-///
-require_once 'mysqlkanshi.php';
-require_once 'alarmwindow.php';
 ///
 mb_language('uni');
 mb_internal_encoding('UTF-8');
 
 function phpsendmail($hst, $prt, $from, $to, $subj, $body){
- $pgm="phpsendmail.php";
+ global $pgm;
  $flg=getmailstatus();
  if ($flg==0){
   $mail_sql="select * from mailserver";

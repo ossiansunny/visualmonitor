@@ -38,10 +38,10 @@ function screatearray($_hdata,$_garr){
   for ($i=0;$i<$maxg;$i++){ 
   /// グループ数分繰り返し
     $segCount=intval($_garr[$i][3]);   ///  セグメント数取得
+    $hostCount=intval($_garr[$i][2]);        /// ホスト数取得
     $snameArr=array();
     for ($j=0;$j<$segCount;$j++){
       /// セグメント数分繰り返し
-      $hostCount=intval($_garr[$j][2]);        /// ホスト数取得
       $hnameArr=array();
       for ($k=0;$k<$hostCount;$k++){
       /// ホスト数分繰り返し
@@ -61,6 +61,7 @@ function layoutsupform($_garr,$_sarr,$_layout,$_user){
   print '<form name=myform action=layouthosteditdb.php method=get>';
   for ($i=0;$i<$_maxGrp;$i++){     /// グループ数繰り返し
     $_maxSeg=intval($_garr[$i][3]); /// 1グループ内セグメント取得
+    $_maxHost=intval($_garr[$i][2]);     /// ホスト数取得
     $groupNum=strval($i+1);        /// グループ番号取得
     $groupName=$_garr[$i][0];      /// グループ名取得
     //$groupValue=$groupNum.','.$groupName; /// グループ番号＋グループ名
@@ -68,9 +69,8 @@ function layoutsupform($_garr,$_sarr,$_layout,$_user){
     print "<input type='hidden' name='groupno[]' value={$groupNum}>";
     print '<table border="1" class="tablelayout">';
     for ($j=0;$j<$_maxSeg;$j++){   /// 1グループ内セグメントループ
-      $maxHost=intval($_garr[$j][2]);     /// ホスト数取得
       print '<tr>'; 
-      for ($k=0;$k<$maxHost;$k++){       /// ホスト数ループ
+      for ($k=0;$k<$_maxHost;$k++){       /// ホスト数ループ
         $host=$_sarr[$i][$j][$k];  /// ホスト名取得
         if ($host==''){
           $host='NoAssign';
@@ -97,10 +97,10 @@ function layoutsupform($_garr,$_sarr,$_layout,$_user){
 $pgm='layouthostedit.php';
 $layout=$_GET['terms'];
 $user=$_GET['user'];
-
+$bgColor=$_GET['bgcolor'];
 print '<html><head><meta>';
-print '<link rel="stylesheet" href="css/kanshi1.css">';
-print '</head><body>';
+print '<link rel="stylesheet" href="css/kanshi1_py.css">';
+print "</head><body class={$bgColor}>";
 print "<h2><img src='header/php.jpg' width='30' height='30'>&emsp;&emsp;グループ名、ホスト名変更  ／  レイアウト名：{$layout}</h2>";
 print '<h4>現用レイアウトのグループ名、ホスト名／IPアドレスが変更出来ます、変更したら「実行」をクリックして下さい<br>';
 print '変更しないものは、そのまま反映されます</h4>';
@@ -121,7 +121,7 @@ $hostRows=getdata($layout_sql);
 ///
 $hostArr=screatearray($hostRows,$grpArr); /// host layout data から host array table作成
 ///
-layoutsupform($grpArr,$hostArr,$layout,$user);
+layoutsupform($grpArr,$hostArr,$layout,$user,$bgColor);
 ///
 print "<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
 print '</body></html>';

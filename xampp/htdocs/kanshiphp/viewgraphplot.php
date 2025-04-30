@@ -7,6 +7,16 @@ $pgm = "viewgraphplot.php";
 
 $get_user=$_GET['user'];
 $user = $get_user;
+$user_sql="select authority,bgcolor from user where userid='".$user."'";
+$userRows=getdata($user_sql);
+if(empty($userRows)){
+  $msg="#error#unkown#ユーザを見失いました";
+  branch('logout.php',$msg);
+}
+$userArr=explode(',',$userRows[0]);
+$authority=$userArr[0];
+$bgColor=$userArr[1];
+
 if(!isset($_GET['fradio'])){
    $msg = "#error#".$user."#ホストを選択して下さい";
    $nextpage = "GraphListPlotPage.php";
@@ -14,13 +24,6 @@ if(!isset($_GET['fradio'])){
 }
 
 $server=$_SERVER['SERVER_ADDR'];
-$osDirSep='';
-///
-if (strtoupper(substr(PHP_OS,0,3))==='WIN') {
-  $osDirSep='\\';
-}else{
-  $osDirSep='/';
-}
 ///
 $hostArr = explode(',',$_GET['fradio']);
 $host=$hostArr[0];
@@ -29,13 +32,21 @@ $mailOpt=$hostArr[6];
 $cpuLim=$hostArr[8];
 $ramLim=$hostArr[9];
 $diskLim=$hostArr[10];
-$vpathParam=array("vpath_plothome");
+$vpathParam=array("vpath_plothome","vpath_htdocs");
 $rtnVal=pathget($vpathParam);
+if(count($rtnVal)!=2){
+   $nextpage="GraphListPlotPage.php";
+   $errMsg="#error#".$user."#Invalid vpath_plothome or/and vpath_htdocs Base";
+   branch($nextpage,$errMsg);
+}
 $plotHome=$rtnVal[0];
+$htdocs=$rtnVal[1];
+$plotDirArr=explode($htdocs,$plotHome);
+$plotParent=$plotDirArr[1];
 $title=$viewName.'('.$host.')';
 print '<html><head>';
 print '<link rel="stylesheet" href="css/kanshi1_py.css">';
-print '</head><body>';
+print "</head><body class={$bgColor}>";
 if ($mailOpt=='1'){
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　プロットグラフ表示/メール添付　▽</h2>';
 }else{
@@ -47,14 +58,16 @@ if(!($cpuLim=="" or $ramLim=="" or $diskLim=="")){
   $noCache=date("ymdHis");
   $svgName=$host . ".svg?date=".$noCache;
   $svgFile=$host . ".svg";
-  $fileName=$plotHome.$osDirSep.'plotimage'.$osDirSep.$svgFile;
+  $fileName=$plotHome.'/plotimage/'.$svgFile;
   if (file_exists($fileName)){
     $existSw=1;
   }
-  print "<h4>CPU/Memory/Disk Maximum Load per Hour</h4>";
-  print "<img alt='画像がありません' src='http://{$server}/plot/plotimage/{$svgName}'>";
+  print "<h3>CPU/Memory/Disk Maximum Load per Hour</h3>";
+  print '<div class=bgwhite>';
+  print "<img alt='画像がありません' src='http://{$server}{$plotParent}/plotimage/{$svgName}'>";
+  print '</div>';
 }else{
-  print "<h4>グラフ指定なし</h4>";
+  print "<h3>グラフ指定なし</h3>";
 }
 if ($mailOpt=='1' and $existSw==1){
   print '<br><br>';

@@ -26,16 +26,20 @@ if(!isset($_GET['param'])){
 
   $user_sql='select bgcolor from user where userid="'.$user.'"';
   $userRows=getdata($user_sql);
+  if(empty($userRows)){
+    $msg="#error#unkown#ユーザを見失いました";
+    branch('logout.php',$msg);
+  }
   $bgcolor=$userRows[0];
   echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
   echo '<html lang="ja">';
   echo '<head>';
-  echo "<meta http-equiv='refresh' content='5'>";
+  //echo "<meta http-equiv='refresh' content='5'>";
   echo '<link rel="stylesheet" href="css/CoreMenu.css">';
   echo '</head>';
   echo "<body class={$bgcolor}>";
   echo '<div><table><tr><td>';
-  echo "<h4><font color=white>PageShover Refresh 5 sec</font></h4>";
+  echo "<h5><font color=white>&nbsp;&nbsp;未使用</font></h5>";
   echo '</td></tr></table></div>';
   ///
   /// 指定ページへジャンプする 

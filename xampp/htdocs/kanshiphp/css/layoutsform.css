@@ -6,6 +6,7 @@ h4 { font-size: small; color: #006DD9; }
 th { font-size: 10px; color: #006DD9; border-radius: 10%;
         background-color: #f4a460; }
 td.back { background-color: #000000;}
+td.host { background-color: #000000;font-size: small; color: red;}
 .tablelayout { layout-fixed; }
 .viewname { font-weight: bold; 	color: white; background-color: #3366ff; }
 .snmp { font-weight: bold; font-size: small; color: green; background-color: #000000; }
@@ -50,6 +51,18 @@ white-space: nowrap;
 .error { color: red; font-weight:bold}
 .alert { color: maroon; font-weight:bold}
 .notic { color: blue; font-weight:bold}
+/*
 .iro1 {font-weight:bold ; color:black; background-color:yellow; }
 .iro0 {font-weight:bold ; color:white; background-color:green; }
 .iro2 {font-weight:bold ; color:white; background-color:red; }';
+*/
+.bgtower{  
+  background: url('../header/towerm1.jpg') ;
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgginga{  
+  background: url('../header/ginga.jpg') ;
+  background-size: cover; 
+  filter: blur(0); 
+}

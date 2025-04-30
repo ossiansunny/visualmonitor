@@ -1,10 +1,11 @@
 
-/* 'Open Sans' font from Google Fonts */
+/* 'Open Sans' font from Google Fonts 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
-
+*/
+/* 全体の背景 */
 body {
   background: #456;
-  font-family: 'Open Sans', sans-serif;
+  /* font-family: 'Open Sans', sans-serif; */
 }
 
 .login {
@@ -13,24 +14,16 @@ body {
   font-size: 16px;
 }
 
-/* Reset top and bottom margins from certain elements */
-.login-header,
+/* タイトルと入力場所を空けない */
+.login-header, 
 .login p {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-/* The triangle form is achieved by a CSS hack */
-.login-triangle {
-  width: 0;
-  margin-right: auto;
-  margin-left: auto;
-  border: 12px solid transparent;
-  border-bottom-color: #28d;
-}
-
 .login-header {
-  background: #66ccff;
+  /* background: #66ccff; */
+  background: indigo;
   padding: 20px;
   font-size: 1.4em;
   font-weight: normal;
@@ -39,30 +32,18 @@ body {
   color: #fff;
 }
 
-.login-sub {
-  background: #28d;
-  padding: 10px;
-  font-size: 1.0em;
-  font-weight: normal;
-  text-align: center;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.non-underline {
-  text-decoration: none;
-}
-
+/* 入力位置の背景 */
 .login-container {
   background: #ebebeb;
   padding: 12px;
-}
+} 
 
-/* Every row inside .login-container is defined with p tags */
+/* 入力エリアの間隔　*/
+
 .login p {
   padding: 12px;
-}
-
+} 
+/*  ログイン入力エリア 拡大　*/
 .login input {
   box-sizing: border-box;
   display: block;
@@ -73,34 +54,53 @@ body {
   outline: 0;
   font-family: inherit;
   font-size: 0.95em;
-}
+} 
 
-.login input[type="email"],
+/* パスワード入力 */
 .login input[type="password"] {
   background: #fff;
   border-color: #bbb;
   color: #555;
-}
+} 
 
-/* Text fields' focus effect */
-.login input[type="email"]:focus,
-.login input[type="password"]:focus {
-  border-color: #888;
-}
 
+/* ログインボタン　背景　*/
 .login input[type="submit"] {
-  background: #28d;
+  /* background: #28d; */
+  background: darkviolet;
   border-color: transparent;
   color: #fff;
   cursor: pointer;
-}
+} 
 
-.login input[type="submit"]:hover {
-  background: #17c;
+.bgimage1{  
+  background: url('../header/bgimage1.jpg');
+  background-size: cover; 
+  filter: blur(0); 
 }
-
-/* Buttons' focus effect */
-.login input[type="submit"]:focus {
-  border-color: #05a;
+.bgimage2{  
+  background: url('../header/bgimage2.jpg');
+  background-size: cover; 
+  filter: blur(0); 
 }
-
+.bgimage3{  
+  background: url('../header/bgimage3.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage4{  
+  background: url('../header/bgimage4.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage5{  
+  background: url('../header/bgimage5.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgred{
+  background-color:red;
+}
+.bggreen{
+  background-color:green;
+}  

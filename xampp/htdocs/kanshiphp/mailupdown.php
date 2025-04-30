@@ -8,13 +8,13 @@ $pgm="mailupdown.php";
 function mailupdown($_hostRow,$_noticeType){
   /// 管理DB展開 mailアドレスで必要
   global $pgm;
-  $admin_sql="select * from admintb";
+  $admin_sql="select receiver,sender,subject,body from admintb";
   $adminRows=getdata($admin_sql);
   $adminArr=explode(',',$adminRows[0]);
-  $toMailAddr=$adminArr[3];
-  $fromMailAddr=$adminArr[4];
-  $adjSubject=$adminArr[5]; /// subject admintb
-  $adjBody=$adminArr[6]; /// body admintb
+  $toMailAddr=$adminArr[0];
+  $fromMailAddr=$adminArr[1];
+  $adjSubject=$adminArr[2]; /// subject admintb
+  $adjBody=$adminArr[3]; /// body admintb
   /// 引数展開
   $hostArr=explode(',',$_hostRow); ///host data
   $host=$hostArr[0];
@@ -49,11 +49,11 @@ function mailupdown($_hostRow,$_noticeType){
  
   $body = array();
   $dte=date('Y-m-d H:i:s');
-  $header_sql="select * from header";
+  $header_sql="select title from header";
   $headerRows=getdata($header_sql);
-  $subj=explode(',',$headerRows[0]);
+  $headTitle=$headerRows[0];
   $body[0]='***** VisualMonitor (ping) *****';
-  $body[1]='From: ' .$subj[0];
+  $body[1]='From: ' .$headTitle;
   $body[2]='Notification Type: '.$_noticeType;
   $body[3]='Date: ' .$dte;
   $body[4]='Service: ' .$prsn. ":" . $snmpt;
