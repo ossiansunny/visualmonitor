@@ -1,0 +1,106 @@
+
+/* 'Open Sans' font from Google Fonts 
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+*/
+/* 全体の背景 */
+body {
+  background: #456;
+  /* font-family: 'Open Sans', sans-serif; */
+}
+
+.login {
+  width: 400px;
+  margin: 16px auto;
+  font-size: 16px;
+}
+
+/* タイトルと入力場所を空けない */
+.login-header, 
+.login p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.login-header {
+  /* background: #66ccff; */
+  background: indigo;
+  padding: 20px;
+  font-size: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* 入力位置の背景 */
+.login-container {
+  background: #ebebeb;
+  padding: 12px;
+} 
+
+/* 入力エリアの間隔　*/
+
+.login p {
+  padding: 12px;
+} 
+/*  ログイン入力エリア 拡大　*/
+.login input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  padding: 16px;
+  outline: 0;
+  font-family: inherit;
+  font-size: 0.95em;
+} 
+
+/* パスワード入力 */
+.login input[type="password"] {
+  background: #fff;
+  border-color: #bbb;
+  color: #555;
+} 
+
+
+/* ログインボタン　背景　*/
+.login input[type="submit"] {
+  /* background: #28d; */
+  background: darkviolet;
+  border-color: transparent;
+  color: #fff;
+  cursor: pointer;
+} 
+
+.bgimage1{  
+  background: url('../header/bgimage1.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage2{  
+  background: url('../header/bgimage2.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage3{  
+  background: url('../header/bgimage3.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage4{  
+  background: url('../header/bgimage4.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage5{  
+  background: url('../header/bgimage5.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgred{
+  background-color:red;
+}
+.bggreen{
+  background-color:green;
+}  
