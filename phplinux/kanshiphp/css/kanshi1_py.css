@@ -1,0 +1,113 @@
+/*
+body { font-family: "メイリオ", meiryo, sans-serif; background: linear-gradient(45deg, #FFCCFF, #14EFFF);
+	font-size: small; } */
+h1 { font-weight: bold; color: #3366ff; }
+h2 { font-weight: bold; color: gray; background-color: lavender;}
+h3 { font-family: "メイリオ", meiryo, sans-serif; font-weight: bold; color: white; font-size: 15px; }
+/* h3 { font-weight: bold; color: #006DD9; } */
+h4 { font-size: small; color: whitesmoke; }
+.wihi { width: 120; }
+
+th { font-size:small; color: #006DD9; border-radius: 10%;
+        background-color: #f4a460; }
+td { font-size:small; color: black; border-radius: 12%;
+        background-color: lightgray; }
+td.back { background-color: #f4a460;}
+td.host { font-size: 8px; font-weight: bold; }
+.tablelayout { layout-fixed; }
+.viewname { font-weight: bold; 	color: white; background-color: #3366ff; }
+.snmp { font-weight: bold; font-size: small; color: green; background-color: lightgray; }
+.unknown { font-weight: bold; font-size: small; color: green; background-color: gray; }
+.alarm { font-weight: bold; font-size: small; color: green; background-color: red;}
+.normal {font-weight: bold; font-size: small; color: green; background-color: green; }
+.snorm {font-weight:bold font-size:small; color:white; background-color:green; }
+.swarn {font-weight:bold font-size:small; color:gray; background-color:yellow; }
+.scrit {font-weight:bold font-size:small; color:white; background-color:red; }
+.sunko {font-weight:bold font-size:small; color:lightgray; background-color:lightgray; }
+.anorm {font-weight:bold font-size:small; color:white; background-color:green; }
+.aprob {font-weight:bold font-size:small; color:gray; background-color:yellow; }
+input.okcolor {background-color: green; color: white;}  
+input.ngcolor {background-color: red; color:white; } 
+input.colorred { color: #ff0000; }
+input.colorgreen { color: #008000; } 
+.blink{animation:BLINK 0.5s ease-in-out infinite alternate;}@keyframes BLINK {0%{opacity:1.0;}100% {opacity:0;}}
+.button { font-size: small; color: white; border-radius: 12%; background-color: green; }
+.buttondel { font-size: small; color: white; border-radius: 12%; background-color: red; }
+.buttongray { font-size: small; color: white; border-radius: 12%; background-color: gray; font-weight: bold;}
+.buttonyell { font-size: small; color: #006DD9; border-radius: 12%; background-color: yellow; font-weight: bold;}
+.buttonwhite { font-size: small; color: black; border-radius: 12%; background-color: white; font-weight: bold;}
+.buttonorang { font-size: small; color: black; border-radius: 12%; background-color: orange; font-weight: bold;}
+.cwhite { font-size: small; color: black; border-radius: 12%; background-color: white; font-weight: bold; text-align: center;}
+.cyellow { font-size: small; color: black; border-radius: 12%; background-color: yellow; font-weight: bold; text-align: center;}
+.cgray { font-size: small; color: white; border-radius: 12%; background-color: gray; font-weight: bold; text-align: center;}
+.cred { font-size: small; color: white; border-radius: 12%; background-color: red; font-weight: bold; text-align: center;}
+.corang { font-size: small; color: black; border-radius: 12%; background-color: orange; font-weight: bold; text-align: center;}
+a { text-decoration: none; }
+.trred { font-size: small; color: white; border-radius: 12%; background-color: red; font-weight: bold;}
+.trblk { font-size: small; color: white; border-radius: 12%; background-color: green; font-weight: bold;}
+.trylw { font-size: small; color: black; border-radius: 12%; background-color: yellow; font-weight: bold;}
+.trgry { font-size: small; color: black; border-radius: 12%; background-color: gray; font-weight: bold;}
+.trpnk { font-size: small; color: black; border-radius: 12%; background-color: coral; font-weight: bold;}
+.dsptb { font-size: small; color: black; border-radius: 12%; background-color: gray; font-weight: bold;}
+.dsptd { background-color: gray; text-align: center; width: 120;}
+.vatop { vertical-align: top;}
+.size { width: 50px; heigh: 50px; }
+.size2 { width: 70px; heigh: 70px; }
+.kom { font-size: small; color: #006DD9; border-radius: 10%;
+        background-color: #f4a460; }
+.nowrap {
+  overflow-x: auto; white-space: nowrap; }
+.txt {
+  display: inline-block;
+    width: 100%;
+    border: 1px solid #999;
+    box-sizing: border-box;
+    margin: 0.5em 0;
+}
+.error { color: red; font-weight:bold;}
+.alert { color: maroon; font-weight:bold;}
+.notic { color: white; font-weight:bold;}
+.iro1 {font-weight:bold ; color:black; background-color:yellow; }
+.iro0 {font-weight:bold ; color:white; background-color:green; }
+.iro2 {font-weight:bold ; color:white; background-color:red; }
+.redcolor { color: red; font-size: 10pt;}
+.greencolor { color: green; font-size: 10pt;}
+.bgstand {font-weight:vold font-size:small; color:#00FFFF; background-color:blue; }
+/* .bgstand {font-weight:vold font-size:small; color:#00FFFF; background-color:#00FFFF; } */
+.bgblack {font-weight:vold font-size:small; color:black; background-color:black; }
+.bgbrown {font-weight:vold font-size:small; color:brown; background-color:brown; }
+.bgindig {font-weight:vold font-size:small; color:indigo; background-color:indigo; }
+.bgpurpl {font-weight:vold font-size:small; color:purple; background-color:purple; }
+.bgdarks {font-weight:vold font-size:small; color:darkslategray; background-color:darkslategray; } 
+.bgwhite {background-color: white; }
+.bgimage1{  
+  background: url('../header/bgimage1.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage2{  
+  background: url('../header/bgimage2.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage3{  
+  background: url('../header/bgimage3.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage4{  
+  background: url('../header/bgimage4.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+.bgimage5{  
+  background: url('../header/bgimage5.jpg');
+  background-size: cover; 
+  filter: blur(0); 
+}
+audio { width: 150px; }
+/* audio { width: 273px; } minimum 273px*/
+.centermsg{
+  
+  margin: 0 auto 0 auto;
+}
