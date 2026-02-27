@@ -48,7 +48,7 @@ if (!isset($_GET['param'])){
   print '<br>';
   ///
   print '<h4>削除を選択して、<span class=trred>「削除実行」</span>をクリック</h4>';
-  print '<form  type="get" action="serverimageinsdeldb.php">';
+  print '<form  method="get" action="serverimageinsdeldb.php">';
   print '<table border=1>';
   print '<tr><th>削除</th><th width="150">画像名</th><th width="248">サーバー名</th></tr>';
   
@@ -96,7 +96,7 @@ if (!isset($_GET['param'])){
   }
   hostimagelist($fileArray,1);
   print '<h4>新たに登録するサーバー画像の画像名を選択、サーバー名を入力し<span class=trblk>「登録実行」</span>をクリック</h4>';
-  print '<form type="get" action="serverimageinsdeldb.php">';
+  print '<form method="get" action="serverimageinsdeldb.php">';
   print '<table border=1>';
   print '<tr><th>画像名</th><th>サーバー名</th></tr>';
   

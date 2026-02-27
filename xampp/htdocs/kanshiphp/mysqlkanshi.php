@@ -90,14 +90,12 @@ function getdata2($_sql) {
     if(!$dbc){
       $msg="mysql db connection error";
       writeloge($pgm,$msg);
-      //$rtable[0]="error";
       return null;
     }
     $res = mysqli_query($dbc,$_sql);
     if (mysqli_error($dbc)) {
       $msg="mysql query error: ".$_sql;
       writeloge($pgm,$msg);
-      //$rtable[0] = "error";
       return null;
     }
     $c = 0;
@@ -212,9 +210,4 @@ function create($_sql) {
   }
   return $rtn; /// whereの該当なしも 0で返る
 }
-/*
-$user="select * from user where userid='admin'";
-$userRows=getdata($user);
-var_dump($userRows);
-*/
 ?>

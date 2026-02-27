@@ -24,6 +24,9 @@ if(!isset($_GET['fradio'])){
 }
 
 $server=$_SERVER['SERVER_ADDR'];
+if($server=='::1' or $server='127.0.0.1'){
+  $server='localhost';
+}
 ///
 $hostArr = explode(',',$_GET['fradio']);
 $host=$hostArr[0];
@@ -64,6 +67,8 @@ if(!($cpuLim=="" or $ramLim=="" or $diskLim=="")){
   }
   print "<h3>CPU/Memory/Disk Maximum Load per Hour</h3>";
   print '<div class=bgwhite>';
+  $http="src='http://{$server}{$plotParent}/plotimage/{$svgName}'";
+  writeloge($pgm,$http);
   print "<img alt='画像がありません' src='http://{$server}{$plotParent}/plotimage/{$svgName}'>";
   print '</div>';
 }else{

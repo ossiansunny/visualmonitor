@@ -28,7 +28,7 @@ if (!isset($_GET['param'])){
   print '<link rel="stylesheet" href="css/kanshi1_py.css">';
   print "</head><body class={$bgColor}>";
   ///
-  if ($brcode=='erroe' or $brcode=='alert' or $brcode=='notic'){
+  if ($brcode=='error' or $brcode=='alert' or $brcode=='notic'){
     print "<h3 class={$brcode}>{$brmsg}</h3><hr>";
   }
   print '<h2><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;▽　SNMP監視結果表示　▽</h2>';

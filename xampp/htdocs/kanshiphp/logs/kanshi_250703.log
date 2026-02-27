@@ -1,0 +1,231 @@
+250703063811: HistoryEditPage.php: second pass
+250703063811: HistoryEditPage.php: histtboshima
+250703063811: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=></td>
+250703063811: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703063811: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703063811: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703063811: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703063811: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703063811: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703063811: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703063811: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703063840: HistoryEditPage.php: first_pass
+250703063840: HistoryEditPage.php: create table histtbabc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250703063840: HistoryEditPage.php: insert into histtbabc (user,password,typ) values(abc,123,計画;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9)
+250703064210: HistoryEditPage.php: second pass
+250703064210: HistoryEditPage.php: histtbabc
+250703064210: HistoryEditPage.php: histtboshima
+250703064210: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=></td>
+250703064210: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703064210: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703064210: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703064210: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703064210: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703064210: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703064210: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703064210: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703064216: HistoryEditPage.php: first_pass
+250703064216: HistoryEditPage.php: create table histtbabc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250703064328: HistoryEditPage.php: second pass
+250703064328: HistoryEditPage.php: histtboshima
+250703064328: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=></td>
+250703064328: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703064328: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703064328: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703064328: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703064328: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703064328: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703064328: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703064328: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703064336: HistoryEditPage.php: first_pass
+250703064336: HistoryEditPage.php: create table histtbabc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250703064336: HistoryEditPage.php: insert into histtbabc (user,password,typ) values('abc','123','クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250703064438: HistoryEditPage.php: second pass
+250703064438: HistoryEditPage.php: histtboshima
+250703064438: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=></td>
+250703064438: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703064438: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703064438: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703064438: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703064438: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703064438: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703064438: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703064438: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703064455: HistoryEditPage.php: first_pass
+250703064455: HistoryEditPage.php: create table histtbabc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250703064455: HistoryEditPage.php: insert into histtbabc (user,password,type) values('abc','123','クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250703064455: HistoryEditPage.php: first_pass
+250703064455: HistoryEditPage.php: paramSet:brcode=regist,user=abc,password=123,types=テーブル登録に失敗しました
+250703064455: HistoryEditPage.php: second pass
+250703064455: HistoryEditPage.php: regist:テーブル登録に失敗しました
+250703064455: HistoryEditPage.php: histtbabc
+250703064455: HistoryEditPage.php: histtboshima
+250703064455: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=テーブル登録に失敗しました></td>
+250703064455: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703064455: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703064455: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703064455: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703064455: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703064455: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703064455: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703064455: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703084639: HistoryEditPage.php: first_pass
+250703084639: HistoryEditPage.php: create table histtbxyz ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250703084640: HistoryEditPage.php: insert into histtbxyz (user,password,type) values('xyz','123','クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250703084640: HistoryEditPage.php: first_pass
+250703084640: HistoryEditPage.php: paramSet:brcode=regist,user=xyz,password=123,types=テーブル登録に失敗しました
+250703084640: HistoryEditPage.php: second pass
+250703084640: HistoryEditPage.php: regist:テーブル登録に失敗しました
+250703084640: HistoryEditPage.php: histtbabc
+250703084640: HistoryEditPage.php: histtboshima
+250703084640: HistoryEditPage.php: histtbxyz
+250703084640: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=テーブル登録に失敗しました></td>
+250703084640: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703084640: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703084640: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703084640: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703084640: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703084640: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703084640: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703084640: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703085222: HistoryEditPage.php: first_pass
+250703085222: HistoryEditPage.php: paramSet:brcode=regist,user=xyz,password=123,types=テーブル登録に失敗しました
+250703085222: HistoryEditPage.php: second pass
+250703085222: HistoryEditPage.php: regist:テーブル登録に失敗しました
+250703085222: HistoryEditPage.php: histtboshima
+250703085222: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=テーブル登録に失敗しました></td>
+250703085222: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703085222: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703085222: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703085222: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703085222: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703085222: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703085222: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703085222: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703085237: HistoryEditPage.php: first_pass
+250703085237: HistoryEditPage.php: first_pass
+250703085237: HistoryEditPage.php: paramSet:brcode=error,user=,password=設定が見つかりません、ユーザーを見直すか登録をして下さい,types=
+250703085237: HistoryEditPage.php: second pass
+250703085237: HistoryEditPage.php: histtboshima
+250703085237: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=></td>
+250703085237: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703085237: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703085237: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703085237: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703085237: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703085237: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703085237: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703085237: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703085404: HistoryEditPage.php: first_pass
+250703085404: HistoryEditPage.php: paramSet:brcode=error,user=,password=設定が見つかりません、ユーザーを見直すか登録をして下さい,types=
+250703085404: HistoryEditPage.php: second pass
+250703085404: HistoryEditPage.php: histtboshima
+250703085404: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=></td>
+250703085404: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703085404: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703085404: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703085404: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703085404: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703085404: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703085404: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703085404: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703085431: HistoryEditPage.php: first_pass
+250703085431: HistoryEditPage.php: create table histtbabc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250703085431: HistoryEditPage.php: insert into histtbabc (user,password,type) values('abc','123','処理;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250703085431: HistoryEditPage.php: first_pass
+250703085431: HistoryEditPage.php: paramSet:brcode=regist,user=abc,password=123,types=処理;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9
+250703085431: HistoryEditPage.php: second pass
+250703085431: HistoryEditPage.php: regist:処理;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9
+250703085431: HistoryEditPage.php: histtbabc
+250703085431: HistoryEditPage.php: histtboshima
+250703085431: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=処理></td>
+250703085431: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250703085431: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250703085431: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250703085431: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250703085431: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250703085431: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250703085431: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250703085431: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250703085645: HistoryEditPage.php: first_pass
+250703085645: HistoryEditPage.php: create table histtbxyz ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250703085645: HistoryEditPage.php: insert into histtbxyz (user,password,type) values('xyz','123','クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250703085645: HistoryEditPage.php: first_pass
+250703085645: HistoryEditPage.php: paramSet:brcode=regist,user=xyz,password=123,types=クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9
+250703085645: HistoryEditPage.php: second pass
+250703085645: HistoryEditPage.php: regist:クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9
+250703085645: HistoryEditPage.php: histtbabc
+250703085645: HistoryEditPage.php: histtboshima
+250703085645: HistoryEditPage.php: histtbxyz
+250703085645: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250703085645: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250703085645: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250703085645: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250703085645: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250703085645: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250703085645: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250703085645: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250703085645: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250703085838: HistoryEditPage.php: first_pass
+250703085838: HistoryEditPage.php: paramSet:brcode=regist,user=xyz,password=123,types=クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9
+250703085838: HistoryEditPage.php: second pass
+250703085838: HistoryEditPage.php: regist:クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9
+250703085838: HistoryEditPage.php: histtboshima
+250703085838: HistoryEditPage.php: <td><input type=text name=etype1 size=5 value=></td>
+250703085838: HistoryEditPage.php: <td><input type=text name=etype2 size=5 value=></td>
+250703085838: HistoryEditPage.php: <td><input type=text name=etype3 size=5 value=></td>
+250703085838: HistoryEditPage.php: <td><input type=text name=etype4 size=5 value=></td>
+250703085838: HistoryEditPage.php: <td><input type=text name=etype5 size=5 value=></td>
+250703085838: HistoryEditPage.php: <td><input type=text name=etype6 size=5 value=></td>
+250703085838: HistoryEditPage.php: <td><input type=text name=etype7 size=5 value=></td>
+250703085838: HistoryEditPage.php: <td><input type=text name=etype8 size=5 value=></td>
+250703085838: HistoryEditPage.php: <td><input type=text name=etype9 size=5 value=></td>
+250703085845: HistoryEditPage.php: first_pass
+250703085845: HistoryEditPage.php: update histtbabc set password='123', type=';;;;;;;;'
+250703094932: login.php: histtboshima
+250703095005: login.php: histtboshima
+250703095129: login.php: histtboshima
+250703095433: : histtboshima
+250703095715: : histtboshima
+250703095938: : histtboshima
+250703100019: : histtboshima
+250703100358: : histtboshima
+250703101701: : histtboshima
+250703101704: : histtboshima
+250703101754: : histtboshima
+250703102026: : histtboshima
+250703102120: : histtboshima
+250703102304: : histtboshima
+250703104044: : histtboshima
+250703104046: : histtboshima
+250703104146: : histtboshima
+250703104353: : histtboshima
+250703104508: : histtboshima
+250703104601: : histtboshima
+250703104653: : histtboshima
+250703104814: : histtboshima
+250703104915: : histtboshima
+250703104944: : histtboshima
+250703122150: : histtboshima
+250703124105: : histtboshima
+250703124350: : histtboshima
+250703124356: : histtboshima
+250703124708: : histtboshima
+250703124713: : histtboshima
+250703124714: : histtboshima
+250703125037: : histtboshima
+250703145955: : histtboshima
+250703150455: : histtboshima
+250703150501: : histtboshima
+250703150505: : histtboshima
+250703150516: : histtboshima
+250703150518: : histtboshima
+250703150518: : histtboshima
+250703150917: : histtboshima
+250703150933: : histtboshima
+250703151154: : histtboshima
+250703183101: : histtboshima
+250703183322: : histtboshima
+250703203447: : histtboshima
+250703203506: : histtboshima
+250703204200: : histtboshima

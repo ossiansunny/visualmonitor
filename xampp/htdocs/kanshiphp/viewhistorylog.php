@@ -45,12 +45,8 @@ if (isset($_GET['add'])){
 }else{
   /// 更新処理
   $user=$_GET['user'];
-  //$debugmsg= 'update user:'.$user;
-  //writeloge($pgm,$debugmsg);
   $user_sql="select bgcolor from user where userid='".$user."'";
-  //writeloge($pgm,$user_sql);
   $userRows=getdata($user_sql);
-  //writeloge($pgm,$userRows[0]);
   if(empty($userRows)){
     $msg="#error#unkown#ユーザを見失いました";
     branch('logout.php',$msg);

@@ -49,7 +49,6 @@ function cpuload($host, $community, &$data) {
     return 0;
   }
 }
-///
 
 ?>
 

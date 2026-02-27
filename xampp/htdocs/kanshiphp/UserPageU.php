@@ -33,7 +33,7 @@ if(isset($_GET['update'])){
   if(empty($userRows)){
     $msg="#error#unkown#ユーザを見失いました";
     writeloge($pgm,$msg);
-    //branch('logout.php',$msg);
+    
   }
   ///
   $userArr=explode(',',$userRows[0]);

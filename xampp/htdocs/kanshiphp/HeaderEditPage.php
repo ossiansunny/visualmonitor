@@ -92,7 +92,7 @@ if (!isset($_GET['param'])){
   print '<h4>☆リンク名はURLをhttp://又はhttps://のように入力　例：他の監視サイト http://mysite.com/kanshiphp/login.php<br>';
   print '☆タイトル、サブタイトルはモニターマネージャ、メールの送信元で使用<br>';
   print '☆ヘッダ画像は一覧をリフレッシュ毎に自動変更するので入力不要</h4>';
-  print '<form name="headeredit" type="get" action="headerupdb.php">';
+  print '<form name="headeredit" method="get" action="headerupdb.php">';
   print '<table border=1>';
   print '<tr><th colspan=2>タイトル</th><th colspan=2>サブタイトル</th></tr>';
   print '<tr>';

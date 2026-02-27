@@ -13,7 +13,6 @@ function adjustlog($logadjust){
     while (($line = fgets($rdfp)) !== false){
       $c++;
       if ($c <= $limit){
-        //echo 'log num: '.$c. ' '.$line;
         fwrite($wtfp, $line);
       }else{
         break;
@@ -49,7 +48,6 @@ function adjustplog($plogadjust){
       if ($c <= $passlimit){
         continue;
       }else{
-        //echo 'plog num: '.$c. ' '.$line;
         fwrite($wtfp, $line);
       }
     }
@@ -65,14 +63,11 @@ function adjustplog($plogadjust){
 
 function graphlogadjust($mrtgdir){
   foreach(glob($mrtgdir."/mrtgimage/*.*.*.*.*.log") as $tgtFile){
-    //echo $tgtFile.PHP_EOL;
     adjustlog($tgtFile);
   }
   foreach(glob($mrtgdir."/mrtgimage/*.*.*.*.*.plog") as $tgtFile){
-    //echo $tgtFile.PHP_EOL;
     adjustlog($tgtFile);
   }
 }
 
-//graphlogadjust('/var/www/html/mrtg');
 ?>

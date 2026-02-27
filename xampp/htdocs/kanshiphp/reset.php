@@ -4,13 +4,7 @@ require_once "mysqlkanshi.php";
 require_once "mailsend.php";
 require_once "graphlogadjust.php";
 require_once "varread.php";
-/*
-function clearSession(){
-  print '<script type="text/javascript">';
-  print 'sessionStorage.clear();';
-  print '</script>';
-}
-*/
+
 date_default_timezone_set('Asia/Tokyo');
 $pgm = "reset.php";
 $user=""; ///BaseFunctionでセットされる

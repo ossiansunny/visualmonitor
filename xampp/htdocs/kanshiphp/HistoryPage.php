@@ -28,7 +28,7 @@ function myjoin($_data){
 }
 
 $ttl1='<img src="header/php.jpg" width="30" height="30">';
-$ttl2=' ▽　覚　え　書　き　管　理　▽   ';
+$ttl2=' ▽　　覚　え　書　き　管　理　　▽   ';
 $ttl=$ttl1 . $ttl2;
   /// charset=UTF-8は日本語に必要
 print '<html><head>';
@@ -179,10 +179,10 @@ if ( isset($_GET['plan']) or isset($_GET['prog']) or isset($_GET['idea']) or iss
     foreach ($histRows as $histRowsRec){
       $histArr=explode(',',$histRowsRec,4);
       if ($histArr[0]=='1'){
-        $logType='計画中';
+        $logType='計　画';
         $bgColor='cwhite';
       }elseif ($histArr[0]=='2'){
-        $logType='処理中';
+        $logType='処　理';
         $bgColor='cyellow';
       }elseif ($histArr[0]=='7'){
         $logType='参　考';
@@ -231,8 +231,8 @@ if ( isset($_GET['plan']) or isset($_GET['prog']) or isset($_GET['idea']) or iss
   print '<input type="hidden" name="display" value="option" >';
   print "<input type=hidden name=user value={$user}>";
   print '<table border="1" class=dsptb><tr>';
-  print '<td class=dsptd><input class=buttonwhite type="submit" name="plan" value="計画中表示" ></td>';
-  print '<td class=dsptd><input class=buttonyell type="submit" name="prog" value="処理中表示" ></td>';
+  print '<td class=dsptd><input class=buttonwhite type="submit" name="plan" value="計画表示" ></td>';
+  print '<td class=dsptd><input class=buttonyell type="submit" name="prog" value="処理表示" ></td>';
   print '<td class=dsptd><input class=buttonorang type="submit" name="idea" value="参考表示" ></td>';
   print '<td class=dsptd><input class=buttondel type="submit" name="tips" value="注意表示" ></td>';
   print '<td class=dsptd><input class=buttongray type="submit" name="save" value="履歴保存表示" ></td>';
@@ -251,8 +251,8 @@ if ( isset($_GET['plan']) or isset($_GET['prog']) or isset($_GET['idea']) or iss
   print '<tr><th >ログタイプ</th><th>日付:時刻</th><th>件名</th><th>内容</th></tr>';
   print '<tr>';
   print '<td><select name="logtype">';
-  print '<option value="1">計画中</option>';
-  print '<option value="2">処理中</option>';
+  print '<option value="1">計画</option>';
+  print '<option value="2">処理</option>';
   print '<option value="7">参考</option>';
   print '<option value="8">注意</option>';
   print '<option value="9">履歴保存</option>';

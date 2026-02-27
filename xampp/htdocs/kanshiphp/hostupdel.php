@@ -13,6 +13,20 @@ require_once "snmpagent.php";
 $pgm="hostupdel.php";
 $mailToAddr="";
 $mailFromAddr="";
+$vpathParam=array("vpath_kanshiphp");
+$rtnPath=pathget($vpathParam);
+$vpath_kanshiphp=$rtnPath[0];
+
+/// 
+function mrtgcfgdel($_ip){
+    global $pgm, $vpath_kanshiphp;
+    $directory=$vpath_kanshiphp."/mrtgcfg/";
+    $selname=$_ip."*.cfg";
+    $file = glob($directory .$selname);
+    foreach ($file as $path) {
+      unlink($path);
+    }
+}
 
 function branchtarget($_page,$_param,$_target,$_jump){
   print '<html lang="ja">';
@@ -141,6 +155,10 @@ if (isset($_GET['delete'])){
   $eventType='4'; ///削除
   $event_sql="insert into eventlog (host,eventtime,eventtype,kanrisha) values('".$host."','".$eventTime."','".$eventType."','".$user."')";
   putdata($event_sql); 
+  ///
+  /// mrtcfg内の削除ホストデータ削除
+  ///
+  mrtgcfgdel($host);
   /// 実行通知　ホスト一覧の前に
   $msg = '#notic#'.$user.'#ホスト'.$host .'が正常に削除されました';
   $nextpage = "HostListPage.php";
@@ -423,7 +441,7 @@ if (isset($_GET['delete'])){
   /// comma check ID
   $jsparam="viewname cpulimit ramlimit disklimit tcpport process community";
   ///
-  print '<form name="updatedb" type="get" action="hostupdel.php" onsubmit="return commaCheck(\''.$jsparam.'\');">';
+  print '<form name="updatedb" method="get" action="hostupdel.php" onsubmit="return commaCheck(\''.$jsparam.'\');">';
   print '<table border=1>';
   print '<tr><th>ホスト名</th><th>OS種類</th><th>結果</th><th>死活</th><th>表示名</th><th>メール</th><th>画像</th></tr>';
   print '<tr>';
@@ -455,8 +473,6 @@ if (isset($_GET['delete'])){
   print "<option value='0'{$selOptArr[0]}>非送信</option>";
   print "<option value='1'{$selOptArr[1]}>自動送信</option>";
   print '</select></td>';
-  //$image_sql='select * from serverimage order by image';
-  //$imageRows=getdata($image_sql);
   $rowcnt=count($imageRows);
   print '<td><select name="image">';
   for ($cnt=0;$cnt<$rowcnt;$cnt++){

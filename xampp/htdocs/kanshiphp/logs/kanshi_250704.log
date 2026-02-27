@@ -1,0 +1,194 @@
+250704050542: : histtboshima
+250704051409: : histtboshima
+250704051737: : histtboshima
+250704054740: : histtboshima
+250704055039: : histtboshima
+250704055129: : histtboshima
+250704055357: : histtboshima
+250704055404: HistoryRegist.php: paramSet:brcode=regist,user=,password=,types=
+250704055404: HistoryRegist.php: second pass
+250704055806: : histtboshima
+250704055814: HistoryRegist.php: paramSet:brcode=regist,user=,password=,types=
+250704055814: HistoryRegist.php: second pass
+250704060252: : histtboshima
+250704060405: : histtboshima
+250704060412: HistoryRegist.php: first pass
+250704060412: HistoryRegist.php: second pass
+250704060710: : histtboshima
+250704061130: : histtboshima
+250704061201: : histtboshima
+250704061524: : histtboshima
+250704062301: : histtboshima
+250704063017: : histtboshima
+250704063025: HistoryLogin.php: #regist###
+250704063050: : histtboshima
+250704063527: : histtboshima
+250704063534: HistoryLogin.php: #regist#abc#123#
+250704063601: : histtboshima
+250704063717: HistoryLogin.php: #regist#abc#123#
+250704063717: HistoryRegist.php: first pass
+250704063717: HistoryRegist.php: second pass
+250704082155: HistoryRegist.php: first pass
+250704082155: HistoryRegist.php: create table histtboshima ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250704092211: : histtboshima
+250704092225: HistoryLogin.php: #regist#oshima#amihsho#
+250704092225: HistoryRegist.php: first pass
+250704092225: HistoryRegist.php: second pass
+250704092228: HistoryRegist.php: first pass
+250704092228: HistoryRegist.php: no record
+250704092228: : histtboshima
+250704092548: : histtboshima
+250704092553: : histtboshima
+250704092608: HistoryLogin.php: #regist#oshima#amihsho#
+250704092608: HistoryRegist.php: first pass
+250704092608: HistoryRegist.php: second pass
+250704092611: HistoryRegist.php: first pass
+250704092611: HistoryRegist.php: no record
+250704092611: : histtboshima
+250704092624: HistoryLogin.php: #regist#abc#123#
+250704092624: HistoryRegist.php: first pass
+250704092624: HistoryRegist.php: second pass
+250704092626: HistoryRegist.php: first pass
+250704092626: HistoryRegist.php: no record
+250704092626: : histtboshima
+250704092730: : histtboshima
+250704092734: : histtboshima
+250704092735: : histtboshima
+250704092743: HistoryLogin.php: #regist#abc#123#
+250704092743: HistoryRegist.php: first pass
+250704092743: HistoryRegist.php: second pass
+250704092746: HistoryRegist.php: first pass
+250704092746: HistoryRegist.php: no record
+250704092746: : histtboshima
+250704093106: HistoryLogin.php: #regist#abc#123#
+250704093106: HistoryRegist.php: first pass
+250704093106: HistoryRegist.php: second pass
+250704093108: HistoryRegist.php: first pass
+250704093108: HistoryRegist.php: create table histtbabc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250704093108: HistoryRegist.php: insert into histtbabc (user,password,type) values('abc','123','クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250704093702: : histtbabc
+250704093702: : histtboshima
+250704093711: HistoryLogin.php: #regist#xyz#123#
+250704093711: HistoryRegist.php: first pass
+250704093711: HistoryRegist.php: second pass
+250704093714: HistoryRegist.php: first pass
+250704093714: HistoryRegist.php: create table histtbxyz ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250704093714: HistoryRegist.php: insert into histtbxyz (user,password,type) values('xyz','123','クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250704093714: : histtbabc
+250704093714: : histtboshima
+250704093714: : histtbxyz
+250704112518: : histtbabc
+250704112518: : histtboshima
+250704112518: : histtbxyz
+250704121200: : histtbabc
+250704121200: : histtboshima
+250704121200: : histtbxyz
+250704121446: : histtbabc
+250704121446: : histtboshima
+250704121446: : histtbxyz
+250704121615: : histtbabc
+250704121615: : histtboshima
+250704121615: : histtbxyz
+250704121745: : histtbabc
+250704121745: : histtboshima
+250704121745: : histtbxyz
+250704122139: : histtbabc
+250704122139: : histtboshima
+250704122139: : histtbxyz
+250704151842: : histtbabc
+250704151842: : histtboshima
+250704151842: : histtbxyz
+250704201838: : histtbabc
+250704201838: : histtboshima
+250704201838: : histtbxyz
+250704202002: : histtbabc
+250704202002: : histtboshima
+250704202002: : histtbxyz
+250704202311: : histtbabc
+250704202311: : histtboshima
+250704202311: : histtbxyz
+250704202413: : histtbabc
+250704202413: : histtboshima
+250704202413: : histtbxyz
+250704202508: HistoryAdmin.php: first_pass
+250704202508: HistoryAdmin.php: second pass
+250704202508: HistoryAdmin.php: no record
+250704202929: HistoryAdmin.php: first_pass
+250704202929: HistoryAdmin.php: second pass
+250704202931: HistoryAdmin.php: first_pass
+250704202931: HistoryAdmin.php: second pass
+250704202936: HistoryAdmin.php: first_pass
+250704202936: HistoryAdmin.php: second pass
+250704202945: HistoryAdmin.php: first_pass
+250704202945: HistoryAdmin.php: second pass
+250704203012: HistoryAdmin.php: first_pass
+250704203012: HistoryAdmin.php: second pass
+250704203324: : histtbabc
+250704203324: : histtboshima
+250704203324: : histtbxyz
+250704203332: HistoryAdmin.php: first_pass
+250704203332: HistoryAdmin.php: abc
+250704203332: HistoryAdmin.php: second pass
+250704203816: : histtbabc
+250704203816: : histtboshima
+250704203816: : histtbxyz
+250704203825: HistoryAdmin.php: first_pass
+250704203825: HistoryAdmin.php: abc
+250704203825: HistoryAdmin.php: second pass
+250704203825: HistoryAdmin.php: abc,123,クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9
+250704204610: : histtbabc
+250704204610: : histtboshima
+250704204610: : histtbxyz
+250704204618: HistoryAdmin.php: first_pass
+250704204618: HistoryAdmin.php: abc
+250704204618: HistoryAdmin.php: second pass
+250704204618: HistoryAdmin.php: abc
+250704204618: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250704204618: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250704204618: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250704204618: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250704204618: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250704204618: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250704204618: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250704204618: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250704204618: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250704204701: : histtbabc
+250704204701: : histtboshima
+250704204701: : histtbxyz
+250704204709: HistoryAdmin.php: first_pass
+250704204709: HistoryAdmin.php: abc
+250704204709: HistoryAdmin.php: second pass
+250704204709: HistoryAdmin.php: abc
+250704210054: : histtbabc
+250704210054: : histtboshima
+250704210054: : histtbxyz
+250704210121: HistoryAdmin.php: first_pass
+250704210121: HistoryAdmin.php: abc
+250704210121: HistoryAdmin.php: second pass
+250704210121: HistoryAdmin.php: abc
+250704211000: : histtbabc
+250704211000: : histtboshima
+250704211000: : histtbxyz
+250704211019: HistoryLogin.php: login edit regist
+250704211019: HistoryAdmin.php: first_pass
+250704211019: HistoryAdmin.php: abc
+250704211019: HistoryAdmin.php: second pass
+250704211019: HistoryAdmin.php: abc
+250704211059: : histtbabc
+250704211059: : histtboshima
+250704211059: : histtbxyz
+250704211354: HistoryLogin.php: login edit regist
+250704211354: HistoryAdmin.php: first_pass
+250704211354: HistoryAdmin.php: abc
+250704211354: HistoryAdmin.php: second pass
+250704211354: HistoryAdmin.php: abc
+250704211354: HistoryAdmin.php: #error#abc##abcパスワードが違います
+250704211821: : histtbabc
+250704211821: : histtboshima
+250704211821: : histtbxyz
+250704211829: HistoryLogin.php: login edit regist
+250704211829: HistoryAdmin.php: first_pass
+250704211829: HistoryAdmin.php: abc
+250704211829: HistoryAdmin.php: second pass
+250704211829: HistoryAdmin.php: abc
+250704211829: HistoryAdmin.php: #error#abc#123#abcパスワードが違います

@@ -150,7 +150,7 @@ if ((!isset($_GET['param'])) and (!isset($_GET['update']))){
     print '</h3>';
     print '<h3><font color=red>&emsp;&emsp;&emsp;注意：入力文字は英字、数字は半角可能、それ以外はスペースも含め全角。</font></h4>';
     ///
-    print '<form name="kanriup" type="get" action="AdminPage.php">';
+    print '<form name="kanriup" method="get" action="AdminPage.php">';
     print '<table border=1>';
     print '<tr><th>モニタ間隔</th><th>コア間隔</th><th>権限</th><th>管理番号</th><th>ホスト表示</th><th>背景図</th><th>未使用</th><th>追跡ログ</th><th>管理者ID</th></tr>';
     print '<tr>';

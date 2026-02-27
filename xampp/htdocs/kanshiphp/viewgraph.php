@@ -16,6 +16,9 @@ if(!isset($_GET['fradio'])){
 }
 
 $server=$_SERVER['SERVER_ADDR'];
+if($server=='::1' or $server='127.0.0.1'){
+  $server='localhost';
+}
 $hostArr = explode(',',$_GET['fradio']);
 ///fradio['host',,,,,'view','mailopt',,'cpu','ram','disk']
 $host=$hostArr[0];

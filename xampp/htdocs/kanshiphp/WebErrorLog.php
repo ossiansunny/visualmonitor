@@ -39,9 +39,17 @@ if(!isset($_GET['param'])){
     if(substr(PHP_OS,0,6)=='Darwin'){
       /// MaxOSX
       $currPath = $vpath_weblog."/error_log";
+      $now=new DateTime();
+      $ymd=$now->format("Ymd");
+      $currPath2=$vpath_weblog."/error_".$ymd.".log";
       print "<h3>{$currPath}</h3>";
-      if (file_exists($currPath)){
-        $contents = file($currPath , FILE_IGNORE_NEW_LINES);
+      if (file_exists($currPath) or file_exists($currPath2)){
+        if (file_exists($currPath)){
+          $contents = file($currPath , FILE_IGNORE_NEW_LINES);
+        }else{
+          $contents = file($currPath2 , FILE_IGNORE_NEW_LINES);
+          $currPath=$currPath2;
+        }
         $start_index = count($contents) - $lineNum;
         if ( $start_index < 0) {
           $start_index = 0;
@@ -61,6 +69,7 @@ if(!isset($_GET['param'])){
         print "<h3>表示すべき上記ファイルがありません、エラーが無いか又はマニュアルを参照して下さい</h3>";
       
       }
+      ///
       $currPath = $vpath_weblog."/php_error_log";
       print "<h3>{$currPath}</h3>";
       if (file_exists($currPath)){

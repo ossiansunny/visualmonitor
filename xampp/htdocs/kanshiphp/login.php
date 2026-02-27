@@ -45,7 +45,6 @@ function checkProcess($_admin){
 
 function setSession($_sessvalue){
   print '<script type="text/javascript">';
-  ///print "sessionStorage.setItem('user',{$value});";  この使い方はエラー
   print 'sessionStorage.setItem("user","'.$_sessvalue.'");';
   print '</script>';
 }
@@ -105,7 +104,6 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
           $userAuth=$userArr[2];   /// login userのauthority
           $userName=$userArr[3];  /// username
           $userCode=$userArr[4];  /// usercode
-          //setSession($user);
           if ($userAuth == '1'){ 
             /// ログインが管理者
             $rtn=checkProcess($userAuth); ///管理者で実行されているかチェック
@@ -190,7 +188,7 @@ print '</head>';
 print "<body class={$bodyColor}>";
 print '<div class="login">';
 print '<h2 class="login-header"><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;監視ログイン</h2>';
-print '<form class="login-container" type="get" action="login.php">';
+print '<form class="login-container" method="get" action="login.php">';
 print '<p><input type="text" name="user" value="" placeholder="ユーザID" required></p>';
 print '<p><input type="password" name="passwd" placeholder="パスワード" required></p>';
 print "<input type='hidden' name='brcode' value={$ercde}>";

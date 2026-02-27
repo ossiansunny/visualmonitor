@@ -14,6 +14,25 @@ div.header a{
   border-bottom:1px solid #888;
   border-right:1px solid #888;
   background:url("../header/libg.gif") repeat 0px -1px #fff; }
+
+.submitlogout{
+  border-top: dotted 2px #666666;
+  margin:-2px 5px -15px 17px;
+  margin:0px 0px 4px 20px; 
+
+  padding:4px;
+
+  font-size: 13px;
+
+  text-decoration:none;
+
+  border-top:1px solid #ccc;
+  border-left:1px solid #ccc;
+  border-bottom:1px solid #888;
+  border-right:1px solid #888;
+
+  border-radius: 12%; 
+  background:url("../header/libg.gif") repeat 0px -1px #fff; }
 .button{
   border-top: dotted 2px #666666;
   margin:2px 5px -15px 5px;
@@ -40,6 +59,7 @@ div.header a{
 
 .buttonlogout{
   border-top: dotted 2px #666666;
+  /* margin 上　右　下　左　*/
   margin:-2px 5px -15px 17px;
   padding:10px;
   font-size: 13px;

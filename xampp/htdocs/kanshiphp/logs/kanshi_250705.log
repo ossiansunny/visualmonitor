@@ -1,0 +1,413 @@
+250705052831: : histtbabc
+250705052831: : histtboshima
+250705052831: : histtbxyz
+250705052840: HistoryLogin.php: login edit regist
+250705053144: : histtbabc
+250705053144: : histtboshima
+250705053144: : histtbxyz
+250705053151: HistoryLogin.php: login edit regist
+250705053151: HistoryAdmin.php: first_pass
+250705053151: HistoryAdmin.php: abc
+250705053151: HistoryAdmin.php: second pass
+250705053151: HistoryAdmin.php: abc
+250705053151: HistoryAdmin.php: #error#abc#123#abcパスワードが違います
+250705053852: : histtbabc
+250705053852: : histtboshima
+250705053852: : histtbxyz
+250705053859: HistoryLogin.php: login edit regist
+250705053859: HistoryAdmin.php: first_pass
+250705053859: HistoryAdmin.php: abc
+250705053859: HistoryAdmin.php: second pass
+250705053859: HistoryAdmin.php: abc
+250705053859: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250705053859: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250705053859: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250705053859: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250705053859: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250705053859: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250705053859: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250705053859: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250705053859: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250705053906: HistoryAdmin.php: first_pass
+250705053906: HistoryAdmin.php: update histtbabc set password='123', type='クラス1;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9'
+250705053906: HistoryLogin.php: #notic#abc#123#更新処理は終了しました
+250705053906: HistoryLogin.php: notic abc 123 更新処理は終了しました
+250705053906: : histtbabc
+250705053906: : histtboshima
+250705053906: : histtbxyz
+250705054315: HistoryLogin.php: #notic#abc#123#更新処理は終了しました
+250705054315: HistoryLogin.php: notic abc 123 更新処理は終了しました
+250705054315: : histtbabc
+250705054315: : histtboshima
+250705054315: : histtbxyz
+250705054322: HistoryLogin.php: login edit regist
+250705054322: HistoryAdmin.php: first_pass
+250705054322: HistoryAdmin.php: abc
+250705054322: HistoryAdmin.php: second pass
+250705054322: HistoryAdmin.php: abc
+250705054322: HistoryAdmin.php: #error#abc#123#abcパスワードが違います
+250705054342: HistoryAdmin.php: first_pass
+250705054342: HistoryAdmin.php: abc
+250705054342: HistoryAdmin.php: second pass
+250705054342: HistoryAdmin.php: abc
+250705054342: HistoryAdmin.php: #error#abc#123#abcパスワードが違います
+250705054344: HistoryAdmin.php: first_pass
+250705054344: HistoryAdmin.php: abc
+250705054344: HistoryAdmin.php: second pass
+250705054344: HistoryAdmin.php: abc
+250705054344: HistoryAdmin.php: #error#abc#123#abcパスワードが違います
+250705054417: : histtbabc
+250705054417: : histtboshima
+250705054417: : histtbxyz
+250705054425: HistoryLogin.php: login edit regist
+250705054425: HistoryAdmin.php: first_pass
+250705054425: HistoryAdmin.php: abc
+250705054425: HistoryAdmin.php: second pass
+250705054425: HistoryAdmin.php: abc
+250705054425: HistoryAdmin.php: #error#abc#123#abcパスワードが違います
+250705061214: HistoryAdmin.php: first_pass
+250705061214: HistoryAdmin.php: abc
+250705061214: HistoryAdmin.php: second pass
+250705061214: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=></td>
+250705061214: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=></td>
+250705061214: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=></td>
+250705061214: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=></td>
+250705061214: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=></td>
+250705061214: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=></td>
+250705061214: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=></td>
+250705061214: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=></td>
+250705061214: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=></td>
+250705061216: HistoryAdmin.php: first_pass
+250705061216: HistoryAdmin.php: abc
+250705061216: HistoryAdmin.php: second pass
+250705061216: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=></td>
+250705061216: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=></td>
+250705061216: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=></td>
+250705061216: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=></td>
+250705061216: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=></td>
+250705061216: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=></td>
+250705061216: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=></td>
+250705061216: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=></td>
+250705061216: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=></td>
+250705061224: : histtbabc
+250705061224: : histtboshima
+250705061224: : histtbxyz
+250705061232: HistoryLogin.php: login edit regist
+250705061232: HistoryAdmin.php: first_pass
+250705061232: HistoryAdmin.php: abc
+250705061232: HistoryAdmin.php: second pass
+250705061232: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=></td>
+250705061232: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=></td>
+250705061232: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=></td>
+250705061232: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=></td>
+250705061232: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=></td>
+250705061232: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=></td>
+250705061232: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=></td>
+250705061232: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=></td>
+250705061232: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=></td>
+250705061817: : histtbabc
+250705061817: : histtboshima
+250705061817: : histtbxyz
+250705061827: HistoryLogin.php: login edit regist
+250705061827: HistoryLogin.php: #error#abc#234#ユーザーまたはパスワードが違います
+250705061827: HistoryLogin.php: error abc 234 ユーザーまたはパスワードが違います
+250705061827: : histtbabc
+250705061827: : histtboshima
+250705061827: : histtbxyz
+250705061838: HistoryLogin.php: login edit regist
+250705061838: : histtbabc
+250705061838: : histtboshima
+250705061838: : histtbxyz
+250705061849: HistoryLogin.php: login edit regist
+250705061849: : histtbabc
+250705061849: : histtboshima
+250705061849: : histtbxyz
+250705061858: HistoryLogin.php: login edit regist
+250705061858: : histtbabc
+250705061858: : histtboshima
+250705061858: : histtbxyz
+250705062434: HistoryLogin.php: login edit regist
+250705062434: HistoryAdmin.php: first_pass
+250705062434: HistoryAdmin.php: abc
+250705062434: HistoryAdmin.php: second pass
+250705062434: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250705062434: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250705062434: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250705062434: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250705062434: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250705062434: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250705062434: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250705062434: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250705062434: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250705062436: HistoryAdmin.php: first_pass
+250705062436: HistoryAdmin.php: abc
+250705062436: HistoryAdmin.php: second pass
+250705062436: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250705062436: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250705062436: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250705062436: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250705062436: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250705062436: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250705062436: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250705062436: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250705062436: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250705062439: HistoryLogin.php: #error#abc#234#ユーザーまたはパスワードが違います
+250705062439: HistoryLogin.php: error abc 234 ユーザーまたはパスワードが違います
+250705062439: : histtbabc
+250705062439: : histtboshima
+250705062439: : histtbxyz
+250705062449: HistoryLogin.php: login edit regist
+250705062449: HistoryAdmin.php: first_pass
+250705062449: HistoryAdmin.php: abc
+250705062449: HistoryAdmin.php: second pass
+250705062449: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250705062449: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250705062449: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250705062449: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250705062449: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250705062449: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250705062449: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250705062449: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250705062449: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250705062618: HistoryLogin.php: #error#abc#234#ユーザーまたはパスワードが違います
+250705062618: HistoryLogin.php: error abc 234 ユーザーまたはパスワードが違います
+250705062618: : histtbabc
+250705062618: : histtboshima
+250705062618: : histtbxyz
+250705062625: HistoryLogin.php: login edit regist
+250705062625: HistoryAdmin.php: first_pass
+250705062625: HistoryAdmin.php: abc
+250705062625: HistoryAdmin.php: second pass
+250705062625: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250705062625: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250705062625: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250705062625: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250705062625: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250705062625: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250705062625: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250705062625: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250705062625: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250705062817: HistoryLogin.php: #error#abc#234#ユーザーまたはパスワードが違います
+250705062817: HistoryLogin.php: error abc 234 ユーザーまたはパスワードが違います
+250705062817: : histtbabc
+250705062817: : histtboshima
+250705062817: : histtbxyz
+250705063411: : histtbabc
+250705063411: : histtboshima
+250705063411: : histtbxyz
+250705063415: : histtbabc
+250705063415: : histtboshima
+250705063415: : histtbxyz
+250705063418: : histtbabc
+250705063418: : histtboshima
+250705063418: : histtbxyz
+250705103836: HistoryLogin.php: login edit regist
+250705103836: HistoryAdmin.php: first_pass
+250705103836: HistoryAdmin.php: abc
+250705103836: HistoryAdmin.php: second pass
+250705103836: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250705103836: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=クラス2></td>
+250705103836: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250705103836: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250705103836: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250705103836: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250705103836: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250705103836: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250705103836: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250705103858: HistoryAdmin.php: first_pass
+250705103858: HistoryAdmin.php: update histtbabc set password='456', type='クラス1;計画;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9'
+250705103859: HistoryLogin.php: #notic#abc#456#abc更新処理は終了しました
+250705103859: HistoryLogin.php: notic abc 456 abc更新処理は終了しました
+250705103859: : histtbabc
+250705103859: : histtboshima
+250705103859: : histtbxyz
+250705103915: HistoryLogin.php: login edit regist
+250705103915: HistoryAdmin.php: first_pass
+250705103915: HistoryAdmin.php: abc
+250705103915: HistoryAdmin.php: second pass
+250705103915: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=クラス1></td>
+250705103915: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=計画></td>
+250705103915: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=クラス3></td>
+250705103915: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=クラス4></td>
+250705103915: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=クラス5></td>
+250705103915: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6></td>
+250705103915: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7></td>
+250705103915: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8></td>
+250705103915: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9></td>
+250705103934: HistoryLogin.php: login edit regist
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124528: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124531: HistoryMain.php: 
+250705124844: HistoryMain.php: user:abc
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705124844: HistoryMain.php: 
+250705125043: HistoryMain.php: user:abc
+250705125043: HistoryMain.php: クラス1;計画;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9
+250705125043: HistoryMain.php: クラス1
+250705125043: HistoryMain.php: 計画
+250705125043: HistoryMain.php: クラス3
+250705125043: HistoryMain.php: クラス4
+250705125043: HistoryMain.php: クラス5
+250705125043: HistoryMain.php: クラス6
+250705125043: HistoryMain.php: クラス7
+250705125043: HistoryMain.php: クラス8
+250705125043: HistoryMain.php: クラス9
+250705125043: HistoryMain.php: 
+250705150735: HistoryLogin.php: #notic#abc#456#abc更新処理は終了しました
+250705150735: HistoryLogin.php: notic abc 456 abc更新処理は終了しました
+250705150735: : histtbabc
+250705150735: : histtboshima
+250705150735: : histtbxyz
+250705150758: HistoryLogin.php: login edit regist
+250705150758: HistoryLogin.php: #regist#aaa#123#
+250705150758: HistoryRegist.php: first pass
+250705150758: HistoryRegist.php: second pass
+250705152222: HistoryLogin.php: login edit regist
+250705152222: HistoryLogin.php: #regist#aaa#123#
+250705152255: HistoryLogin.php: login edit regist
+250705152255: HistoryLogin.php: #regist#aaa#123#
+250705152531: HistoryLogin.php: login edit regist
+250705152531: HistoryLogin.php: #regist#aaa#123#
+250705152531: HistoryRegist.php: first pass
+250705152531: HistoryRegist.php: second pass
+250705152718: HistoryRegist.php: first pass
+250705152718: HistoryRegist.php: second pass
+250705152721: HistoryRegist.php: first pass
+250705152721: HistoryRegist.php: second pass
+250705152758: HistoryRegist.php: first pass
+250705152758: HistoryRegist.php: second pass
+250705152856: HistoryRegist.php: first pass
+250705152856: HistoryRegist.php: second pass
+250705153004: HistoryRegist.php: first pass
+250705153004: HistoryRegist.php: second pass
+250705153338: HistoryRegist.php: first pass
+250705153338: HistoryRegist.php: second pass
+250705153359: HistoryRegist.php: first pass
+250705153359: HistoryRegist.php: create table histtbaaa ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250705153359: HistoryRegist.php: insert into histtbaaa (user,password,type) values('aaa','123','ｂｂｂｂｂ;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250705153400: HistoryLogin.php: #regist#aaa#123#aaa管理・ログテーブルを作成しました
+250705153400: HistoryLogin.php: regist aaa 123 aaa管理・ログテーブルを作成しました
+250705153400: : histtbaaa
+250705153400: : histtbabc
+250705153400: : histtboshima
+250705153400: : histtbxyz
+250705153427: HistoryLogin.php: login edit regist
+250705153427: HistoryLogin.php: #regist#bbb#123#
+250705153427: HistoryRegist.php: first pass
+250705153427: HistoryRegist.php: second pass
+250705154411: HistoryRegist.php: first pass
+250705154411: HistoryRegist.php: second pass
+250705154523: HistoryRegist.php: first pass
+250705154523: HistoryRegist.php: second pass
+250705154847: HistoryRegist.php: first pass
+250705154847: HistoryRegist.php: second pass
+250705155021: HistoryRegist.php: first pass
+250705155021: HistoryRegist.php: create table histtbbbb ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250705155021: HistoryRegist.php: insert into histtbbbb (user,password,type) values('bbb','123','あああああ;クラス2;クラス3;クラス4;クラス5;クラス6;クラス7;クラス8;クラス9')
+250705155022: HistoryLogin.php: #regist#bbb#123#bbb管理・ログテーブルを作成しました
+250705155022: HistoryLogin.php: regist bbb 123 bbb管理・ログテーブルを作成しました
+250705155022: : histtbaaa
+250705155022: : histtbabc
+250705155022: : histtbbbb
+250705155022: : histtboshima
+250705155022: : histtbxyz
+250705160650: HistoryLogin.php: login edit regist
+250705160650: HistoryLogin.php: #regist#ccc#aaa#
+250705160650: HistoryRegist.php: first pass
+250705160650: HistoryRegist.php: second pass
+250705161858: HistoryRegist.php: first pass
+250705161858: HistoryRegist.php: second pass
+250705161904: HistoryRegist.php: first pass
+250705161904: HistoryRegist.php: second pass
+250705161911: HistoryRegist.php: first pass
+250705161911: HistoryRegist.php: create table histtbccc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250705161911: HistoryRegist.php: insert into histtbccc (user,password,type) values('ccc','aaa','クラス1:1;クラス2:1;クラス3:1;クラス4:1;クラス5:1;クラス6:1;クラス7:1;クラス8:1;クラス9:1')
+250705162229: HistoryRegist.php: first pass
+250705162229: HistoryRegist.php: second pass
+250705162301: HistoryRegist.php: first pass
+250705162301: HistoryRegist.php: create table histtbccc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250705162512: HistoryRegist.php: first pass
+250705162512: HistoryRegist.php: second pass
+250705162546: HistoryRegist.php: first pass
+250705162546: HistoryRegist.php: create table histtbccc ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250705162546: HistoryRegist.php: insert into histtbccc (user,password,type) values('ccc','aaa','クラス1:1;赤色４:4;クラス3:1;黄色２:2;クラス5:1;クラス6:1;クラス7:1;クラス8:1;クラス9:1')
+250705195601: HistoryLogin.php: #regist#bbb#123#bbb管理・ログテーブルを作成しました
+250705195601: HistoryLogin.php: regist bbb 123 bbb管理・ログテーブルを作成しました
+250705195601: : histtbaaa
+250705195601: : histtbabc
+250705195601: : histtbbbb
+250705195601: : histtbccc
+250705195601: : histtboshima
+250705195601: : histtbxyz
+250705195617: HistoryLogin.php: login edit regist
+250705195617: HistoryLogin.php: #regist#eee#123#
+250705195617: HistoryRegist.php: first pass
+250705195617: HistoryRegist.php: second pass
+250705195729: HistoryRegist.php: first pass
+250705195729: HistoryRegist.php: create table histtbeee ( user varchar(20) not null primary key , password varchar(20) not null default '' , type varchar(81) not null default '' )
+250705195730: HistoryRegist.php: insert into histtbeee (user,password,type) values('eee','123','白１:1;黄色２:2;橙３:3;赤４:4;灰色５:5;クラス6:1;クラス7:1;クラス8:1;クラス9:1')
+250705195730: HistoryLogin.php: #regist#eee#123#eee管理・ログテーブルを作成しました
+250705195730: HistoryLogin.php: regist eee 123 eee管理・ログテーブルを作成しました
+250705195730: : histtbaaa
+250705195730: : histtbabc
+250705195730: : histtbbbb
+250705195730: : histtbccc
+250705195730: : histtbeee
+250705195730: : histtboshima
+250705195730: : histtbxyz
+250705211919: : histtbeee
+250705211932: HistoryLogin.php: login edit regist
+250705211932: HistoryLogin.php: #error#ccc#123#設定が見つかりません、ユーザーを見直すか登録をして下さい
+250705211932: HistoryLogin.php: error ccc 123 設定が見つかりません、ユーザーを見直すか登録をして下さい
+250705211932: : histtbeee
+250705211943: HistoryLogin.php: login edit regist
+250705211944: HistoryAdmin.php: first_pass
+250705211944: HistoryAdmin.php: eee
+250705211944: HistoryAdmin.php: second pass
+250705211944: HistoryAdmin.php: <td><input type=text name=etype1 size=5 value=白１:1></td>
+250705211944: HistoryAdmin.php: <td><input type=text name=etype2 size=5 value=黄色２:2></td>
+250705211944: HistoryAdmin.php: <td><input type=text name=etype3 size=5 value=橙３:3></td>
+250705211944: HistoryAdmin.php: <td><input type=text name=etype4 size=5 value=赤４:4></td>
+250705211944: HistoryAdmin.php: <td><input type=text name=etype5 size=5 value=灰色５:5></td>
+250705211944: HistoryAdmin.php: <td><input type=text name=etype6 size=5 value=クラス6:1></td>
+250705211944: HistoryAdmin.php: <td><input type=text name=etype7 size=5 value=クラス7:1></td>
+250705211944: HistoryAdmin.php: <td><input type=text name=etype8 size=5 value=クラス8:1></td>
+250705211944: HistoryAdmin.php: <td><input type=text name=etype9 size=5 value=クラス9:1></td>
+250705212803: HistoryAdmin.php: first_pass
+250705212803: HistoryAdmin.php: eee
+250705212803: HistoryAdmin.php: second pass
+250705212905: HistoryAdmin.php: first_pass
+250705212905: HistoryAdmin.php: eee
+250705212905: HistoryAdmin.php: second pass
+250705213443: HistoryAdmin.php: first_pass
+250705213443: HistoryAdmin.php: eee
+250705213443: HistoryAdmin.php: second pass
+250705214423: HistoryAdmin.php: first_pass
+250705214423: HistoryAdmin.php: eee
+250705214423: HistoryAdmin.php: second pass

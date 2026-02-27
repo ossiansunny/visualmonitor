@@ -4,14 +4,12 @@ require_once "mysqlkanshi.php";
 function dataflagreset($_layout){
  $layout_sql="select * from g".$_layout." order by gsequence";
  $grpName="";
- $grpSeq="";
- 
+ $grpSeq=""; 
  $layoutRows=getdata($layout_sql);
  foreach ($layoutRows as $layoutRowsRec){
   $layoutArr=explode(',',$layoutRowsRec);
   $grpName=$layoutArr[0];
-  $grpSeq=$layoutArr[1];
-  
+  $grpSeq=$layoutArr[1];  
   if ($grpName==""){
     $pattern="g".$grpSeq."%";
     $layout_sql="select * from ".$_layout." where gshid like '".$pattern."'";

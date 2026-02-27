@@ -286,8 +286,6 @@ if (isset($_GET['create'])){
   ///
   print '<form name="newhost" method="get" action="NewHostPage.php" onsubmit="return commaCheck(\''.$jsparam.'\');">';
   print '&emsp;<span class=kom>ホスト名：</span>&ensp;<input id="hostname" type="text" name="hostname" placeholder="ホスト名又はIPアドレス" size="25" maxlength="25" value="" required/>';
-  //$image_sql='select * from serverimage';
-  //$imageRows=getdata($image_sql);
   $rowcnt=count($imageRows);
   print '&emsp;<span class=kom>モニター画像：</span>&ensp;<select name="image">';
   for ($cnt=0;$cnt<$rowcnt;$cnt++){

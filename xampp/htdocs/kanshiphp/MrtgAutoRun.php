@@ -77,7 +77,7 @@ if(!isset($_GET['param'])){
         /// plot
         $cmdPlotGraph=$vpath_ubin.'/plotgraph.exe '.$vpath_base. ' '. $debug;  
         $plotRtn = shell_exec($cmdPlotGraph);
-        writeloge($pgm,"call ".$cmdPlotGraph);
+        writelogd($pgm,"call ".$cmdPlotGraph);
         ///
       }else{
         $msg="Invalid path , Check kanshiphp.ini";
