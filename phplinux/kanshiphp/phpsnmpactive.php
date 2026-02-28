@@ -1,5 +1,7 @@
 <?php
-error_reporting(E_ALL & ~E_WARNING);
+error_reporting(0);
+ini_set('display_errors', 0);
+//E_ALL & ~E_WARNING);
 /// SNMP sysLocation.0 をチェック
 function snmpactive($host,$community) {
   if(substr(PHP_OS,0,6)=="Darwin"){
@@ -19,5 +21,7 @@ function snmpactive($host,$community) {
   }
 }
 ///
+//$rtn=snmpactive('10.168.253.235','public');
+//var_dump($rtn);
 ?>
 

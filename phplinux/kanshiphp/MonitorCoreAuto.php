@@ -135,7 +135,7 @@ Function actionNcat($hostArr,$statArr)
         if($ncatOldPort!=$ncatNewPort){
           /// 前回異常
           eventLog($hostArr,$newEventType,'N',$ncatNewPort);
-          mailsend($hostArr,$user,'2','Ncat','TcpPort','前回異常-今回正常','');
+          //mailsend($hostArr,$user,'2','Ncat','TcpPort','前回異常-今回正常','');
         }      
       }else{
         /// 今回異常　ポートの異常
@@ -308,7 +308,7 @@ Function snmpCheck($hostArr,$statArr)
   ///
   
   if($mailSw==1){
-    mailsend($hostArr,$user,'1','Snmp','応答なし','','');
+    //mailsend($hostArr,$user,'1','Snmp','応答なし','','');
   } 
    
   /// process,port check
@@ -335,7 +335,7 @@ Function snmpCheck($hostArr,$statArr)
           $snmpMailValue='指定なし';
         }else{
           $snmpMailValue=" ".$snmpNewValue."未稼働/閉鎖";   
-          mailsend($hostArr,$user,'2','Snmp',$snmpMailType,$snmpMailValue,'');         
+          //mailsend($hostArr,$user,'2','Snmp',$snmpMailType,$snmpMailValue,'');         
         } 
       }
     }else{
@@ -369,7 +369,7 @@ Function snmpCheck($hostArr,$statArr)
         }else{
           $snmpMailValue=" ".$snmpNewValue[$cc].$snmpMailName;   
         }
-        mailsend($hostArr,$user,'1','Snmp',$snmpMailType,$snmpMailValue,'');
+        //mailsend($hostArr,$user,'1','Snmp',$snmpMailType,$snmpMailValue,'');
         
           
       }
@@ -458,7 +458,7 @@ if(!isset($_GET['param'])){ /// ユーザ取得依頼
     writelogd($pgm,$msg);
   }else{  
     foreach($layoutRows as $layoutRow){
-    
+    var_dump($layoutRow);    
       if(empty($layoutRow) or $layoutRow=='NoAssign'){
         continue;
       }else{

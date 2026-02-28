@@ -49,6 +49,23 @@ function hostping($_host){
       } else {
          return 1;
       }
+   } elseif(substr(PHP_OS,0,6)=='Darwin') {
+      $cmd = "/sbin/ping -c 3 -W 3 " . $_host;
+      $rtnCde = exec($cmd, $output, $res);
+      $breakSw = 0;
+      $lineCount = count($output);
+      for ($i=0;$i<$lineCount;$i++) {
+         $matchLine = preg_match("/icmp_seq=0 ttl/",$output[$i]);
+         if ($matchLine == 1)  {
+            $breakSw = 1;
+            break;
+         }
+      }
+      if($breakSw == 1){
+         return 0;
+      } else {
+         return 1;
+      }
    } else {
       return 1;
    }

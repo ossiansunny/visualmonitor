@@ -16,7 +16,7 @@ print '<html><head>';
 print '<title>Visual Manager</title>';
 print '</head>';
 
-print '<frameset rows="140,*,30">';
+print '<frameset rows="165,*,30">';
   print '<frame src="HeaderPage.php" name="hframe" title="ヘッダフレーム">';
   print '<frameset cols="210,*">';
     print '<frame src="MenuPage.php" name="mframe" title="メニューフレーム">';
@@ -30,7 +30,8 @@ print '<frameset rows="140,*,30">';
     //}else{
     //  print '<frame name="mrtg" src="NoFunction.php">';
     //}
-    print '<frame name="disc" src="Discover.php">';
+    print '<frame name="disc" src="PageShover.php">';  // 未使用
+//    print '<frame name="disc" src="Discover.php">';
     print '<frame name="push" src="PageShover.php">';  // 未使用
     print '</frameset>';
 print '</frameset>';

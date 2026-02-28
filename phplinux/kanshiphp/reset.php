@@ -1,7 +1,7 @@
 ﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-require_once "mailsend.php";
+//require_once "mailsend.php";
 require_once "graphlogadjust.php";
 require_once "varread.php";
 /*
@@ -94,7 +94,7 @@ if(!isset($_GET['param'])){
   /// メール送信    
   $timeStamp=date('ymdHis');
   $logName='RESET_'.$user;
-  mailsend('',$user,'7','リセット','','',$mailMsg);
+  //mailsend('',$user,'7','リセット','','',$mailMsg);
   /// Write Event Log
   $event_sql = "insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrimei,kanrino,message) values('".$logName."','".$timeStamp."','9',' ','".$kanrisha."',' ','0',' ')";
   putdata($event_sql); 

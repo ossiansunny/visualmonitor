@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 ################################################################
 ## production
 ## called arguments
@@ -13,20 +13,22 @@ ppath=$4
 debug=$5
 if [ ${mrtg:0:1} == '/' ] 
 then
+  #echo $mrtg $mpath $ppath $debug
   ${ubin}/logwriter.sh 'mrtgrun.sh' 'start mrtgrun.sh' $bggth $debug
   env LANG=C ${mrtg} ${mpath}/newmrtg.cfg >/dev/null 2>&1
   ${ubin}/logwriter.sh 'mrtgrun.sh' 'end mrtgrun.sh' $ppath $debug
+  #echo $mrtg $mpath $ppath $debug
 else
   utime=`date +%s`
   hostall=`grep Target ${mpath}/newmrtg.cfg | awk 'BEGIN{FS="\`"}{print $2}' | awk '{print $2","$3","$4}' | uniq`
   for hostoscomm in ${hostall[@]}
   do
     ${ubin}/logwriter.sh 'mrtgrun.sh' 'start mrtgrun.sh' $bggth $debug
-    #echo $hostoscomm
+    echo $hostoscomm
     ghost=`echo $hostoscomm | awk 'BEGIN{FS=","}{print $1}'`
     gos=`echo $hostoscomm | awk 'BEGIN{FS=","}{print $2}'`
     comm=`echo $hostoscomm | awk 'BEGIN{FS=","}{print $3}'`
-    #echo "$ghost $gos $comm"
+    echo "$ghost $gos $comm"
     cpu=`${ubin}/snmpcpuget.sh $ghost $gos $comm`
     cpu1=`echo $cpu | awk '{print $1}'`
     cpu2=`echo $cpu | awk '{print $2}'` 

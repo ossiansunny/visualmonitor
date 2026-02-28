@@ -2,7 +2,7 @@
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
 require_once "serverimagedisplay.php";
-require_once "mailsend.php";
+//require_once "mailsend.php";
 require_once "phpsnmpprocessset.php";
 require_once "phpsnmptcpportset.php";
 require_once "phpsnmptrapset.php";
@@ -18,7 +18,7 @@ function writelogsendmail($_host,$_msg){
   $msg='ホスト '.$_host.' 監視管理 '.$_msg;
   writelogd($pgm,$msg);
   ///
-  mailsend($_host,$user,'0','ホスト作成',$_host,'','',$_msg); 
+  //mailsend($_host,$user,'0','ホスト作成',$_host,'','',$_msg); 
   ///     mailtype=0(監視管理) param1='ホスト作成' param2=$msg 
   writelogd($pgm,'writelogsendmail function done. ');
 }

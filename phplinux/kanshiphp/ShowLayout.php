@@ -39,7 +39,7 @@ if (!isset($_GET['param'])){
   $show_sql='show tables like "layout%"';
   $showRows=getdata($show_sql);
   print '<br>';
-  print '<table border=0 class="tablelayout"><form type=GET action="saveloadlayout.php">';
+  print '<table border=0 class="tablelayout"><form method=get action="saveloadlayout.php">';
   $cc=0;
   print '<tr><th align=center>レイアウト名</th><th align=center width=10px>保存・読込先</th><th colspan=2 align=center>実行ボタン</th></tr>';
   foreach($showRows as $showRowsRec){

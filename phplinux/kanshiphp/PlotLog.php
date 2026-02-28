@@ -65,7 +65,7 @@ if(!isset($_GET['param'])){
     writeloge($pgm,"variable vpath_plothome could not get path");
     $subject="Path変数不正";
     $msg="パス変数 vpath_mrgbase 取得不可";
-    mailsend('PlotLog.php',$user,'5',$body,'','','');
+    //mailsend('PlotLog.php',$user,'5',$body,'','','');
     print "&emsp;<h3><font color=red>変数vpath_php取得不可、管理者に通知</font></h3><br>";
     print "&emsp;<a href='MonitorManager.php?param={$user}'><span class=buttonyell>監視モニターへ戻る</span></a>";
     print '</body></html>';

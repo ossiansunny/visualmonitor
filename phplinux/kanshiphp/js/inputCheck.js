@@ -19,3 +19,12 @@ function deleteHost(host){
     return false;
   }
 }
+
+function confirmEnd(action){
+  if(window.confirm( action + " してよろしいですか？")){
+    return true;
+  }else{
+    window.alert(action + " をキャンセルしました");
+    return false;
+  }
+}

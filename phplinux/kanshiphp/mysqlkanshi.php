@@ -54,7 +54,7 @@ function writeloge($_pgm,$_msg) {
   $timeStamp = date("ymdHis");
   $ymd=substr($timeStamp,0,6);
   $fp = fopen($kanshiDir."/logs/kanshi_".$ymd.".log","a");
-  $data = $timeStamp . ": " . $_pgm . ": " . $_msg . "\n";
+  $data = $timeStamp . ": " . $_pgm . ": " . $_msg .PHP_EOL;
   fwrite($fp,$data);
   fclose($fp);
 }
@@ -212,5 +212,13 @@ function create($_sql) {
   }
   return $rtn; /// whereの該当なしも 0で返る
 }
-
+/*
+$user="select * from user where userid='admin'";
+$userRows=getdata($user);
+var_dump($userRows);
+*/
+//writeloge('test','message');
+//$layoutRow='10.160.244.235';
+//$msg="レイアウトにあるホスト".$layoutRow."がホストテーブルにありません";
+//writeloge("test",$msg);
 ?>

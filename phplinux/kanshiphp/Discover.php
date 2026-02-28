@@ -3,7 +3,7 @@ require_once "BaseFunction.php";
 require_once "varread.php";
 require_once 'alarmwindow.php';
 require_once 'hostncat.php';
-require_once 'mailsend.php';
+//require_once 'mailsend.php';
 require_once 'mysqlkanshi.php';
 
 $interval=60;
@@ -124,11 +124,11 @@ if(!isset($_GET['param'])){
         if($adminLoginTime!='000000000000'){
           $userSql="select username from user where userid='".$user."'";
           $userRows=getdata($userSql);
-          $rtnCd=mailsend('',$user,'6',$userRows[0],$user);
-          if($rtnCde==0){
-            $adminSql="update admintb set loginstamp='000000000000'";
-            putdata($adminSql);
-          }
+          //$rtnCd=mailsend('',$user,'6',$userRows[0],$user);
+          //if($rtnCde==0){
+          //  $adminSql="update admintb set loginstamp='000000000000'";
+          //  putdata($adminSql);
+          //}
         }  
       }else{
         /// return code 1

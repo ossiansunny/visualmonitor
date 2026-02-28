@@ -15,7 +15,15 @@ if(!isset($_GET['fradio'])){
   branch($nextpage,$alerMsg);  
 }
 
-$server=$_SERVER['SERVER_ADDR'];
+//$server=$_SERVER['SERVER_ADDR'];
+$server=gethostbyname(gethostname());
+writeloge($pgm,'server1='.$server);
+/*
+ * if($server=='::1' or $server='127.0.0.1'){
+  $server='localhost';
+}a
+ */
+writeloge($pgm,'server2='.$server);
 $hostArr = explode(',',$_GET['fradio']);
 ///fradio['host',,,,,'view','mailopt',,'cpu','ram','disk']
 $host=$hostArr[0];
@@ -73,7 +81,8 @@ $gSw=0;
 $graphArr=array("","","");
 $noCache=date("ymdHis");
 if($cpuLim!=""){
-  $pngCpu=$host . ".cpu-day.png?date=".$noCache;
+  $pngCpu=$host . ".cpu-day.png";
+  //$pngCpu=$host . ".cpu-day.png?date=".$noCache;
   $fileCpu=$host . ".cpu-day.png";
   $fileName=$mrtgBase.'/mrtgimage/'.$fileCpu;
   if (file_exists($fileName)){
@@ -86,20 +95,24 @@ if($cpuLim!=""){
   print "<h3>CPU グラフ指定なし</h3>";
 }
 if($ramLim!=""){
-  $pngRam=$host . ".ram-day.png?date=".$noCache;
+  $pngRam=$host . ".ram-day.png";
+  //$pngRam=$host . ".ram-day.png?date=".$noCache;
   $fileRam=$host . ".ram-day.png";
   $fileName=$mrtgBase.'/mrtgimage/'.$fileRam;
   if (file_exists($fileName)){
     $graphArr[1]=$fileRam;
     $gSw=1;
   }
+  $http="http://".$server.$mrtgParent."/mrtgimage/".$pngRam;
+  writeloge($pgm,$http);
   print "<h3>Memory Usage</h3>";
   print "<img alt='画像なし、未作成または作成中' src='http://{$server}{$mrtgParent}/mrtgimage/{$pngRam}'>";
 }else{
   print "<h3>Memory グラフ指定なし</h3>";
 }
 if($diskLim!=""){
-  $pngDisk=$host . ".disk-day.png?date=".$noCache;
+  $pngDisk=$host . ".disk-day.png";
+  //$pngDisk=$host . ".disk-day.png?date=".$noCache;
   $fileDisk=$host . ".disk-day.png";
   $fileName=$mrtgBase.'/mrtgimage/'.$fileDisk;
   if (file_exists($fileName)){

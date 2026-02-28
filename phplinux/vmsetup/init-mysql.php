@@ -125,7 +125,7 @@ if(count($rtnv)==1){
   if($rtn==1){
     echo '-------------------------------------------------------------------------'.PHP_EOL;
     echo ' mysql アクセスに失敗しました、ユーザ、データベースを手動で作成して下さい'.PHP_EOL;
-    echo ' 作成例は、VMDatabaseManualSetup.utf8にあります'.PHP_EOL;
+    echo ' 作成例は、kanshiデータベース手動作成.txtにあります'.PHP_EOL;
     echo '-------------------------------------------------------------------------'.PHP_EOL;
   }else{
     echo "mysqlにuser='{$dbuser}'@'{$dbhost}'、passwd='{$dbpass}'、db='{$dbname}'を設定しました".PHP_EOL;

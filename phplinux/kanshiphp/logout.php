@@ -1,7 +1,7 @@
 ﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-require_once "mailsend.php";
+//require_once "mailsend.php";
 require_once "snmpagent.php";
 
 function clearSession(){
@@ -79,7 +79,7 @@ if(!isset($_GET['param'])){
   $timeStamp = $now;
   $logName='LOGOUT_'.$user;  
   $subject=$logName; 
-  mailsend('',$user,'7','ログアウト','','',$mailMsg);
+  //mailsend('',$user,'7','ログアウト','','',$mailMsg);
   /// イベントログ
   
   $event_sql = "insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrimei,kanrino,message) values('{$logName}','{$timeStamp}','9',' ','".$kanrisha."',' ','',' ')";

@@ -1,7 +1,7 @@
 <?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-require_once "mailsend.php";
+//require_once "mailsend.php";
 ///
 Function linkcheck($_link){  
   if (strlen($_link)!=0){
@@ -30,7 +30,7 @@ $lnkurl4=$_GET['lnkurl4'];
 $imageMax=$_GET['imageMax'];  
 $header_sql="update header set title='{$title}',subtitle='{$subtitle}',link1title='{$lnkttl1}',link2title='{$lnkttl2}',link3title='{$lnkttl3}',link4title='{$lnkttl4}',link5title='',link1url='{$lnkurl1}',link2url='{$lnkurl2}',link3url='{$lnkurl3}',link4url='{$lnkurl4}',link5url=''"; 
 putdata($header_sql);
-mailsend('',$user,'0','ヘッダ情報更新','','','');
+//mailsend('',$user,'0','ヘッダ情報更新','','','');
 $nextpage='HeaderEditPage.php';
 $msg="#notic#".$user."#正常に更新されました";
 branch($nextpage,$msg);

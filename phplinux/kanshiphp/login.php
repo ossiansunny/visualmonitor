@@ -20,6 +20,7 @@ function checkProcess($_admin){
   $procStr=explode(',',$procArr[0]);
   $coreTime=$procStr[4];  /// 60 60
   $coreStamp=$procStr[5]; /// 1702453795 1647169256 
+  echo 'time:'.time().'<br>';
   $diff=time() - intval($coreStamp); ///現在時刻からcore起動した時刻の差
   $msg='coretime:'.$coreTime.' corestamp:'.$coreStamp.' diff:'.strval($diff).' auth:'.$_admin;
   writelogd($pgm,$msg);
@@ -45,7 +46,6 @@ function checkProcess($_admin){
 
 function setSession($_sessvalue){
   print '<script type="text/javascript">';
-  ///print "sessionStorage.setItem('user',{$value});";  この使い方はエラー
   print 'sessionStorage.setItem("user","'.$_sessvalue.'");';
   print '</script>';
 }
@@ -73,7 +73,7 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
 }else{
   /// login ボタン押した時の処理
   if (isset($_GET['login'])){  
-    /// login処理
+  /// login処理
     $passwd=$_GET['passwd'];
     $user=$_GET['user'];
     $ercde=$_GET['brcode'];
@@ -84,8 +84,8 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
     $userRows=getdata($user_sql);
     if(empty($userRows)){
       $msg="#2002#".$user."#●入力したユーザー".$user."がありません、<br>ログイン出来るユーザーでログインして下さい";
-      writelogd($pgm,$msg);
-      //branch($pgm,$msg);
+      echo $msg.PHP_EOL;
+      branch($pgm,$msg);
     }else{ 
       /// userあり
       foreach ($userRows as $userRow){  
@@ -93,23 +93,22 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
         if ($passwd != $userArr[1]){
           /// password一致せず
           $msg="#2002#".$user."#●パスワードが不正です、<br>正しいパスワードでログインして下さい";
-          writelogd($pgm,$msg);
+	  echo $msg.PHP_EOL;
           branch($pgm,$msg);
         }else{
           /// password一致
           $msg=$user." Login Success";
-          writelogd($pgm,$msg);
           $nowDate=date('ymdHis');
           $timeStamp = $nowDate;
           $userId=$userArr[0]; /// userid
           $userAuth=$userArr[2];   /// login userのauthority
           $userName=$userArr[3];  /// username
           $userCode=$userArr[4];  /// usercode
-          //setSession($user);
           if ($userAuth == '1'){ 
-            /// ログインが管理者
+	    /// ログインが管理者
+	    echo 'authority='.$userAuth.PHP_EOL;
             $rtn=checkProcess($userAuth); ///管理者で実行されているかチェック
-            if ($rtn=="0"){
+	    if ($rtn=="0"){
               /// まだ管理者で実行されていない->正常  
               setSession($user);            
               $proc_sql='update processtb set admin="'.$user.'",starttime="'.$timeStamp.'"';
@@ -119,7 +118,6 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $evtLog_sql = "insert into eventlog (host,eventtime,eventtype,snmpvalue,kanrisha,kanrino) values('ログイン','".$timeStamp."','0',' ','".$user."','')";
               putdata($evtLog_sql); 
               $msg = $logName . " Eventlog Insert sql: " . $evtLog_sql;
-              writelogd($pgm,$msg);  
             
               /// 開始メール送信 ログインメールはメールサーバのチェックをするDiscover.phpが送信
               /// Discover.phpの送信条件はloginstamp欄に0以外の時刻があるとき、Discover.phpで0にする
@@ -140,11 +138,12 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               */
               ///---------------------------------------------
               /// MainIindexphp呼び出し
-              $nextPage="MainIndex.php";
+	      $nextPage="MainIndex.php";
               branch($nextPage,"");
               ///
             }else{ /// auth=0
               $msg="#2003#".$user."#●既に管理者監視が実行されています、<br>確認してしばらくしてからログインして下さい";
+	      echo $msg.PHP_EOL;
               branch($pgm,$msg);
             } 
           }else{ 
@@ -157,15 +156,14 @@ if (isset($_GET['param'])){   /// branchで戻った時の処理
               $evtLog_sql = "insert into eventlog (host,eventtime,eventtype,kanrisha,kanrino) values('ログイン','" . $timeStamp . "','0','".$user."','')";
               putdata($evtLog_sql); 
               $msg = $logName . " Eventlog Insert sql: " . $insql;
-              writelogd($pgm,$msg);  
               /// 開始メール送信               
-              //mailsend($hostArr,$user,'6','一般ユーザーログイン',$user,'','');
               /// MainIndexUphp.php呼び出し
               $nextPage="MainIndexU.html";
               branch($nextPage,"");
             }else{  /// $rtn=="0" or $admin_Authority="0"
               $msg="#2004#".$user."#●管理者監視が実行されていません、<br>しばらくしてからログインするか、管理者監視を確認して下さい";
-              branch($pgm,$msg);
+	      echo $msg.PHP_EOL;
+	      branch($pgm,$msg);
             }
           }          
           print '</body></html>';
@@ -190,7 +188,7 @@ print '</head>';
 print "<body class={$bodyColor}>";
 print '<div class="login">';
 print '<h2 class="login-header"><img src="header/php.jpg" width="30" height="30">&emsp;&emsp;監視ログイン</h2>';
-print '<form class="login-container" type="get" action="login.php">';
+print '<form class="login-container" method="get" action="login.php">';
 print '<p><input type="text" name="user" value="" placeholder="ユーザID" required></p>';
 print '<p><input type="password" name="passwd" placeholder="パスワード" required></p>';
 print "<input type='hidden' name='brcode' value={$ercde}>";

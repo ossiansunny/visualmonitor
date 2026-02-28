@@ -22,8 +22,9 @@ if(!isset($_GET['fradio'])){
    $nextpage = "GraphListPlotPage.php";
    branch($nextpage,$msg);   
 }
-
-$server=$_SERVER['SERVER_ADDR'];
+$server=gethostbyname(gethostname());
+//writeloge($pgm,'server1='.$server);
+//$server=$_SERVER['SERVER_ADDR'];
 ///
 $hostArr = explode(',',$_GET['fradio']);
 $host=$hostArr[0];

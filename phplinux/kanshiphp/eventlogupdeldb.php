@@ -1,7 +1,7 @@
 ﻿<?php
 require_once "BaseFunction.php";
 require_once "mysqlkanshi.php";
-require_once "mailsend.php";
+//require_once "mailsend.php";
 ///
 function getautokanrino(){
   /// yymmdd9001から自動で管理番号を取得
@@ -125,7 +125,7 @@ if(isset($_GET['confirm'])){ /// 「障害確認」ボタン ---> statistics gty
   ///
   /// メール送信
   ///
-  mailsend($hostArr,$user,'9','障害処理終了',$kanrimei,$kanrino,$memoMsg);  
+  //mailsend($hostArr,$user,'9','障害処理終了',$kanrimei,$kanrino,$memoMsg);  
 
 }elseif (isset($_GET['memo'])){ /// 「メモ保存」
   $kanrimei = $_GET['kanrimei']; /// 障害種類
