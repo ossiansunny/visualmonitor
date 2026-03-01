@@ -57,6 +57,12 @@ $errSw=0;
 /// get admin data
 $admin_sql='select authority,receiver,sender,subject,snmpintval from admintb';
 $adminRows=getdata($admin_sql);
+if(empty($adminRows)){
+  $msg="Error:2001#●mysqlが正常に起動しているかチェックして下さい";
+  writelogd($pgm,$msg);
+  print "<font color=red><b>{$msg}</b></font>";
+  exit(1);
+}
 $adminArr=explode(',',$adminRows[0]);
 $admin_Authority=$adminArr[0];/// 管理者がログイン済であると、authority=1になる
 $admin_Toaddr=$adminArr[1];
